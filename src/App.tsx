@@ -300,16 +300,19 @@ function CodeBlock({
             {/* Code and gutter */}
             <div
                 className={cx(
-                    "grid grid-cols-[32px_1fr] overflow-x-auto p-4 leading-6 code-font",
-                    compact ? "max-h-[180px]" : "max-h-[280px]",
+                    "flex overflow-x-auto p-4 code-font",
+                    compact ? "max-h-[200px]" : "max-h-[320px]",
                 )}
             >
-                <div className="select-none pr-3 text-right text-muted-foreground/30 font-mono text-[11px]">
+                {/* Line Numbers Gutter: locked fixed width, matching font-size & line-height */}
+                <div className="w-10 shrink-0 select-none border-r border-white/[0.08] pr-3 text-right font-mono text-xs leading-6 text-muted-foreground/35">
                     {lines.map((_, i) => (
                         <div key={i}>{String(i + 1).padStart(2, "0")}</div>
                     ))}
                 </div>
-                <pre className="text-[#c5d1ee] drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+
+                {/* Code Area: identical text-xs and leading-6 so every line aligns 1:1 */}
+                <pre className="!m-0 min-w-0 flex-1 !bg-transparent pl-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                     <HighlightedCode code={example.code} />
                 </pre>
             </div>
@@ -613,6 +616,7 @@ function ExamplesPage() {
         "Runtime",
         "Planned",
     ];
+
     const filtered = useMemo(
         () =>
             examples.filter((example) => {
@@ -679,7 +683,7 @@ function ExamplesPage() {
                     </div>
                 </div>
 
-                <div className="mb-6 mt-8 flex items-center justify-between">
+                <div className="mb-8 mt-8 flex items-center justify-between">
                     <p
                         className="font-mono text-xs text-muted-foreground"
                         data-testid="text-example-count"
@@ -716,60 +720,153 @@ function ExamplesPage() {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid gap-6 md:grid-cols-2">
-                        {filtered.map((example, index) => (
-                            <article
-                                key={example.slug}
-                                className={cx(
-                                    "group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/40 hover:shadow-lg",
-                                    `animate-rise-in-delay-${Math.min((index % 4) + 1, 3)}`,
-                                )}
-                                data-testid={`card-example-${example.slug}`}
-                            >
-                                <div>
-                                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                                        <div className="flex items-center gap-2">
-                                            <span className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[10px] text-muted-foreground">
-                                                {example.category}
-                                            </span>
-                                            {example.status === "planned" ? (
-                                                <span className="rounded-md border border-accent/30 px-2 py-0.5 font-mono text-[10px] text-accent">
-                                                    planned
-                                                </span>
-                                            ) : (
-                                                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[#9ed6c5]">
-                                                    <span className="h-1.5 w-1.5 rounded-full bg-[#9ed6c5]" />
-                                                    runnable
-                                                </span>
+                    <div className="space-y-10">
+                        {filtered.map((example, index) => {
+                            const isFlipped = index % 2 !== 0;
+                            return (
+                                <article
+                                    key={example.slug}
+                                    className={cx(
+                                        "group rounded-2xl border border-border/80 bg-card/50 p-6 sm:p-8 backdrop-blur-sm transition-all hover:border-primary/40 hover:shadow-2xl",
+                                        `animate-rise-in-delay-${Math.min((index % 4) + 1, 3)}`,
+                                    )}
+                                    data-testid={`card-example-${example.slug}`}
+                                >
+                                    <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
+                                        {/* Description / Text Column */}
+                                        <div
+                                            className={cx(
+                                                "flex flex-col justify-between lg:col-span-5 h-full",
+                                                isFlipped && "lg:order-2",
                                             )}
+                                        >
+                                            <div>
+                                                <div className="flex items-center justify-between border-b border-border/50 pb-3.5">
+                                                    <div className="flex items-center gap-2">
+                                                        <span className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[10px] text-muted-foreground">
+                                                            {example.category}
+                                                        </span>
+                                                        {example.status ===
+                                                        "planned" ? (
+                                                            <span className="rounded-md border border-accent/30 px-2 py-0.5 font-mono text-[10px] text-accent">
+                                                                planned
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[#9ed6c5]">
+                                                                <span className="h-1.5 w-1.5 rounded-full bg-[#9ed6c5]" />
+                                                                runnable
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <span className="font-mono text-xs text-muted-foreground/40 font-semibold">
+                                                        #
+                                                        {String(
+                                                            index + 1,
+                                                        ).padStart(2, "0")}
+                                                    </span>
+                                                </div>
+
+                                                <div className="mt-5">
+                                                    <h2 className="text-2xl font-semibold tracking-[-.03em] text-foreground transition-colors group-hover:text-primary">
+                                                        {example.title}
+                                                    </h2>
+                                                    <p className="mt-1 font-mono text-sm font-medium text-primary/85">
+                                                        {example.marathiTitle}
+                                                    </p>
+                                                    <div className="mt-4 space-y-2.5 text-sm leading-relaxed text-muted-foreground">
+                                                        <p>
+                                                            {
+                                                                example.description
+                                                            }
+                                                        </p>
+                                                        <p className="marathi-font text-xs text-foreground/60 border-l-2 border-primary/30 pl-3 leading-6">
+                                                            {
+                                                                example.marathiDescription
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Action Button */}
+                                            <div className="mt-7 pt-4 border-t border-border/40">
+                                                {example.status === "ready" ? (
+                                                    <PlaygroundAnchor
+                                                        slug={example.slug}
+                                                        className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-4 py-2 text-xs font-mono font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                                                    >
+                                                        Open in Playground{" "}
+                                                        <ArrowUpRight
+                                                            size={14}
+                                                        />
+                                                    </PlaygroundAnchor>
+                                                ) : (
+                                                    <span className="inline-flex items-center gap-1.5 font-mono text-xs text-accent">
+                                                        Planned implementation
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
-                                        <span className="font-mono text-[11px] text-muted-foreground/40">
-                                            #
-                                            {String(index + 1).padStart(2, "0")}
-                                        </span>
-                                    </div>
 
-                                    <div className="mt-4">
-                                        <h2 className="text-xl font-semibold tracking-[-.03em] text-foreground group-hover:text-primary transition-colors">
-                                            {example.title}
-                                        </h2>
-                                        <p className="mt-0.5 font-mono text-sm text-primary/80">
-                                            {example.marathiTitle}
-                                        </p>
-                                        <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
-                                            {example.description}{" "}
-                                            <span className="text-foreground/40 font-serif">
-                                                {example.marathiDescription}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
+                                        {/* Code Column (Full Natural Height - No Clipping) */}
+                                        <div
+                                            className={cx(
+                                                "lg:col-span-7",
+                                                isFlipped && "lg:order-1",
+                                            )}
+                                        >
+                                            <div className="relative overflow-hidden rounded-xl code border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.45)]">
+                                                <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-                                <div className="mt-5">
-                                    <CodeBlock example={example} compact />
-                                </div>
-                            </article>
-                        ))}
+                                                {/* Window Title Header */}
+                                                <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+                                                    <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
+                                                        <FileCode2
+                                                            size={13}
+                                                            className="text-primary"
+                                                        />
+                                                        <span className="text-foreground/85 font-mono">
+                                                            {example.slug}.mr
+                                                        </span>
+                                                    </div>
+                                                    <span className="font-mono text-[10px] text-muted-foreground/50">
+                                                        {
+                                                            example.code.split(
+                                                                "\n",
+                                                            ).length
+                                                        }{" "}
+                                                        lines
+                                                    </span>
+                                                </div>
+
+                                                {/* Code View with Gutter */}
+                                                <div className="grid grid-cols-[36px_1fr] p-4 text-xs leading-6 code-font overflow-x-auto">
+                                                    <div className="select-none pr-3 text-right text-muted-foreground/35 font-mono text-xs leading-6 border-r border-white/[0.06]">
+                                                        {example.code
+                                                            .split("\n")
+                                                            .map((_, i) => (
+                                                                <div key={i}>
+                                                                    {String(
+                                                                        i + 1,
+                                                                    ).padStart(
+                                                                        2,
+                                                                        "0",
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                    </div>
+                                                    <pre className="!m-0 pl-4 !bg-transparent text-xs leading-6 text-[#c5d1ee] font-mono whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                                                        <HighlightedCode
+                                                            code={example.code}
+                                                        />
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            );
+                        })}
                     </div>
                 )}
             </main>
