@@ -1088,7 +1088,7 @@ function DocSection({
             <h2 className="mb-5 text-2xl font-medium tracking-[-.04em]">
                 {title}
             </h2>
-            <div className="prose prose-invert prose-sm max-w-none prose-p:leading-7 prose-p:text-muted-foreground prose-code:font-mono prose-code:text-primary prose-pre:bg-transparent prose-pre:p-0">
+            <div className="space-y-5 text-sm leading-7 text-muted-foreground">
                 {children}
             </div>
         </section>
