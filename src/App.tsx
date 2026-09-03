@@ -372,7 +372,7 @@ function Home() {
                             </div>
                         </div>
                         <div className="animate-rise-in animate-rise-in-delay-2">
-                            <div className="relative rounded-2xl border border-border/90 bg-[hsl(225_25%_7%/.82)] p-2 shadow-[var(--shadow-lg)] -z-10">
+                            <div className="relative rounded-2xl border code p-2 shadow-[var(--shadow-lg)] -z-10">
                                 <div className="flex items-center justify-between rounded-xl bg-sidebar/75 px-4 py-3 backdrop-blur-sm">
                                     <div className="flex items-center gap-1.5">
                                         <span className="h-2 w-2 rounded-full bg-primary" />
@@ -383,7 +383,7 @@ function Home() {
                                         source.mr
                                     </span>
                                 </div>
-                                <div className="hero-terminal relative overflow-hidden rounded-b-xl bg-[hsl(225_25%_7%/.82)] px-5 py-7 font-mono text-[13px] leading-7 backdrop-blur-xl">
+                                <div className="hero-terminal relative overflow-hidden rounded-b-xl px-5 py-7 font-mono text-[13px] leading-7 backdrop-blur-xl">
                                     <div className="grid grid-cols-[32px_1fr]">
                                         <div className="select-none pr-3 text-right text-xs leading-7 text-muted-foreground/35">
                                             {typedCode
