@@ -329,7 +329,7 @@ function Home() {
                                     size={13}
                                     className="animate-spin [animation-duration:8s]"
                                 />{" "}
-                                native code, in a familiar tongue
+                                Created by Anvay with Prem &amp; Pride.
                             </div>
                             <h1 className="max-w-[700px] text-[clamp(3.1rem,7vw,6.9rem)] font-semibold leading-[.9] tracking-[-.075em] text-foreground">
                                 Marathi,
@@ -1419,7 +1419,7 @@ function Playground() {
                         <ChevronDown size={13} />
                     </button>
                     {pickerOpen && (
-                        <div className="absolute right-0 top-11 z-30 w-72 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-[var(--shadow-lg)]">
+                        <div className="absolute right-0 top-11 z-30 w-72 overflow-hidden rounded-xl border border-border glass p-1 shadow-[var(--shadow-lg)]">
                             <div className="px-3 py-2 font-mono text-[10px] uppercase tracking-[.15em] text-muted-foreground">
                                 examples / उदाहरणे
                             </div>
@@ -1500,7 +1500,7 @@ function Playground() {
                     )}
                     style={{ flexBasis: `${split}%` }}
                 >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border px-4">
+                    <div className="flex h-11 shrink-0 items-center justify-between border-border px-4 rounded-xl glass mx-2 mt-1">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <span className="h-2 w-2 rounded-full bg-accent" />
                             {selected?.title ?? "untitled.mr"}
@@ -1622,15 +1622,9 @@ function Playground() {
                             />
                         </div>
                     </div>
-                    <div className="flex h-8 shrink-0 items-center justify-between border-t border-border bg-sidebar px-4 font-mono text-[10px] text-muted-foreground">
-                        <span>
-                            Ln {cursor.line}, Col {cursor.column}
-                        </span>
-                        <span>Cascadia Mono</span>
-                    </div>
                 </section>
                 <div
-                    className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/50 hover:bg-primary/50 md:flex"
+                    className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/50 hover:bg-primary/50 md:flex rounded-2xl my-2"
                     onPointerDown={() => {
                         dragging.current = true;
                     }}
@@ -1646,7 +1640,7 @@ function Playground() {
                         mobileTab === "code" && "hidden md:flex",
                     )}
                 >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border px-4">
+                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border px-4 glass rounded-xl mt-1 mx-2">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <Terminal size={14} className="text-primary" />{" "}
                             output
@@ -1791,8 +1785,12 @@ function Playground() {
                     <span>Exit {exitCode ?? "—"}</span>
                 </div>
                 <div className="flex items-center gap-4">
-                    <span>source.mr</span>
-                    <span className="text-foreground/70">भाषा: मराठी</span>
+                    <span>
+                        Ln {cursor.line}, Col {cursor.column}
+                    </span>
+
+                    <span className="text-foreground/70">मराठी</span>
+                    <span className="text-primary/70">.mr</span>
                 </div>
             </footer>
         </div>
