@@ -269,19 +269,25 @@ function CodeBlock({
     return (
         <div
             className={cx(
-                "group overflow-hidden rounded-xl border border-border block shadow-[var(--shadow)]",
+                "group relative overflow-hidden rounded-xl border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.5)]",
+                "bg-gradient-to-b from-[hsl(225_25%_10%/.68)] via-[hsl(225_28%_7%/.72)] to-[hsl(225_30%_5%/.82)]",
+                "backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 hover:border-white/[0.14]",
                 compact ? "text-[11px]" : "text-xs",
             )}
         >
-            <div className="flex items-center justify-between border-b border-border/70 px-4 py-2.5">
-                <div className="flex items-center gap-2 font-mono text-[10px] text-muted-foreground">
+            {/* Specular edge sheen */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
+
+            {/* Header bar */}
+            <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+                <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
                     <FileCode2 size={13} className="text-primary" />{" "}
-                    {example.title}
+                    <span className="text-foreground/80">{example.title}</span>
                 </div>
                 {example.status === "ready" ? (
                     <PlaygroundAnchor
                         slug={example.slug}
-                        className="flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10px] text-primary opacity-70 transition-opacity hover:bg-primary/10 hover:opacity-100"
+                        className="flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 font-mono text-[10px] text-primary transition-all hover:border-primary/40 hover:bg-primary/20"
                         data-testid={`link-run-code-${example.slug}`}
                     >
                         Run <ArrowUpRight size={12} />
@@ -292,18 +298,20 @@ function CodeBlock({
                     </span>
                 )}
             </div>
+
+            {/* Editor body & line numbers */}
             <div
                 className={cx(
                     "grid grid-cols-[32px_1fr] overflow-x-auto p-4 leading-6 code-font",
                     compact ? "max-h-[180px]" : "max-h-[280px]",
                 )}
             >
-                <div className="select-none pr-3 text-right text-muted-foreground/40">
+                <div className="select-none pr-3 text-right text-muted-foreground/30 font-mono text-[11px]">
                     {lines.map((_, i) => (
                         <div key={i}>{String(i + 1).padStart(2, "0")}</div>
                     ))}
                 </div>
-                <pre className="text-[#c5d1ee]">
+                <pre className="text-[#c5d1ee] drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
                     <HighlightedCode code={example.code} />
                 </pre>
             </div>
