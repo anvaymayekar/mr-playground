@@ -1658,6 +1658,20 @@ function Playground() {
                             >
                                 wrap
                             </button>
+                            <span className="font-mono text-[10px] bg-none mr-1 ml-3">
+                                {compileState === "success" ? (
+                                    <span className="flex items-center gap-1 text-[#9ed6c5]">
+                                        <CircleCheck size={12} /> exited cleanly
+                                    </span>
+                                ) : compileState === "unavailable" ? (
+                                    <span className="flex items-center gap-1 text-primary">
+                                        <CircleAlert size={12} /> no compiler
+                                        connection
+                                    </span>
+                                ) : (
+                                    "ready"
+                                )}
+                            </span>
                             <button
                                 onClick={() => setOutput("")}
                                 className="rounded p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
@@ -1724,27 +1738,10 @@ function Playground() {
                             </>
                         )}
                     </div>
-                    <div className="flex h-8 shrink-0 items-center justify-between border-t border-border bg-sidebar px-4 font-mono text-[10px] text-muted-foreground">
-                        <span>
-                            {compileState === "success" ? (
-                                <span className="flex items-center gap-1 text-[#9ed6c5]">
-                                    <CircleCheck size={12} /> exited cleanly
-                                </span>
-                            ) : compileState === "unavailable" ? (
-                                <span className="flex items-center gap-1 text-primary">
-                                    <CircleAlert size={12} /> no compiler
-                                    connection
-                                </span>
-                            ) : (
-                                "ready"
-                            )}
-                        </span>
-                        <span>UTF-8</span>
-                    </div>
                 </section>
             </main>
             <footer
-                className="workspace-status flex h-9 shrink-0 items-center justify-between border-t border-border bg-sidebar px-3 font-mono text-[10px] text-muted-foreground sm:px-5"
+                className="workspace-status flex h-9 shrink-0 items-center justify-between border-t px-3 font-mono text-[10px] text-muted-foreground sm:px-5 glass mb-1 mx-2 rounded-lg"
                 aria-label="Compiler status"
             >
                 <div className="flex items-center gap-4">
@@ -1782,7 +1779,7 @@ function Playground() {
                                   ? "Compiler unavailable"
                                   : "Ready"}
                     </span>
-                    <span>Exit {exitCode ?? "—"}</span>
+                    <span>Code {exitCode ?? ""}</span>
                 </div>
                 <div className="flex items-center gap-4">
                     <span>
