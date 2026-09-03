@@ -23,7 +23,7 @@ export const examples: MrExample[] = [
             "Bind values with explicit types, then let the machine do the rest.",
         marathiDescription:
             "स्पष्ट प्रकारांसह मूल्ये बांधा; पुढचे काम मशीन करू दे.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank marks = 92;                          // ank -> integer
 he bhagank accuracy ahe 98.5;
@@ -53,7 +53,7 @@ leeh(username);                             // leeh() -> print()`,
             "The familiar arithmetic operators, expressed in Roman-script Marathi.",
         marathiDescription:
             "Roman-script Marathi मध्ये ओळखीचे अंकगणिती संकारक.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank a = 20;
 he ank b = 6;
@@ -74,7 +74,7 @@ leeh(a % b);        // % -> modulo`,
         description: "Compare values and ask direct questions of your program.",
         marathiDescription:
             "मूल्यांची तुलना करून प्रोग्रामला थेट प्रश्न विचारा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank a = 10;
 he ank b = 20;
@@ -97,7 +97,7 @@ leeh(a >= b);       // >= -> greater/equal`,
             "Combine truths with the small, readable vocabulary of .mr.",
         marathiDescription:
             "सत्य मूल्ये .mr च्या छोट्या, वाचनीय शब्दसंग्रहाने जोडा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he vidhan a = khare;
 he vidhan b = khote;
@@ -115,7 +115,7 @@ leeh(!a);           // ! -> logical NOT`,
         category: "Machine level",
         description: "Work close to the bits with and, or, xor and shifts.",
         marathiDescription: "and, or, xor आणि shifts ने बिट्सच्या जवळ काम करा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank a = 12;
 he ank b = 5;
@@ -136,7 +136,7 @@ leeh(a >> 1);       // >> -> right shift`,
         category: "Control flow",
         description: "Choose a path without losing the shape of the thought.",
         marathiDescription: "विचाराची रचना न गमावता योग्य मार्ग निवडा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he bhagank temperature = 38.5;
 
@@ -158,7 +158,7 @@ jar (temperature >= 40.0) {
         description: "Repeat a known number of times, with a compact range.",
         marathiDescription:
             "ओळखीच्या संख्येइतक्या वेळा संक्षिप्त range सह पुन्हा करा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank sum = 0;
 
@@ -177,7 +177,7 @@ leeh(sum);`,
         category: "Control flow",
         description: "Keep going while a condition remains true.",
         marathiDescription: "अट खरी असेपर्यंत काम चालू ठेवा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank sum = 0;
 he ank i = 0;
@@ -208,7 +208,7 @@ leeh(sum);`,
             "Give a reusable idea a name and pass it the values it needs.",
         marathiDescription:
             "पुन्हा वापरता येणाऱ्या कल्पनेला नाव द्या आणि मूल्ये पाठवा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he maze ank karya maximum(
     he ank a,
@@ -232,7 +232,7 @@ leeh(maximum(42, 27));`,
         category: "Functions",
         description: "A function can do useful work without returning a value.",
         marathiDescription: "मूल्य परत न करताही कार्य उपयुक्त काम करू शकते.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he nirank karya greet(
     te akshar name
@@ -253,7 +253,7 @@ greet("Anvay");`,
         description: "See the memory footprint of the core numeric types.",
         marathiDescription:
             "मुख्य संख्यात्मक प्रकारांनी व्यापलेली memory पाहा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he lahan ank small = 10;
 he ank normal = 100;
@@ -272,7 +272,7 @@ leeh(large);`,
         description: "Leave a native process with an explicit exit code.",
         marathiDescription:
             "स्पष्ट exit code सह native process मधून बाहेर पडा.",
-        code: `@anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
 he ank status = 0;
 

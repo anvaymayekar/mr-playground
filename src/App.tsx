@@ -380,7 +380,7 @@ function Home() {
                         </div>
                         <div className="animate-rise-in animate-rise-in-delay-2">
                             <div className="relative rounded-2xl border code p-2 shadow-[var(--shadow-lg)] -z-10">
-                                <div className="flex items-center justify-between rounded-xl bg-sidebar/75 px-4 py-3 backdrop-blur-sm">
+                                <div className="flex items-center justify-between rounded-xl px-4 py-3">
                                     <div className="flex items-center gap-1.5">
                                         <span className="h-2 w-2 rounded-full bg-primary" />
                                         <span className="h-2 w-2 rounded-full bg-primary" />
@@ -390,7 +390,7 @@ function Home() {
                                         source.mr
                                     </span>
                                 </div>
-                                <div className="hero-terminal relative overflow-hidden rounded-b-xl px-5 py-7 font-mono text-[13px] leading-7 backdrop-blur-xl">
+                                <div className="hero-terminal relative overflow-hidden rounded-b-xl px-5 py-7 font-mono text-[13px] leading-7 backdrop-blur-xl rounded-xl">
                                     <div className="grid grid-cols-[32px_1fr]">
                                         <div className="select-none pr-3 text-right text-xs leading-7 text-muted-foreground/35">
                                             {typedCode
@@ -1177,6 +1177,8 @@ function Playground() {
 
     const dragging = useRef(false);
     const editorRef = useRef<HTMLTextAreaElement>(null);
+    const preRef = useRef<HTMLPreElement>(null);
+    const lineNumbersRef = useRef<HTMLDivElement>(null);
     const idleTimerRef = useRef<number | null>(null);
     const hoverDebounceRef = useRef<number | null>(null);
 
@@ -1400,6 +1402,27 @@ function Playground() {
         setHoverDoc(null);
     };
 
+    const handleEditorScroll = (e: React.UIEvent<HTMLTextAreaElement>) => {
+        const top = e.currentTarget.scrollTop;
+        const left = e.currentTarget.scrollLeft;
+        if (preRef.current) {
+            preRef.current.scrollTop = top;
+            preRef.current.scrollLeft = left;
+        }
+        if (lineNumbersRef.current) {
+            lineNumbersRef.current.scrollTop = top;
+        }
+        if (completionOpen && editorRef.current) {
+            setMenuPosition(
+                computeMenuCoordinates(
+                    editorRef.current,
+                    editorRef.current.selectionStart,
+                ),
+            );
+        }
+        if (hoverDoc) setHoverDoc(null);
+    };
+
     const run = async () => {
         if (selected?.status === "planned" || !code.trim()) return;
         setCompileState("running");
@@ -1549,7 +1572,7 @@ function Playground() {
     };
 
     return (
-        <div className="flex min-h-[100dvh] flex-col bg-[hsl(225_24%_9%)] text-foreground">
+        <div className="flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-[hsl(225_24%_9%)] text-foreground">
             {/* Token Hover Explanation Card */}
             {hoverDoc && (
                 <div
@@ -1706,15 +1729,17 @@ function Playground() {
                 </span>
             </div>
 
-            <main className="flex min-h-0 flex-1 flex-col md:flex-row">
+            <main className="flex min-h-0 flex-1 overflow-hidden md:flex-row">
+                {/* Code Editor Column */}
                 <section
                     className={cx(
-                        "flex min-h-0 flex-col md:flex",
+                        "flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[hsl(225_25%_7%)]",
                         mobileTab === "output" && "hidden md:flex",
                     )}
                     style={{ flexBasis: `${split}%` }}
                 >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-border px-4 rounded-xl glass mx-2 mt-1">
+                    {/* Control Toolbar */}
+                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 glass">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <span className="h-2 w-2 rounded-full bg-accent" />
                             {selected?.title ?? "untitled.mr"}
@@ -1770,6 +1795,7 @@ function Playground() {
                         </div>
                     </div>
 
+                    {/* Unboxed Full-Bleed Editor Surface */}
                     <div className="relative flex min-h-0 flex-1 overflow-hidden">
                         {/* Intelligent Completion Menu */}
                         {completionOpen && activeSuggestions.length > 0 && (
@@ -1808,7 +1834,11 @@ function Playground() {
                             </div>
                         )}
 
-                        <div className="thin-scroll w-11 shrink-0 overflow-hidden border-r border-border/60 py-5 text-right font-mono text-xs leading-7 text-muted-foreground/35">
+                        {/* Line Numbers Gutter */}
+                        <div
+                            ref={lineNumbersRef}
+                            className="thin-scroll w-11 shrink-0 select-none overflow-hidden border-r border-border/60 pb-12 pt-5 text-right font-mono text-xs leading-7 text-muted-foreground/35"
+                        >
                             {code.split("\n").map((_, i) => (
                                 <div key={i} className="pr-3">
                                     {String(i + 1).padStart(2, "0")}
@@ -1816,10 +1846,12 @@ function Playground() {
                             ))}
                         </div>
 
-                        <div className="relative min-w-0 flex-1 overflow-hidden">
+                        {/* Code Layer */}
+                        <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden">
                             <pre
+                                ref={preRef}
                                 aria-hidden="true"
-                                className="pointer-events-none absolute inset-0 overflow-auto whitespace-pre px-5 py-5 font-mono leading-7 text-[#c5d1ee]"
+                                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre px-5 pb-12 pt-5 font-mono leading-7 text-[#c5d1ee]"
                                 style={{ fontSize }}
                             >
                                 <HighlightedCode code={code} />
@@ -1852,6 +1884,7 @@ function Playground() {
                                 }}
                                 onMouseMove={handleTextareaMouseMove}
                                 onMouseLeave={handleTextareaMouseLeave}
+                                onScroll={handleEditorScroll}
                                 onFocus={(event) =>
                                     updateCompletion(
                                         event.currentTarget.value,
@@ -1863,24 +1896,12 @@ function Playground() {
                                     setCompletionOpen(false);
                                     setHoverDoc(null);
                                 }}
-                                onScroll={() => {
-                                    if (completionOpen && editorRef.current) {
-                                        setMenuPosition(
-                                            computeMenuCoordinates(
-                                                editorRef.current,
-                                                editorRef.current
-                                                    .selectionStart,
-                                            ),
-                                        );
-                                    }
-                                    if (hoverDoc) setHoverDoc(null);
-                                }}
                                 spellCheck={false}
                                 style={{
                                     fontSize,
                                     caretColor: "hsl(var(--primary))",
                                 }}
-                                className="editor-scroll relative h-full min-w-0 w-full resize-none overflow-auto bg-transparent px-5 py-5 font-mono leading-7 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40"
+                                className="editor-scroll relative h-full w-full resize-none overflow-auto bg-transparent px-5 pb-12 pt-5 font-mono leading-7 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40"
                                 placeholder="Start with an .mr thought…"
                                 data-testid="textarea-code-editor"
                                 aria-label="Code editor"
@@ -1889,8 +1910,9 @@ function Playground() {
                     </div>
                 </section>
 
+                {/* Divider Handle */}
                 <div
-                    className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/50 hover:bg-primary/50 md:flex rounded-2xl my-2"
+                    className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
                     onPointerDown={() => {
                         dragging.current = true;
                     }}
@@ -1901,13 +1923,14 @@ function Playground() {
                     <span className="h-9 w-0.5 rounded bg-muted-foreground/40 group-hover:bg-primary" />
                 </div>
 
+                {/* Output Console Column */}
                 <section
                     className={cx(
-                        "flex min-h-0 flex-1 flex-col md:flex",
+                        "flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[hsl(225_24%_9%)]",
                         mobileTab === "code" && "hidden md:flex",
                     )}
                 >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border px-4 glass rounded-xl mt-1 mx-2">
+                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 glass">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <Terminal size={14} className="text-primary" />{" "}
                             output
@@ -1951,7 +1974,7 @@ function Playground() {
                     </div>
                     <div
                         className={cx(
-                            "editor-scroll min-h-0 flex-1 overflow-auto bg-[hsl(225_24%_9%)] p-5 font-mono text-sm leading-7",
+                            "editor-scroll min-h-0 flex-1 overflow-auto p-5 pb-12 font-mono text-sm leading-7",
                             wrap
                                 ? "whitespace-pre-wrap break-words"
                                 : "whitespace-pre",
@@ -2008,8 +2031,9 @@ function Playground() {
                 </section>
             </main>
 
+            {/* Floating Frost Glass Status Bar with Background Pass-Through */}
             <footer
-                className="workspace-status flex h-9 shrink-0 items-center justify-between border-t px-3 font-mono text-[10px] text-muted-foreground sm:px-5 glass mb-1 mx-2 rounded-lg"
+                className="workspace-status fixed bottom-0 left-0 right-0 z-30 flex h-7 shrink-0 items-center justify-between border-t px-8 font-mono text-[10px] text-muted-foreground sm:px-5 frost backdrop-blur-md"
                 aria-label="Compiler status"
             >
                 <div className="flex items-center gap-4">
