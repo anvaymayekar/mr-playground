@@ -1779,7 +1779,7 @@ function Playground() {
                     style={{ flexBasis: `${split}%` }}
                 >
                     {/* Control Toolbar */}
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 glass">
+                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <span className="h-2 w-2 rounded-full bg-accent" />
                             {selected?.title ?? "untitled.mr"}
@@ -1951,7 +1951,7 @@ function Playground() {
 
                 {/* Divider Handle */}
                 <div
-                    className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
+                    className="group relative hidden w-1.5 rounded-2xl h-1/2 shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
                     onPointerDown={() => {
                         dragging.current = true;
                     }}
@@ -1969,7 +1969,7 @@ function Playground() {
                         mobileTab === "code" && "hidden md:flex",
                     )}
                 >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 glass">
+                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <Terminal size={14} className="text-primary" />{" "}
                             output
