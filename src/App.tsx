@@ -269,16 +269,14 @@ function CodeBlock({
     return (
         <div
             className={cx(
-                "group relative overflow-hidden rounded-xl border border-white/[0.08] shadow-[0_12px_32px_rgba(0,0,0,0.5)]",
-                "bg-gradient-to-b from-[hsl(225_25%_10%/.68)] via-[hsl(225_28%_7%/.72)] to-[hsl(225_30%_5%/.82)]",
-                "backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 hover:border-white/[0.14]",
+                "group relative overflow-hidden rounded-xl code transition-all duration-300 hover:border-white/[0.14]",
                 compact ? "text-[11px]" : "text-xs",
             )}
         >
-            {/* Specular edge sheen */}
+            {/* Top specular edge highlight */}
             <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
-            {/* Header bar */}
+            {/* Header tab */}
             <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
                 <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
                     <FileCode2 size={13} className="text-primary" />{" "}
@@ -299,7 +297,7 @@ function CodeBlock({
                 )}
             </div>
 
-            {/* Editor body & line numbers */}
+            {/* Code and gutter */}
             <div
                 className={cx(
                     "grid grid-cols-[32px_1fr] overflow-x-auto p-4 leading-6 code-font",
@@ -1614,7 +1612,7 @@ function Playground() {
     };
 
     return (
-        <div className="flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-[hsl(225_24%_9%)] text-foreground">
+        <div className="flex h-[100dvh] max-h-[100dvh] w-full flex-col overflow-hidden bg-transparent text-foreground">
             {/* Token Hover Explanation Card */}
             {hoverDoc && (
                 <div
@@ -1775,7 +1773,7 @@ function Playground() {
                 {/* Code Editor Column */}
                 <section
                     className={cx(
-                        "flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[hsl(225_25%_7%)]",
+                        "code flex h-full min-h-0 min-w-0 flex-col overflow-hidden",
                         mobileTab === "output" && "hidden md:flex",
                     )}
                     style={{ flexBasis: `${split}%` }}
@@ -1836,7 +1834,6 @@ function Playground() {
                             </button>
                         </div>
                     </div>
-
                     {/* Unboxed Full-Bleed Editor Surface */}
                     <div className="relative flex min-h-0 flex-1 overflow-hidden">
                         {/* Intelligent Completion Menu */}
@@ -1968,7 +1965,7 @@ function Playground() {
                 {/* Output Console Column */}
                 <section
                     className={cx(
-                        "flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[hsl(225_24%_9%)]",
+                        "code flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
                         mobileTab === "code" && "hidden md:flex",
                     )}
                 >

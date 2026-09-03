@@ -257,24 +257,16 @@
             transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .code {
-        /* 1. Base using your --card variable (225 21% 13%) with alpha transparency */
-        background-color: hsl(225 25% 7% / 0.42);
-
-        /* 2. Glass blur engine */
-        backdrop-filter: blur(20px) saturate(180%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%);
-
-        /* 3. Clean neutral frosted rim */
-        border: 1px solid rgba(255, 255, 255, 0.07);
-
-        /* 4. Layered glow: specular edge + deep drop shadow + amber-gold aura */
-
-        /* Smooth transitions for interactive elements */
-        transition:
-            background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-            border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-            box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-            transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        background: linear-gradient(
+            to bottom,
+            hsl(225 25% 10% / 0.68),
+            hsl(225 28% 7% / 0.72) 50%,
+            hsl(225 30% 5% / 0.82)
+        );
+        backdrop-filter: blur(20px) saturate(150%);
+        -webkit-backdrop-filter: blur(20px) saturate(150%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
     }
     .round {
         border-radius: var(--radius-xl);
