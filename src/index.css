@@ -280,3 +280,7 @@
         border-radius: var(--radius-xl);
     }
 }
+
+@utility frost {
+    @apply shadow-2xl border border-border/80 backdrop-blur;
+}

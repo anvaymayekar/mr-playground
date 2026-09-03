@@ -53,7 +53,14 @@ import {
     readyExamples,
     type MrExample,
 } from "@/examples/registry";
-import { mrCompletions, type MrCompletion } from "@/editor/completions";
+import {
+    mrCompletions,
+    extractDynamicSymbols,
+    formatMrCode,
+    tokenDocs,
+    type MrCompletion,
+    type TokenDoc,
+} from "@/editor/completions";
 import { HighlightedCode } from "@/editor/syntax";
 
 const queryClient = new QueryClient();
@@ -570,7 +577,7 @@ function ExamplesPage() {
         () =>
             examples.filter((example) => {
                 const matchesQuery =
-                    `${example.title} ${example.marathiTitle} ${example.description}`
+                    `${example.title} ${example.marathiTitle} ${example.description} ${example.code}`
                         .toLowerCase()
                         .includes(query.toLowerCase());
                 return (
@@ -580,6 +587,7 @@ function ExamplesPage() {
             }),
         [query, category],
     );
+
     return (
         <Shell>
             <main className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8 lg:py-24">
@@ -597,29 +605,30 @@ function ExamplesPage() {
                         Every ready example opens directly in the playground.
                     </p>
                 </div>
-                <div className="mt-14 flex flex-col gap-4 border-y border-border py-4 lg:flex-row lg:items-center lg:justify-between">
+
+                <div className="mt-12 flex flex-col gap-4 border-y border-border py-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="relative max-w-md flex-1">
                         <Search
                             size={16}
-                            className="absolute left-3 top-3.5 text-muted-foreground"
+                            className="absolute left-3.5 top-3.5 text-muted-foreground"
                         />
                         <input
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
-                            placeholder="Search examples…"
+                            placeholder="Search examples by topic or keyword…"
                             className="focus-ring h-11 w-full rounded-lg border border-border bg-card pl-10 pr-4 text-sm outline-none placeholder:text-muted-foreground focus:border-primary/70"
                             data-testid="input-search-examples"
                         />
                     </div>
-                    <div className="thin-scroll flex gap-1 overflow-x-auto pb-1">
+                    <div className="thin-scroll flex gap-1.5 overflow-x-auto pb-1">
                         {categories.map((item) => (
                             <button
                                 key={item}
                                 onClick={() => setCategory(item)}
                                 className={cx(
-                                    "whitespace-nowrap rounded-md px-3 py-2 text-xs transition-colors",
+                                    "whitespace-nowrap rounded-lg px-3 py-2 text-xs font-mono transition-colors",
                                     category === item
-                                        ? "bg-primary text-primary-foreground"
+                                        ? "bg-primary text-primary-foreground font-semibold"
                                         : "text-muted-foreground hover:bg-secondary hover:text-foreground",
                                 )}
                                 data-testid={`button-category-${item.toLowerCase().replace(" ", "-")}`}
@@ -629,7 +638,8 @@ function ExamplesPage() {
                         ))}
                     </div>
                 </div>
-                <div className="mb-5 mt-10 flex items-center justify-between">
+
+                <div className="mb-6 mt-8 flex items-center justify-between">
                     <p
                         className="font-mono text-xs text-muted-foreground"
                         data-testid="text-example-count"
@@ -641,6 +651,7 @@ function ExamplesPage() {
                         Roman-script Marathi
                     </p>
                 </div>
+
                 {filtered.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-border bg-card/50 px-6 py-20 text-center">
                         <CircleAlert
@@ -665,46 +676,58 @@ function ExamplesPage() {
                         </button>
                     </div>
                 ) : (
-                    <div className="grid gap-5 md:grid-cols-2">
+                    <div className="grid gap-6 md:grid-cols-2">
                         {filtered.map((example, index) => (
                             <article
                                 key={example.slug}
                                 className={cx(
-                                    "animate-rise-in overflow-hidden rounded-2xl border border-border bg-card transition-transform hover:-translate-y-1",
+                                    "group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/40 hover:shadow-lg",
                                     `animate-rise-in-delay-${Math.min((index % 4) + 1, 3)}`,
                                 )}
                                 data-testid={`card-example-${example.slug}`}
                             >
-                                <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-6">
-                                    <div>
-                                        <div className="mb-3 flex items-center gap-2">
-                                            <span className="rounded-full bg-secondary px-2 py-1 font-mono text-[10px] text-muted-foreground">
+                                <div>
+                                    <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                                        <div className="flex items-center gap-2">
+                                            <span className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[10px] text-muted-foreground">
                                                 {example.category}
                                             </span>
-                                            {example.status === "planned" && (
-                                                <span className="rounded-full border border-accent/30 px-2 py-1 font-mono text-[10px] text-accent">
+                                            {example.status === "planned" ? (
+                                                <span className="rounded-md border border-accent/30 px-2 py-0.5 font-mono text-[10px] text-accent">
                                                     planned
+                                                </span>
+                                            ) : (
+                                                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-[#9ed6c5]">
+                                                    <span className="h-1.5 w-1.5 rounded-full bg-[#9ed6c5]" />
+                                                    runnable
                                                 </span>
                                             )}
                                         </div>
-                                        <h2 className="text-xl font-medium tracking-[-.03em]">
+                                        <span className="font-mono text-[11px] text-muted-foreground/40">
+                                            #
+                                            {String(index + 1).padStart(2, "0")}
+                                        </span>
+                                    </div>
+
+                                    <div className="mt-4">
+                                        <h2 className="text-xl font-semibold tracking-[-.03em] text-foreground group-hover:text-primary transition-colors">
                                             {example.title}
                                         </h2>
-                                        <p className="mt-1 font-mono text-sm text-primary/90">
+                                        <p className="mt-0.5 font-mono text-sm text-primary/80">
                                             {example.marathiTitle}
                                         </p>
+                                        <p className="mt-2.5 text-sm leading-6 text-muted-foreground">
+                                            {example.description}{" "}
+                                            <span className="text-foreground/40 font-serif">
+                                                {example.marathiDescription}
+                                            </span>
+                                        </p>
                                     </div>
-                                    <span className="font-mono text-[10px] text-muted-foreground">
-                                        {String(index + 1).padStart(2, "0")}
-                                    </span>
                                 </div>
-                                <p className="px-6 pb-5 text-sm leading-6 text-muted-foreground">
-                                    {example.description}{" "}
-                                    <span className="text-foreground/50">
-                                        {example.marathiDescription}
-                                    </span>
-                                </p>
-                                <CodeBlock example={example} compact />
+
+                                <div className="mt-5">
+                                    <CodeBlock example={example} compact />
+                                </div>
                             </article>
                         ))}
                     </div>
@@ -756,9 +779,9 @@ function DocsPage() {
                             onClick={() => setMarathi(true)}
                             className={cx(
                                 "flex-1 rounded-md px-3 py-2 text-xs",
-                                marathi
-                                    ? "bg-secondary text-foreground"
-                                    : "text-muted-foreground",
+                                !marathi
+                                    ? "text-muted-foreground"
+                                    : "bg-secondary text-foreground",
                             )}
                             data-testid="button-docs-marathi"
                         >
@@ -932,75 +955,6 @@ function DocSection({
                 {children}
             </div>
         </section>
-    );
-}
-
-function CompletionPanel({
-    items,
-    active,
-    onSelect,
-    onHover,
-}: {
-    items: MrCompletion[];
-    active: MrCompletion;
-    onSelect: (item: MrCompletion) => void;
-    onHover: (item: MrCompletion) => void;
-}) {
-    return (
-        <div className="completion-panel absolute left-12 top-3 z-20 flex max-h-[min(360px,calc(100%-24px))] w-[min(620px,calc(100%-60px))] overflow-hidden rounded-xl border border-border bg-[hsl(225_21%_13%/.97)] shadow-[0_16px_40px_hsl(225_30%_3%/.45)] backdrop-blur-xl">
-            <div className="min-w-0 flex-1 overflow-y-auto p-1.5">
-                <div className="px-2.5 py-2 font-mono text-[10px] uppercase tracking-[.14em] text-muted-foreground">
-                    complete / पूर्ण करा
-                </div>
-                {items.map((item) => (
-                    <button
-                        key={item.token}
-                        type="button"
-                        onClick={() => onSelect(item)}
-                        onMouseEnter={() => onHover(item)}
-                        title={`${item.description} · ${item.marathi}`}
-                        className={cx(
-                            "flex w-full items-center justify-between gap-3 rounded-lg px-2.5 py-2 text-left hover:bg-secondary",
-                            active.token === item.token && "bg-primary/10",
-                        )}
-                    >
-                        <span
-                            className={cx(
-                                "font-mono text-xs",
-                                active.token === item.token
-                                    ? "text-primary"
-                                    : "text-foreground",
-                            )}
-                        >
-                            {item.token}
-                        </span>
-                        <span className="truncate text-[11px] text-muted-foreground">
-                            {item.description}
-                        </span>
-                        <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/60">
-                            {item.category}
-                        </span>
-                    </button>
-                ))}
-            </div>
-            <div className="hidden w-52 border-l border-border bg-sidebar/70 p-4 sm:block">
-                <p className="font-mono text-xs text-primary">{active.token}</p>
-                <p className="mt-2 text-xs leading-5 text-foreground">
-                    {active.description}
-                </p>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                    {active.marathi}
-                </p>
-                <div className="mt-4 border-t border-border pt-3">
-                    <p className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
-                        inserts
-                    </p>
-                    <code className="mt-2 block whitespace-pre-wrap break-words font-mono text-[10px] leading-5 text-[#c3e88d]">
-                        {active.insertText}
-                    </code>
-                </div>
-            </div>
-        </div>
     );
 }
 
@@ -1203,24 +1157,49 @@ function Playground() {
     const [split, setSplit] = useState(58);
     const [copied, setCopied] = useState(false);
     const [cursor, setCursor] = useState({ line: 1, column: 1 });
+
+    // Autocomplete State
     const [completionOpen, setCompletionOpen] = useState(false);
     const [completionQuery, setCompletionQuery] = useState("");
-    const [hoveredCompletion, setHoveredCompletion] =
-        useState<MrCompletion | null>(null);
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [menuPosition, setMenuPosition] = useState({
+        top: 0,
+        left: 0,
+        showAbove: false,
+    });
+
+    // Hover Card State
+    const [hoverDoc, setHoverDoc] = useState<{
+        doc: TokenDoc;
+        x: number;
+        y: number;
+    } | null>(null);
+
     const dragging = useRef(false);
     const editorRef = useRef<HTMLTextAreaElement>(null);
+    const idleTimerRef = useRef<number | null>(null);
+    const hoverDebounceRef = useRef<number | null>(null);
+
     const selected = selectedSlug
         ? examples.find((example) => example.slug === selectedSlug)
         : undefined;
-    const completionItems = useMemo(
-        () =>
-            mrCompletions
-                .filter((item) =>
-                    item.token.startsWith(completionQuery.toLowerCase()),
-                )
-                .slice(0, 8),
-        [completionQuery],
+
+    const dynamicSymbols = useMemo(() => extractDynamicSymbols(code), [code]);
+    const completionPool = useMemo(
+        () => [...mrCompletions, ...dynamicSymbols],
+        [dynamicSymbols],
     );
+
+    const activeSuggestions = useMemo(() => {
+        if (!completionQuery) return [];
+        return completionPool
+            .filter((item) =>
+                item.token
+                    .toLowerCase()
+                    .startsWith(completionQuery.toLowerCase()),
+            )
+            .slice(0, 8);
+    }, [completionPool, completionQuery]);
 
     useEffect(() => {
         const move = (event: PointerEvent) => {
@@ -1243,6 +1222,53 @@ function Playground() {
         };
     }, []);
 
+    const performFormat = () => {
+        const ta = editorRef.current;
+        if (!ta) return;
+        const currentCursor = ta.selectionStart;
+        const formatted = formatMrCode(ta.value);
+        if (formatted !== ta.value) {
+            setCode(formatted);
+            requestAnimationFrame(() => {
+                ta.selectionStart = Math.min(currentCursor, formatted.length);
+                ta.selectionEnd = ta.selectionStart;
+            });
+        }
+    };
+
+    const triggerDebouncedFormat = () => {
+        if (idleTimerRef.current) window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = window.setTimeout(() => {
+            performFormat();
+        }, 1600);
+    };
+
+    const computeMenuCoordinates = (
+        textarea: HTMLTextAreaElement,
+        pos: number,
+    ) => {
+        const textBefore = textarea.value.slice(0, pos);
+        const lines = textBefore.split("\n");
+        const lineIdx = lines.length - 1;
+        const colIdx = lines[lineIdx].length;
+
+        const lineHeight = 28;
+        const charWidth = fontSize * 0.6;
+        const rect = textarea.getBoundingClientRect();
+
+        const topOffset = lineIdx * lineHeight - textarea.scrollTop + 20;
+        const leftOffset = colIdx * charWidth - textarea.scrollLeft + 20;
+
+        const showAbove = topOffset + 180 > rect.height;
+        return {
+            top: showAbove
+                ? Math.max(8, topOffset - 175)
+                : topOffset + lineHeight,
+            left: Math.min(Math.max(12, leftOffset), rect.width - 240),
+            showAbove,
+        };
+    };
+
     const updateCursor = (value: string, position: number) => {
         const before = value.slice(0, position);
         const lines = before.split("\n");
@@ -1251,19 +1277,25 @@ function Playground() {
             column: lines[lines.length - 1].length + 1,
         });
     };
+
     const updateCompletion = (value: string, position: number) => {
         const lineStart =
             value.lastIndexOf("\n", Math.max(0, position - 1)) + 1;
         const prefix =
-            value.slice(lineStart, position).match(/[A-Za-z]*$/)?.[0] ?? "";
+            value.slice(lineStart, position).match(/[A-Za-z_-]*$/)?.[0] ?? "";
         setCompletionQuery(prefix);
-        setCompletionOpen(
-            prefix.length > 0 &&
-                mrCompletions.some((item) =>
-                    item.token.startsWith(prefix.toLowerCase()),
-                ),
-        );
+        setSelectedIndex(0);
+
+        if (prefix.length > 0 && editorRef.current) {
+            setMenuPosition(
+                computeMenuCoordinates(editorRef.current, position),
+            );
+            setCompletionOpen(true);
+        } else {
+            setCompletionOpen(false);
+        }
     };
+
     const chooseExample = (example: MrExample) => {
         setSelectedSlug(example.slug);
         setCode(example.code);
@@ -1272,34 +1304,109 @@ function Playground() {
         setExitCode(null);
         setPickerOpen(false);
         setCompletionOpen(false);
+        setHoverDoc(null);
         setCursor({ line: 1, column: 1 });
     };
+
     const chooseCompletion = (item: MrCompletion) => {
         const target = editorRef.current;
         if (!target) return;
         const position = target.selectionStart;
         const lineStart = code.lastIndexOf("\n", Math.max(0, position - 1)) + 1;
         const prefix =
-            code.slice(lineStart, position).match(/[A-Za-z]*$/)?.[0] ?? "";
-        const next = `${code.slice(0, position - prefix.length)}${item.token}${code.slice(position)}`;
+            code.slice(lineStart, position).match(/[A-Za-z_-]*$/)?.[0] ?? "";
+        const next = `${code.slice(0, position - prefix.length)}${item.insertText}${code.slice(position)}`;
+
         setCode(next);
         setCompletionOpen(false);
         setCompletionQuery("");
-        setHoveredCompletion(null);
+
         requestAnimationFrame(() => {
             target.focus();
-            target.selectionStart =
-                position - prefix.length + item.token.length;
-            target.selectionEnd = target.selectionStart;
-            updateCursor(next, target.selectionStart);
+            const targetPos =
+                position -
+                prefix.length +
+                item.insertText.length +
+                (item.cursorOffset ?? 0);
+            target.selectionStart = targetPos;
+            target.selectionEnd = targetPos;
+            updateCursor(next, targetPos);
         });
     };
+
+    const handleTextareaMouseMove = (
+        e: React.MouseEvent<HTMLTextAreaElement>,
+    ) => {
+        const ta = editorRef.current;
+        if (!ta || completionOpen) {
+            if (hoverDoc) setHoverDoc(null);
+            return;
+        }
+
+        const rect = ta.getBoundingClientRect();
+        const offsetX = e.clientX - rect.left - 20 + ta.scrollLeft;
+        const offsetY = e.clientY - rect.top - 20 + ta.scrollTop;
+
+        const lineHeight = 28;
+        const charWidth = fontSize * 0.6;
+
+        const lineIndex = Math.floor(offsetY / lineHeight);
+        const colIndex = Math.floor(offsetX / charWidth);
+
+        const lines = ta.value.split("\n");
+        if (lineIndex < 0 || lineIndex >= lines.length) {
+            if (hoverDoc) setHoverDoc(null);
+            return;
+        }
+
+        const line = lines[lineIndex];
+        if (colIndex < 0 || colIndex >= line.length) {
+            if (hoverDoc) setHoverDoc(null);
+            return;
+        }
+
+        let start = colIndex;
+        while (start > 0 && /[A-Za-z0-9_]/.test(line[start - 1])) start--;
+        let end = colIndex;
+        while (end < line.length && /[A-Za-z0-9_]/.test(line[end])) end++;
+
+        const hoveredWord = line.slice(start, end).trim();
+
+        if (hoverDebounceRef.current)
+            window.clearTimeout(hoverDebounceRef.current);
+
+        if (hoveredWord && tokenDocs[hoveredWord]) {
+            hoverDebounceRef.current = window.setTimeout(() => {
+                const doc = tokenDocs[hoveredWord];
+                const cardX = Math.min(
+                    Math.max(16, e.clientX - 20),
+                    window.innerWidth - 330,
+                );
+                const cardY =
+                    e.clientY + 22 + 200 > window.innerHeight
+                        ? Math.max(10, e.clientY - 210)
+                        : e.clientY + 18;
+
+                setHoverDoc({ doc, x: cardX, y: cardY });
+            }, 120);
+        } else {
+            if (hoverDoc) setHoverDoc(null);
+        }
+    };
+
+    const handleTextareaMouseLeave = () => {
+        if (hoverDebounceRef.current)
+            window.clearTimeout(hoverDebounceRef.current);
+        setHoverDoc(null);
+    };
+
     const run = async () => {
         if (selected?.status === "planned" || !code.trim()) return;
         setCompileState("running");
         setOutput("");
         setExitCode(null);
         setCompletionOpen(false);
+        setHoverDoc(null);
         try {
             const response = await fetch("/api/compile", {
                 method: "POST",
@@ -1337,14 +1444,17 @@ function Playground() {
             setMobileTab("output");
         }
     };
+
     const reset = () => {
         setCode(selected?.code ?? "");
         setOutput("");
         setCompileState("idle");
         setExitCode(null);
         setCompletionOpen(false);
+        setHoverDoc(null);
         setCursor({ line: 1, column: 1 });
     };
+
     const copyCode = async () => {
         try {
             await navigator.clipboard?.writeText(code);
@@ -1354,39 +1464,141 @@ function Playground() {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1400);
     };
+
     const onEditorKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+        triggerDebouncedFormat();
+        if (hoverDoc) setHoverDoc(null);
+
         if (event.key === "Enter" && event.ctrlKey) {
             event.preventDefault();
             void run();
-        }
-        if (
-            (event.key === "Enter" || event.key === "Tab") &&
-            completionOpen &&
-            completionItems[0]
-        ) {
-            event.preventDefault();
-            chooseCompletion(hoveredCompletion ?? completionItems[0]);
             return;
         }
+
+        if (completionOpen && activeSuggestions.length > 0) {
+            if (event.key === "ArrowDown") {
+                event.preventDefault();
+                setSelectedIndex(
+                    (prev) => (prev + 1) % activeSuggestions.length,
+                );
+                return;
+            }
+            if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setSelectedIndex(
+                    (prev) =>
+                        (prev - 1 + activeSuggestions.length) %
+                        activeSuggestions.length,
+                );
+                return;
+            }
+            if (event.key === "Enter" || event.key === "Tab") {
+                event.preventDefault();
+                chooseCompletion(activeSuggestions[selectedIndex]);
+                return;
+            }
+            if (event.key === "Escape") {
+                event.preventDefault();
+                setCompletionOpen(false);
+                return;
+            }
+        }
+
         if (event.key === "Escape") {
             setCompletionOpen(false);
+            setHoverDoc(null);
             return;
         }
+
         if (event.key === "Tab") {
             event.preventDefault();
             const target = event.currentTarget;
             const start = target.selectionStart;
             const end = target.selectionEnd;
-            const next = `${code.slice(0, start)}  ${code.slice(end)}`;
+            const next = `${code.slice(0, start)}    ${code.slice(end)}`;
             setCode(next);
             requestAnimationFrame(() => {
-                target.selectionStart = start + 2;
-                target.selectionEnd = start + 2;
+                target.selectionStart = start + 4;
+                target.selectionEnd = start + 4;
             });
+            return;
+        }
+
+        if (event.key === "Enter") {
+            const target = event.currentTarget;
+            const start = target.selectionStart;
+            const lineStart = code.lastIndexOf("\n", start - 1) + 1;
+            const currentLine = code.slice(lineStart, start);
+            const indentMatch = currentLine.match(/^\s*/);
+            const currentIndent = indentMatch ? indentMatch[0] : "";
+
+            if (currentLine.trim().endsWith("{")) {
+                event.preventDefault();
+                const nextIndent = currentIndent + "    ";
+                const hasClosing = code[start] === "}";
+                const textToInsert = `\n${nextIndent}${hasClosing ? `\n${currentIndent}` : ""}`;
+                const nextCode = `${code.slice(0, start)}${textToInsert}${code.slice(start)}`;
+                setCode(nextCode);
+                requestAnimationFrame(() => {
+                    target.selectionStart = start + nextIndent.length + 1;
+                    target.selectionEnd = target.selectionStart;
+                    updateCursor(nextCode, target.selectionStart);
+                });
+            }
         }
     };
+
     return (
         <div className="flex min-h-[100dvh] flex-col bg-[hsl(225_24%_9%)] text-foreground">
+            {/* Token Hover Explanation Card */}
+            {hoverDoc && (
+                <div
+                    className="pointer-events-none fixed z-50 w-72 overflow-hidden p-3.5 rounded-xl frost animate-rise-in"
+                    style={{
+                        top: `${hoverDoc.y}px`,
+                        left: `${hoverDoc.x}px`,
+                    }}
+                >
+                    <div className="flex items-center justify-between border-b border-border/60 pb-2">
+                        <span className="font-mono text-xs font-bold text-primary">
+                            {hoverDoc.doc.token}
+                        </span>
+                        <span className="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
+                            {hoverDoc.doc.category}
+                        </span>
+                    </div>
+
+                    <div className="mt-2.5 space-y-2 text-xs">
+                        <div>
+                            <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                                English
+                            </div>
+                            <p className="mt-0.5 text-xs leading-5 text-foreground/90">
+                                {hoverDoc.doc.english}
+                            </p>
+                        </div>
+
+                        <div>
+                            <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                                मराठी
+                            </div>
+                            <p className="mt-0.5 text-xs leading-5 text-muted-foreground marathi-font">
+                                {hoverDoc.doc.marathi}
+                            </p>
+                        </div>
+
+                        <div className="border-t border-border/60 pt-2">
+                            <div className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                                Syntax
+                            </div>
+                            <pre className="mt-1 whitespace-pre-wrap rounded bg-sidebar/80 p-1.5 font-mono text-[10px] leading-4 text-[#c3e88d]">
+                                {hoverDoc.doc.syntax}
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-sidebar px-3 sm:px-5">
                 <div className="flex items-center gap-3">
                     <Link
@@ -1463,6 +1675,7 @@ function Playground() {
                     </span>
                 </button>
             </header>
+
             <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-3 py-2 md:hidden">
                 <div className="flex rounded-md bg-secondary p-0.5">
                     <button
@@ -1492,6 +1705,7 @@ function Playground() {
                     Ctrl + Enter to run
                 </span>
             </div>
+
             <main className="flex min-h-0 flex-1 flex-col md:flex-row">
                 <section
                     className={cx(
@@ -1555,15 +1769,45 @@ function Playground() {
                             </button>
                         </div>
                     </div>
-                    <div className="relative flex min-h-0 flex-1 overflow-hidden bg-[hsl(225_25%_7%)]">
-                        {completionOpen && completionItems.length > 0 && (
-                            <CompletionPanel
-                                items={completionItems}
-                                active={hoveredCompletion ?? completionItems[0]}
-                                onSelect={chooseCompletion}
-                                onHover={setHoveredCompletion}
-                            />
+
+                    <div className="relative flex min-h-0 flex-1 overflow-hidden">
+                        {/* Intelligent Completion Menu */}
+                        {completionOpen && activeSuggestions.length > 0 && (
+                            <div
+                                className="absolute z-30 w-52 overflow-hidden rounded-lg frost"
+                                style={{
+                                    top: `${menuPosition.top}px`,
+                                    left: `${menuPosition.left}px`,
+                                }}
+                            >
+                                <div className="max-h-48 overflow-y-auto p-1">
+                                    {activeSuggestions.map((item, idx) => (
+                                        <button
+                                            key={item.token}
+                                            type="button"
+                                            onMouseDown={(e) => {
+                                                e.preventDefault();
+                                                chooseCompletion(item);
+                                            }}
+                                            className={cx(
+                                                "flex w-full items-center justify-between rounded-md px-2 py-1 text-left text-xs transition-colors",
+                                                idx === selectedIndex
+                                                    ? "bg-primary/20 text-primary"
+                                                    : "text-foreground hover:bg-secondary",
+                                            )}
+                                        >
+                                            <span className="font-mono">
+                                                {item.token}
+                                            </span>
+                                            <span className="font-mono text-[9px] uppercase text-muted-foreground/70">
+                                                {item.category}
+                                            </span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
                         )}
+
                         <div className="thin-scroll w-11 shrink-0 overflow-hidden border-r border-border/60 py-5 text-right font-mono text-xs leading-7 text-muted-foreground/35">
                             {code.split("\n").map((_, i) => (
                                 <div key={i} className="pr-3">
@@ -1571,6 +1815,7 @@ function Playground() {
                                 </div>
                             ))}
                         </div>
+
                         <div className="relative min-w-0 flex-1 overflow-hidden">
                             <pre
                                 aria-hidden="true"
@@ -1592,6 +1837,7 @@ function Playground() {
                                         event.target.value,
                                         event.target.selectionStart,
                                     );
+                                    if (hoverDoc) setHoverDoc(null);
                                 }}
                                 onKeyDown={onEditorKeyDown}
                                 onClick={(event) => {
@@ -1604,12 +1850,31 @@ function Playground() {
                                         event.currentTarget.selectionStart,
                                     );
                                 }}
+                                onMouseMove={handleTextareaMouseMove}
+                                onMouseLeave={handleTextareaMouseLeave}
                                 onFocus={(event) =>
                                     updateCompletion(
                                         event.currentTarget.value,
                                         event.currentTarget.selectionStart,
                                     )
                                 }
+                                onBlur={() => {
+                                    performFormat();
+                                    setCompletionOpen(false);
+                                    setHoverDoc(null);
+                                }}
+                                onScroll={() => {
+                                    if (completionOpen && editorRef.current) {
+                                        setMenuPosition(
+                                            computeMenuCoordinates(
+                                                editorRef.current,
+                                                editorRef.current
+                                                    .selectionStart,
+                                            ),
+                                        );
+                                    }
+                                    if (hoverDoc) setHoverDoc(null);
+                                }}
                                 spellCheck={false}
                                 style={{
                                     fontSize,
@@ -1623,6 +1888,7 @@ function Playground() {
                         </div>
                     </div>
                 </section>
+
                 <div
                     className="group relative hidden w-2 shrink-0 cursor-col-resize items-center justify-center bg-border/50 hover:bg-primary/50 md:flex rounded-2xl my-2"
                     onPointerDown={() => {
@@ -1634,6 +1900,7 @@ function Playground() {
                 >
                     <span className="h-9 w-0.5 rounded bg-muted-foreground/40 group-hover:bg-primary" />
                 </div>
+
                 <section
                     className={cx(
                         "flex min-h-0 flex-1 flex-col md:flex",
@@ -1740,6 +2007,7 @@ function Playground() {
                     </div>
                 </section>
             </main>
+
             <footer
                 className="workspace-status flex h-9 shrink-0 items-center justify-between border-t px-3 font-mono text-[10px] text-muted-foreground sm:px-5 glass mb-1 mx-2 rounded-lg"
                 aria-label="Compiler status"
