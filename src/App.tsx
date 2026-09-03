@@ -1298,7 +1298,7 @@ function Playground() {
         const charWidth = fontSize * 0.6;
         const rect = textarea.getBoundingClientRect();
 
-        const topOffset = lineIdx * lineHeight - textarea.scrollTop + 20;
+        const topOffset = lineIdx * lineHeight - textarea.scrollTop + 56;
         const leftOffset = colIdx * charWidth - textarea.scrollLeft + 20;
 
         const showAbove = topOffset + 180 > rect.height;
@@ -1773,13 +1773,13 @@ function Playground() {
                 {/* Code Editor Column */}
                 <section
                     className={cx(
-                        "code flex h-full min-h-0 min-w-0 flex-col overflow-hidden",
+                        "code relative flex h-full min-h-0 min-w-0 flex-col overflow-hidden",
                         mobileTab === "output" && "hidden md:flex",
                     )}
                     style={{ flexBasis: `${split}%` }}
                 >
-                    {/* Control Toolbar */}
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
+                    {/* Floating Frosted Control Toolbar */}
+                    <div className="absolute top-1 left-2 right-2 z-20 flex h-11 items-center justify-between border-b border-border/60 px-4 frost rounded-lg">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <span className="h-2 w-2 rounded-full bg-accent" />
                             {selected?.title ?? "untitled.mr"}
@@ -1834,7 +1834,8 @@ function Playground() {
                             </button>
                         </div>
                     </div>
-                    {/* Unboxed Full-Bleed Editor Surface */}
+
+                    {/* Full-Bleed Editor Surface (Scrolls under the bar) */}
                     <div className="relative flex min-h-0 flex-1 overflow-hidden">
                         {/* Intelligent Completion Menu */}
                         {completionOpen && activeSuggestions.length > 0 && (
@@ -1876,7 +1877,7 @@ function Playground() {
                         {/* Line Numbers Gutter */}
                         <div
                             ref={lineNumbersRef}
-                            className="thin-scroll w-11 shrink-0 select-none overflow-hidden border-r border-border/60 pb-12 pt-5 text-right font-mono text-xs leading-7 text-muted-foreground/35"
+                            className="thin-scroll w-11 shrink-0 select-none overflow-hidden border-r border-border/60 pb-12 pt-14 text-right font-mono text-xs leading-7 text-muted-foreground/35"
                         >
                             {code.split("\n").map((_, i) => (
                                 <div key={i} className="pr-3">
@@ -1890,7 +1891,7 @@ function Playground() {
                             <pre
                                 ref={preRef}
                                 aria-hidden="true"
-                                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre px-5 pb-12 pt-5 font-mono leading-7 text-[#c5d1ee]"
+                                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre px-5 pb-12 pt-14 font-mono leading-7 text-[#c5d1ee]"
                                 style={{ fontSize }}
                             >
                                 <HighlightedCode code={code} />
@@ -1940,7 +1941,7 @@ function Playground() {
                                     fontSize,
                                     caretColor: "hsl(var(--primary))",
                                 }}
-                                className="editor-scroll relative h-full w-full resize-none overflow-auto bg-transparent px-5 pb-12 pt-5 font-mono leading-7 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40"
+                                className="editor-scroll relative h-full w-full resize-none overflow-auto bg-transparent px-5 pb-12 pt-14 font-mono leading-7 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40"
                                 placeholder="Start with an .mr thought…"
                                 data-testid="textarea-code-editor"
                                 aria-label="Code editor"
@@ -1951,7 +1952,7 @@ function Playground() {
 
                 {/* Divider Handle */}
                 <div
-                    className="group relative hidden w-1.5 rounded-2xl h-1/2 shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
+                    className="group relative hidden w-1.5 rounded-2xl h-1/2 self-center shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
                     onPointerDown={() => {
                         dragging.current = true;
                     }}
@@ -1965,7 +1966,7 @@ function Playground() {
                 {/* Output Console Column */}
                 <section
                     className={cx(
-                        "code flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
+                        "code border-l-0 flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
                         mobileTab === "code" && "hidden md:flex",
                     )}
                 >
