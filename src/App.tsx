@@ -269,7 +269,7 @@ function CodeBlock({
     return (
         <div
             className={cx(
-                "group overflow-hidden rounded-xl border border-border bg-[hsl(225_25%_7%)] shadow-[var(--shadow)]",
+                "group overflow-hidden rounded-xl border border-border block shadow-[var(--shadow)]",
                 compact ? "text-[11px]" : "text-xs",
             )}
         >
@@ -314,15 +314,50 @@ function CodeBlock({
 function Home() {
     const featured = getExample("functions-and-arguments");
     const [typedCode, setTypedCode] = useState("");
+
     useEffect(() => {
+        const fullText = featured.code;
         let position = 0;
-        const timer = window.setInterval(() => {
-            position += 1;
-            setTypedCode(featured.code.slice(0, position));
-            if (position >= featured.code.length) window.clearInterval(timer);
-        }, 24);
-        return () => window.clearInterval(timer);
+        let isDeleting = false;
+        let timer: ReturnType<typeof setTimeout>;
+
+        const tick = () => {
+            if (!isDeleting) {
+                // Natural forward typing (1 char per tick)
+                position += 1;
+                setTypedCode(fullText.slice(0, position));
+
+                if (position >= fullText.length) {
+                    // Fully typed: wait 3 seconds before backspacing
+                    isDeleting = true;
+                    timer = setTimeout(tick, 3000);
+                    return;
+                }
+                timer = setTimeout(tick, 32);
+            } else {
+                // Natural backspacing (1 char per tick at controlled speed)
+                position -= 1;
+                setTypedCode(fullText.slice(0, Math.max(0, position)));
+
+                if (position <= 0) {
+                    // Fully deleted: pause 800ms before re-typing
+                    isDeleting = false;
+                    timer = setTimeout(tick, 800);
+                    return;
+                }
+                timer = setTimeout(tick, 28);
+            }
+        };
+
+        timer = setTimeout(tick, 300);
+
+        return () => clearTimeout(timer);
     }, [featured.code]);
+
+    const activeLines = useMemo(() => {
+        return typedCode ? typedCode.split("\n") : [""];
+    }, [typedCode]);
+
     return (
         <Shell>
             <main>
@@ -380,7 +415,7 @@ function Home() {
                         </div>
                         <div className="animate-rise-in animate-rise-in-delay-2">
                             <div className="relative rounded-2xl border code p-2 shadow-[var(--shadow-lg)] -z-10">
-                                <div className="flex items-center justify-between rounded-xl px-4 py-3">
+                                <div className="flex items-center justify-between rounded-xl px-4 py-2.5">
                                     <div className="flex items-center gap-1.5">
                                         <span className="h-2 w-2 rounded-full bg-primary" />
                                         <span className="h-2 w-2 rounded-full bg-primary" />
@@ -390,25 +425,24 @@ function Home() {
                                         source.mr
                                     </span>
                                 </div>
-                                <div className="hero-terminal relative overflow-hidden rounded-b-xl px-5 py-7 font-mono text-[13px] leading-7 backdrop-blur-xl rounded-xl">
+                                <div className="hero-terminal relative overflow-hidden rounded-xl px-4 py-4 font-mono text-[13px] leading-6 backdrop-blur-xl transition-all duration-150">
                                     <div className="grid grid-cols-[32px_1fr]">
-                                        <div className="select-none pr-3 text-right text-xs leading-7 text-muted-foreground/35">
-                                            {typedCode
-                                                .split("\n")
-                                                .map((_, index) => (
-                                                    <div key={index}>
-                                                        {String(
-                                                            index + 1,
-                                                        ).padStart(2, "0")}
-                                                    </div>
-                                                ))}
+                                        <div className="select-none pr-3 text-right text-xs leading-6 text-muted-foreground/35">
+                                            {activeLines.map((_, index) => (
+                                                <div key={index}>
+                                                    {String(index + 1).padStart(
+                                                        2,
+                                                        "0",
+                                                    )}
+                                                </div>
+                                            ))}
                                         </div>
-                                        <pre className="overflow-x-auto text-[#c5d1ee]">
+                                        <pre className="overflow-x-auto text-[#c5d1ee] leading-6">
                                             <HighlightedCode code={typedCode} />
-                                            <span className="cursor-blink ml-0.5 inline-block h-4 w-[1px] translate-y-[3px] bg-primary align-middle" />
+                                            <span className="cursor-blink ml-0.5 inline-block h-3.5 w-[1px] translate-y-[2px] bg-primary align-middle" />
                                         </pre>
                                     </div>
-                                    <div className="mt-7 flex items-center justify-between border-t border-border/60 pt-4 font-mono text-[10px] text-muted-foreground">
+                                    <div className="mt-4 flex items-center justify-between border-t border-border/60 pt-3 font-mono text-[10px] text-muted-foreground">
                                         <span>native compiler surface</span>
                                         <span className="text-primary/80">
                                             .mr / x86-64
