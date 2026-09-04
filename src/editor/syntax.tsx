@@ -165,7 +165,10 @@ export function HighlightedCode({
     const spans = useMemo(() => parseCodeSpans(code), [code]);
 
     return (
-        <code className={className}>
+        <code
+            className={className}
+            style={{ fontFamily: "inherit", fontKerning: "none" }}
+        >
             {spans.map((span, idx) =>
                 span.className ? (
                     <span key={idx} className={span.className}>

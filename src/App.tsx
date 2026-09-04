@@ -3,6 +3,7 @@ import {
     useMemo,
     useRef,
     useState,
+    useLayoutEffect,
     type AnchorHTMLAttributes,
     type KeyboardEvent,
     type ReactNode,
@@ -1369,7 +1370,23 @@ function Playground() {
         () => [...mrCompletions, ...dynamicSymbols],
         [dynamicSymbols],
     );
+    const syncCursorAndCompletion = (value: string, position: number) => {
+        updateCursor(value, position);
+        updateCompletion(value, position);
+    };
 
+    // --- 2. Defensive scroll resync after any code/cursor change ---
+    useLayoutEffect(() => {
+        const ta = editorRef.current;
+        if (!ta) return;
+        if (preRef.current) {
+            preRef.current.scrollTop = ta.scrollTop;
+            preRef.current.scrollLeft = ta.scrollLeft;
+        }
+        if (lineNumbersRef.current) {
+            lineNumbersRef.current.scrollTop = ta.scrollTop;
+        }
+    }, [code, cursor]);
     const activeSuggestions = useMemo(() => {
         if (!completionQuery) return [];
         return completionPool
@@ -1423,6 +1440,11 @@ function Playground() {
         }, 1600);
     };
 
+    // Spacious, uniform line-height across numbers, pre, and textarea
+    const LINE_HEIGHT = 28;
+    const MONO_FONT =
+        'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
+
     const computeMenuCoordinates = (
         textarea: HTMLTextAreaElement,
         pos: number,
@@ -1432,38 +1454,33 @@ function Playground() {
         const lineIdx = lines.length - 1;
         const colIdx = lines[lineIdx].length;
 
-        const lineHeight = 28;
         const charWidth = fontSize * 0.602;
         const rect = textarea.getBoundingClientRect();
         const isMobile = window.innerWidth < 768;
 
-        // Y position of the active typing line inside the textarea viewport
-        const cursorTop = lineIdx * lineHeight - textarea.scrollTop + 56;
-        const leftOffset = colIdx * charWidth - textarea.scrollLeft + 20;
+        const cursorLineTop = lineIdx * LINE_HEIGHT - textarea.scrollTop + 56;
+        const leftOffset =
+            colIdx * charWidth - textarea.scrollLeft + 20 + (isMobile ? 0 : 8);
 
-        // Dynamic height calculation: ~32px per suggestion + padding
-        const suggestionCount = Math.max(
-            1,
-            Math.min(activeSuggestions.length, 8),
-        );
-        const estimatedMenuHeight = suggestionCount * 32 + 10;
+        const count = Math.max(1, Math.min(activeSuggestions.length, 8));
+        const menuHeight = count * 32 + 10;
 
-        // Flip above only if placing it below would overflow the visible viewport
-        const showAbove =
-            cursorTop + lineHeight + estimatedMenuHeight > rect.height - 8;
+        const spaceBelow = rect.height - (cursorLineTop + LINE_HEIGHT);
+        const shouldShowAbove = spaceBelow < menuHeight + 10;
 
-        const menuWidth = isMobile ? Math.min(220, rect.width - 24) : 208;
-        const maxLeft = Math.max(8, rect.width - menuWidth - 12);
+        let computedTop = cursorLineTop + LINE_HEIGHT + 4;
+        if (shouldShowAbove) {
+            computedTop = Math.max(56, cursorLineTop - menuHeight - 4);
+        }
+
+        const menuWidth = isMobile ? Math.min(220, rect.width - 24) : 216;
+        const maxLeft = Math.max(8, rect.width - menuWidth - 14);
         const clampedLeft = Math.max(8, Math.min(leftOffset, maxLeft));
 
         return {
-            // When showing above: sit exactly 6px above the top of the current line
-            // When showing below: sit exactly 4px below the bottom of the current line
-            top: showAbove
-                ? Math.max(56, cursorTop - estimatedMenuHeight - 6)
-                : cursorTop + lineHeight + 4,
+            top: computedTop,
             left: clampedLeft,
-            showAbove,
+            showAbove: shouldShowAbove,
         };
     };
 
@@ -1543,12 +1560,10 @@ function Playground() {
 
         const rect = ta.getBoundingClientRect();
         const offsetX = e.clientX - rect.left - 20 + ta.scrollLeft;
-        const offsetY = e.clientY - rect.top - 20 + ta.scrollTop;
+        const offsetY = e.clientY - rect.top - 56 + ta.scrollTop;
 
-        const lineHeight = 28;
-        const charWidth = fontSize * 0.6;
-
-        const lineIndex = Math.floor(offsetY / lineHeight);
+        const charWidth = fontSize * 0.602;
+        const lineIndex = Math.floor(offsetY / LINE_HEIGHT);
         const colIndex = Math.floor(offsetX / charWidth);
 
         const lines = ta.value.split("\n");
@@ -1815,6 +1830,8 @@ function Playground() {
                     </div>
                 </div>
             )}
+
+            {/* Main Header */}
             <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-sidebar px-3 sm:px-5">
                 <div className="flex items-center gap-3">
                     <Link
@@ -1891,6 +1908,7 @@ function Playground() {
                     </span>
                 </button>
             </header>
+
             {/* Vertical Stack on Mobile, Resizable Horizontal Split on Desktop */}
             <main className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
                 {/* Code Editor Column */}
@@ -1963,7 +1981,7 @@ function Playground() {
                         </div>
                     </div>
 
-                    {/* Full-Bleed Editor Surface (Scrolls under the bar) */}
+                    {/* Dual-Layer Synced Editor Viewport */}
                     <div className="relative flex min-h-0 flex-1 overflow-hidden">
                         {/* Intelligent Completion Menu */}
                         {completionOpen && activeSuggestions.length > 0 && (
@@ -2002,31 +2020,72 @@ function Playground() {
                             </div>
                         )}
 
-                        {/* Line Numbers Gutter */}
+                        {/* Gutter: Strictly matching line height and dynamic font size */}
                         <div
                             ref={lineNumbersRef}
-                            className="thin-scroll w-11 shrink-0 select-none overflow-hidden border-r border-border/60 pb-12 pt-14 text-right font-mono text-xs leading-7 text-muted-foreground/35"
+                            className="thin-scroll w-11 shrink-0 select-none overflow-hidden border-r border-border/60 pb-16 pt-14 text-right text-muted-foreground/35"
+                            style={{
+                                fontSize: `${fontSize}px`,
+                                lineHeight: `${LINE_HEIGHT}px`,
+                                fontFamily: MONO_FONT,
+                                letterSpacing: "0px",
+                                fontVariantLigatures: "none",
+                                WebkitTextSizeAdjust: "100%",
+                                boxSizing: "border-box",
+                            }}
                         >
                             {code.split("\n").map((_, i) => (
-                                <div key={i} className="pr-3">
+                                <div
+                                    key={i}
+                                    className="pr-3"
+                                    style={{
+                                        height: `${LINE_HEIGHT}px`,
+                                        lineHeight: `${LINE_HEIGHT}px`,
+                                    }}
+                                >
                                     {String(i + 1).padStart(2, "0")}
                                 </div>
                             ))}
                         </div>
 
-                        {/* Code Layer */}
+                        {/* Dual Layer: Color Syntax Mirror (<pre>) + Caret Input (<textarea>) */}
                         <div className="relative min-h-0 min-w-0 flex-1 overflow-hidden">
                             <pre
                                 ref={preRef}
                                 aria-hidden="true"
-                                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre px-5 pb-12 pt-14 font-mono leading-7 text-[#c5d1ee]"
-                                style={{ fontSize }}
+                                className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre px-5 pb-16 pt-14 text-[#c5d1ee] m-0 border-0"
+                                style={{
+                                    fontSize: `${fontSize}px`,
+                                    fontFamily: MONO_FONT,
+                                    tabSize: 4,
+                                    letterSpacing: "0px",
+                                    fontVariantLigatures: "none",
+                                    WebkitTextSizeAdjust: "100%",
+                                    boxSizing: "border-box",
+                                }}
                             >
-                                <HighlightedCode code={code} />
+                                {code.split("\n").map((line, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            height: `${LINE_HEIGHT}px`,
+                                            lineHeight: `${LINE_HEIGHT}px`,
+                                            overflow: "hidden",
+                                        }}
+                                    >
+                                        <HighlightedCode code={line || " "} />
+                                    </div>
+                                ))}
                             </pre>
                             <textarea
                                 ref={editorRef}
                                 value={code}
+                                draggable={false}
+                                wrap="off"
+                                autoCapitalize="off"
+                                autoComplete="off"
+                                autoCorrect="off"
+                                spellCheck={false}
                                 onChange={(event) => {
                                     setCode(event.target.value);
                                     updateCursor(
@@ -2040,6 +2099,12 @@ function Playground() {
                                     if (hoverDoc) setHoverDoc(null);
                                 }}
                                 onKeyDown={onEditorKeyDown}
+                                onSelect={(event) =>
+                                    syncCursorAndCompletion(
+                                        event.currentTarget.value,
+                                        event.currentTarget.selectionStart,
+                                    )
+                                }
                                 onClick={(event) => {
                                     updateCursor(
                                         event.currentTarget.value,
@@ -2064,12 +2129,20 @@ function Playground() {
                                     setCompletionOpen(false);
                                     setHoverDoc(null);
                                 }}
-                                spellCheck={false}
                                 style={{
-                                    fontSize,
+                                    fontSize: `${fontSize}px`,
+                                    lineHeight: `${LINE_HEIGHT}px`,
+                                    fontFamily: MONO_FONT,
                                     caretColor: "hsl(var(--primary))",
+                                    tabSize: 4,
+                                    letterSpacing: "0px",
+                                    fontKerning: "none",
+                                    fontVariantLigatures: "none",
+                                    WebkitTextSizeAdjust: "100%",
+                                    boxSizing: "border-box",
+                                    whiteSpace: "pre",
                                 }}
-                                className="editor-scroll relative h-full w-full resize-none overflow-auto bg-transparent px-5 pb-12 pt-14 font-mono leading-7 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40"
+                                className="editor-scroll relative h-full w-full resize-none overflow-auto bg-transparent px-5 pb-16 pt-14 text-transparent selection:bg-primary/25 outline-none placeholder:text-muted-foreground/40 m-0 border-0"
                                 placeholder="Start with an .mr thought…"
                                 data-testid="textarea-code-editor"
                                 aria-label="Code editor"
@@ -2077,6 +2150,7 @@ function Playground() {
                         </div>
                     </div>
                 </section>
+
                 {/* Divider Handle (Desktop Only) */}
                 <div
                     className="group relative hidden w-1.5 rounded-2xl h-1/2 self-center shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
@@ -2089,6 +2163,7 @@ function Playground() {
                 >
                     <span className="h-9 w-0.5 rounded bg-muted-foreground/40 group-hover:bg-primary" />
                 </div>
+
                 {/* Output Console Column: Fixed 38% height on mobile, fills rest of space on desktop */}
                 <section className="code border-t md:border-t-0 md:border-l-0 flex h-[38%] md:h-full shrink-0 md:shrink md:min-h-0 min-w-0 md:flex-1 flex-col overflow-hidden">
                     <div className="flex h-9 md:h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
@@ -2187,14 +2262,10 @@ function Playground() {
                     </div>
                 </section>
             </main>
-            {/* Status Bar: In-flow footer sitting firmly below the workspace */}
+
             {/* Translucent Frosted Acrylic Status Bar */}
             <footer
                 className="fixed bottom-0 left-0 right-0 z-30 flex h-7 shrink-0 items-center justify-between border-t border-white/[0.08] px-4 font-mono text-[10px] text-muted-foreground sm:px-5 frost backdrop-saturate-150"
-                style={{
-                    boxShadow:
-                        "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 -8px 24px rgba(0, 0, 0, 0.4)",
-                }}
                 aria-label="Compiler status"
             >
                 <div className="flex items-center gap-3 md:gap-4">
