@@ -72,19 +72,7 @@ const playgroundHref = (slug: string) =>
     `/playground?example=${encodeURIComponent(slug)}`;
 
 function Mark() {
-    return (
-        <span
-            className="inline-flex items-center gap-2"
-            data-testid="brand-mark"
-        >
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-mono text-lg font-bold text-primary-foreground shadow-[0_0_0_4px_hsl(var(--primary)/.1)]">
-                m
-            </span>
-            <span className="font-mono text-[17px] font-semibold tracking-[-.06em]">
-                .mr
-            </span>
-        </span>
-    );
+    return <img src="/favicon.svg" className="mt-1 scale-80" />;
 }
 
 function Header() {
@@ -383,14 +371,14 @@ function Home() {
                                 />{" "}
                                 Created by Anvay with Prem &amp; Pride.
                             </div>
-                            <h1 className="max-w-[700px] text-[clamp(3.1rem,7vw,6.9rem)] font-semibold leading-[.9] tracking-[-.075em] text-foreground">
+                            <h1 className="max-w-[700px] text-[clamp(3.1rem,7vw,6.6rem)] font-semibold leading-[.96] tracking-[-.075em] text-foreground">
                                 Marathi,
                                 <br />
                                 <span className="text-primary">
                                     understood by machines.
                                 </span>
                             </h1>
-                            <p className="hero-marathi marathi-font mt-6 text-lg font-medium text-foreground/90 sm:text-xl">
+                            <p className="hero-marathi marathi-font mt-10 text-lg font-medium text-foreground/90 sm:text-xl">
                                 मराठी, संगणकासाठी.
                             </p>
                             <p className="mt-5 max-w-[490px] text-lg leading-8 text-muted-foreground">
