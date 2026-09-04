@@ -910,7 +910,7 @@ function DocsPage() {
             <main className="mx-auto grid max-w-[1240px] min-w-0 w-full gap-8 px-4 sm:px-6 py-12 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-20">
                 {/* Sidebar Navigation */}
                 <aside className="w-full min-w-0 lg:sticky lg:top-28 lg:h-fit">
-                    <SectionEyebrow>Docs / दस्तऐवज</SectionEyebrow>
+                    <SectionEyebrow>Docs / प्रलेखन</SectionEyebrow>
                     <div className="mb-6 flex w-full rounded-lg border border-border bg-card p-1">
                         <button
                             onClick={() => setMarathi(false)}

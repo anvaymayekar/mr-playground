@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -30,7 +31,12 @@
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
 }
-
+/* Ensure the Devanagari font controls its own space width */
+@font-face {
+    font-family: "Noto Sans Devanagari Space";
+    src: local("Noto Sans Devanagari");
+    unicode-range: U+0020, U+0900-097F;
+}
 :root {
     --background: 225 24% 9%;
     --foreground: 39 30% 92%;
@@ -52,7 +58,9 @@
     --destructive-foreground: 39 30% 92%;
     --input: 225 15% 27%;
     --ring: 38 92% 59%;
-    --app-font-sans: "Outfit", sans-serif;
+    --app-font-sans:
+        "Outfit", "Noto Sans Devanagari Space", "Noto Sans Devanagari",
+        sans-serif;
     --app-font-devanagari: "Noto Sans Devanagari", "Nirmala UI", sans-serif;
     --app-font-serif: Georgia, serif;
     --app-font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
@@ -107,6 +115,11 @@
     body {
         @apply font-sans antialiased bg-background text-foreground;
         min-width: 320px;
+        font-feature-settings:
+            "kern" 1,
+            "liga" 1,
+            "calt" 1;
+        text-rendering: optimizeLegibility;
     }
     button,
     a,
@@ -115,9 +128,20 @@
     select {
         -webkit-tap-highlight-color: transparent;
     }
+
     ::selection {
         background: hsl(var(--primary) / 0.3);
         color: hsl(var(--foreground));
+    }
+    p,
+    h1,
+    h2,
+    h3,
+    h4,
+    span,
+    a,
+    button {
+        word-spacing: 0.15em;
     }
 }
 
