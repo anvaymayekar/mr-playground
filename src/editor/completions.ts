@@ -11,185 +11,307 @@ export const tokenDocs: Record<string, TokenDoc> = {
         token: "jar",
         category: "Control Flow",
         english:
-            "Executes a block of code if the specified condition evaluates to true.",
-        marathi: "दिलेली अट खरी (khare) असेल तर हा कोड ब्लॉक चालवला जातो.",
-        syntax: "jar (condition) {\n    // code\n}",
+            "Executes a block of code when the specified condition evaluates to true.",
+        marathi: "दिलेली अट खरी (khare) असल्यास हा कोड ब्लॉक चालवला जातो.",
+        syntax: `jar (condition) {
+    // code
+}`,
     },
+
     nahitar: {
         token: "nahitar",
         category: "Control Flow",
         english:
-            "Executes a fallback block when the preceding 'jar' condition is false.",
-        marathi: "आधीची 'jar' अट खोटी (khote) असल्यास हा ब्लॉक चालवला जातो.",
-        syntax: "nahitar {\n    // code\n}",
+            "Tests another condition when the preceding jar condition is false.",
+        marathi: "आधीची jar अट खोटी असल्यास पुढील अट तपासण्यासाठी वापरले जाते.",
+        syntax: `nahitar (condition) {
+    // code
+}`,
     },
+
     anyatha: {
         token: "anyatha",
         category: "Control Flow",
         english:
-            "Tests a subsequent condition if the previous 'jar' condition was false.",
-        marathi: "पहिली अट खोटी असल्यास पुढची नवी अट तपासण्यासाठी वापरले जाते.",
-        syntax: "anyatha jar (condition) {\n    // code\n}",
+            "Executes a fallback block when all preceding conditions are false.",
+        marathi:
+            "आधीच्या सर्व अटी खोट्या असल्यास हा पर्यायी कोड ब्लॉक चालवला जातो.",
+        syntax: `anyatha {
+    // code
+}`,
     },
+
     jovar: {
         token: "jovar",
         category: "Control Flow",
         english:
-            "Repeats a block of code continuously as long as the condition remains true.",
-        marathi: "जोपर्यंत अट खरी राहील तोपर्यंत हा लूप चालत राहील.",
-        syntax: "jovar (condition) {\n    // code\n}",
+            "Repeats a block of code as long as the specified condition remains true.",
+        marathi: "जोपर्यंत अट खरी राहील तोपर्यंत हा लूप चालत राहतो.",
+        syntax: `jovar (condition) {
+    // code
+}`,
     },
+
     pratyek: {
         token: "pratyek",
         category: "Control Flow",
         english:
-            "Standard counting loop with initializer, condition, and increment.",
-        marathi: "ठराविक फेऱ्यांसाठी मोजणी करणारा पुनरावृत्ती लूप.",
-        syntax: "pratyek (he ank i = 0; i < 10; i++) {\n    // code\n}",
+            "Creates a counting loop with an initializer, condition, and increment expression.",
+        marathi:
+            "Initializer, condition आणि increment वापरून ठराविक फेऱ्यांसाठी loop चालवतो.",
+        syntax: `pratyek (he ank i = 0; i < 10; i++) {
+    // code
+}`,
     },
-    karya: {
-        token: "karya",
-        category: "Function",
-        english:
-            "Declares a callable function or subroutine in the source code.",
-        marathi: "पुन्हा वापरता येण्याजोगे कार्य (function) घोषित करण्यासाठी.",
-        syntax: "karya नाव(he ank x) {\n    partav x;\n}",
-    },
-    leeh: {
-        token: "leeh",
-        category: "Builtin",
-        english:
-            "Standard terminal output function that writes values to stdout.",
-        marathi: "टर्मिनलवर आउटपुट किंवा मजकूर छापण्यासाठीचे मूलभूत विधान.",
-        syntax: "leeh(value);",
-    },
-    shevti: {
-        token: "shevti",
-        category: "Builtin",
-        english:
-            "Terminates execution or marks cleanup at the end of execution.",
-        marathi: "प्रोग्रामचा समारोप किंवा शेवट दर्शवण्यासाठी वापरले जाते.",
-        syntax: "shevti;",
-    },
-    partav: {
-        token: "partav",
-        category: "Control Flow",
-        english:
-            "Returns a value from a function and yields control back to the caller.",
-        marathi: "कार्यातून (function) मूल्य परत पाठवण्यासाठी.",
-        syntax: "partav expression;",
-    },
+
     thamba: {
         token: "thamba",
         category: "Control Flow",
-        english:
-            "Terminates the nearest enclosing loop or control construct immediately.",
-        marathi: "चालू असलेला लूप ताबडतोब थांबवण्यासाठी.",
+        english: "Immediately terminates the nearest enclosing loop.",
+        marathi: "सर्वात जवळचा चालू loop ताबडतोब थांबवण्यासाठी वापरले जाते.",
         syntax: "thamba;",
     },
+
     pudhe: {
         token: "pudhe",
         category: "Control Flow",
         english:
-            "Skips the remainder of the current loop iteration and proceeds to the next.",
-        marathi: "पुढील फेरीकडे जाण्यासाठी चालू फेरी वगळतो.",
+            "Skips the remainder of the current loop iteration and continues with the next iteration.",
+        marathi:
+            "चालू फेरीतील उर्वरित code वगळून पुढील फेरीकडे जाण्यासाठी वापरले जाते.",
         syntax: "pudhe;",
     },
+
+    partav: {
+        token: "partav",
+        category: "Control Flow",
+        english: "Returns a value from a function to its caller.",
+        marathi: "Function मधून मूल्य परत पाठवण्यासाठी वापरले जाते.",
+        syntax: "partav expression;",
+    },
+
     paryay: {
         token: "paryay",
         category: "Control Flow",
-        english: "Multi-branch condition matching block (switch statement).",
-        marathi: "अनेक पर्यायांमधून निवड करण्यासाठीचे विधान.",
-        syntax: "paryay (value) {\n    // cases\n}",
+        english: "Creates a multi-branch selection block based on a value.",
+        marathi:
+            "एखाद्या मूल्यावर आधारित अनेक पर्यायांमधून निवड करण्यासाठी वापरले जाते.",
+        syntax: `paryay (value) {
+    // cases
+}`,
     },
+
+    karya: {
+        token: "karya",
+        category: "Function",
+        english: "Marks a function declaration.",
+        marathi: "Function घोषित करण्यासाठी वापरला जाणारा शब्द.",
+        syntax: `ank karya(he ank x) {
+    partav x;
+}`,
+    },
+
+    leeh: {
+        token: "leeh",
+        category: "Builtin",
+        english: "Writes a value or expression to standard output.",
+        marathi: "टर्मिनलवर मूल्य किंवा मजकूर आउटपुट करण्यासाठी वापरले जाते.",
+        syntax: "leeh(value);",
+    },
+
+    shevti: {
+        token: "shevti",
+        category: "Builtin",
+        english: "Terminates program execution.",
+        marathi: "प्रोग्रामची अंमलबजावणी समाप्त करण्यासाठी वापरले जाते.",
+        syntax: "shevti;",
+    },
+
     ank: {
         token: "ank",
         category: "Data Type",
-        english: "32-bit signed integer numeric type for whole numbers.",
-        marathi: "पूर्णांक संख्या साठवण्यासाठीचा डेटा प्रकार.",
+        english: "Signed integer data type for whole numbers.",
+        marathi: "पूर्णांक संख्या साठवण्यासाठी वापरला जाणारा डेटा प्रकार.",
         syntax: "he ank x = 10;",
     },
+
     akshar: {
         token: "akshar",
         category: "Data Type",
-        english: "Character or text string primitive type.",
-        marathi: "अक्षर किंवा मजकूर साठवण्यासाठीचा प्रकार.",
-        syntax: 'he akshar name = "Anvay";',
+        english: "Character or text data type.",
+        marathi: "अक्षर किंवा मजकूर साठवण्यासाठी वापरला जाणारा डेटा प्रकार.",
+        syntax: `he akshar name = "Anvay";`,
     },
+
     bhagank: {
         token: "bhagank",
         category: "Data Type",
-        english: "Single-precision IEEE-754 floating-point decimal type.",
-        marathi: "दशांश अपूर्णांक संख्यांसाठी वापरला जाणारा डेटा प्रकार.",
+        english: "Floating-point data type for decimal values.",
+        marathi:
+            "दशांश किंवा अपूर्णांक संख्या साठवण्यासाठी वापरला जाणारा डेटा प्रकार.",
         syntax: "he bhagank pi = 3.14;",
     },
+
     purnank: {
         token: "purnank",
         category: "Data Type",
-        english: "64-bit wide signed integer for large whole numbers.",
-        marathi: "मोठ्या पूर्णांक संख्यांसाठी ६४-बिट डेटा प्रकार.",
+        english: "Wide integer data type for whole numbers.",
+        marathi: "मोठ्या पूर्णांक संख्यांसाठी वापरला जाणारा डेटा प्रकार.",
         syntax: "he purnank big = 100000;",
     },
+
     vidhan: {
         token: "vidhan",
         category: "Data Type",
-        english:
-            "Boolean logic evaluation type holding either khare (true) or khote (false).",
-        marathi: "सत्य (khare) किंवा असत्य (khote) दर्शवणारा तार्किक प्रकार.",
+        english: "Boolean data type that can hold khare or khote.",
+        marathi: "khare किंवा khote मूल्य धारण करणारा तार्किक डेटा प्रकार.",
         syntax: "he vidhan check = khare;",
     },
+
     nirank: {
         token: "nirank",
         category: "Data Type",
         english:
-            "Void type indicating the absence of any value or return value.",
-        marathi: "काहीही मूल्य नसलेला शून्य प्रकार (Void).",
-        syntax: "karya log(): nirank { ... }",
+            "Void return type indicating that a function does not return a value.",
+        marathi:
+            "Function कोणतेही मूल्य परत करत नाही हे दर्शवणारा void प्रकार.",
+        syntax: `nirank karya(he akshar s) {
+    // code
+}`,
     },
+
     he: {
         token: "he",
         category: "Modifier",
-        english:
-            "Binding declaration specifier introducing a new local scope identifier.",
-        marathi: "स्थानिक चल (variable) घोषित करण्यासाठीचा शब्द.",
-        syntax: "he ank vay = 20;",
+        english: "Introduces a scalar declaration or scalar parameter.",
+        marathi: "Scalar चल किंवा parameter घोषित करण्यासाठी वापरले जाते.",
+        syntax: "he ank x = 10;",
     },
+
     te: {
         token: "te",
         category: "Modifier",
-        english: "Secondary immutable or constant assignment specifier.",
-        marathi: "अचल किंवा निश्चित मूल्यासाठी वापरला जाणारा शब्द.",
-        syntax: "te ank max = 100;",
+        english: "Introduces a collection or array declaration or parameter.",
+        marathi: "Collection किंवा array घोषित करण्यासाठी वापरले जाते.",
+        syntax: "te ank marks = [85, 91, 78];",
     },
+
+    ahe: {
+        token: "ahe",
+        category: "Modifier",
+        english: "Marks a declaration as immutable.",
+        marathi: "Declaration मधील मूल्य immutable करण्यासाठी वापरले जाते.",
+        syntax: "ahe he ank x = 10;",
+    },
+
+    maze: {
+        token: "maze",
+        category: "Modifier",
+        english: "Marks a member or declaration as private where applicable.",
+        marathi:
+            "लागू असलेल्या scope मध्ये member किंवा declaration private करण्यासाठी वापरले जाते.",
+        syntax: "maze he ank x = 10;",
+    },
+
+    lahan: {
+        token: "lahan",
+        category: "Size Modifier",
+        english: "Specifies the small size level.",
+        marathi: "लहान आकाराचा स्तर दर्शवण्यासाठी वापरले जाते.",
+        syntax: "lahan",
+    },
+
+    maha: {
+        token: "maha",
+        category: "Size Modifier",
+        english: "Specifies the large size level.",
+        marathi: "मोठ्या आकाराचा स्तर दर्शवण्यासाठी वापरले जाते.",
+        syntax: "maha",
+    },
+
+    uch: {
+        token: "uch",
+        category: "Size Modifier",
+        english: "Specifies the ultra size level.",
+        marathi: "अत्युच्च आकाराचा स्तर दर्शवण्यासाठी वापरले जाते.",
+        syntax: "uch",
+    },
+
+    sarve: {
+        token: "sarve",
+        category: "Scope Rule",
+        english: "Establishes a rule for the entire scope in which it appears.",
+        marathi:
+            "ज्या scope मध्ये ते वापरले जाते त्या संपूर्ण scope साठी नियम निश्चित करते.",
+        syntax: "sarve uch;",
+    },
+
     khare: {
         token: "khare",
         category: "Boolean",
-        english: "Literal representation for truthy boolean state (true).",
-        marathi: "सत्य दर्शवणारे मूल्य.",
+        english: "Boolean literal representing true.",
+        marathi: "सत्य दर्शवणारे boolean मूल्य.",
         syntax: "khare",
     },
+
     khote: {
         token: "khote",
         category: "Boolean",
-        english: "Literal representation for falsy boolean state (false).",
-        marathi: "असत्य दर्शवणारे मूल्य.",
+        english: "Boolean literal representing false.",
+        marathi: "असत्य दर्शवणारे boolean मूल्य.",
         syntax: "khote",
     },
+
     ani: {
         token: "ani",
         category: "Operator",
         english:
-            "Logical AND operator requiring both expressions to evaluate true.",
-        marathi: "तार्किक 'आणि' (Logical AND) ऑपरेटर.",
+            "Logical AND operator. Both expressions must evaluate to true.",
+        marathi:
+            "दोन्ही expressions खरे असणे आवश्यक असलेला तार्किक आणि (AND) operator.",
         syntax: "cond1 ani cond2",
     },
+
     va: {
         token: "va",
         category: "Operator",
         english:
-            "Logical OR operator requiring at least one expression to evaluate true.",
-        marathi: "तार्किक 'किंवा' (Logical OR) ऑपरेटर.",
+            "Logical OR operator. At least one expression must evaluate to true.",
+        marathi:
+            "कमीतकमी एक expression खरे असणे आवश्यक असलेला तार्किक किंवा (OR) operator.",
         syntax: "cond1 va cond2",
+    },
+
+    // Planned / To be implemented
+
+    prakar: {
+        token: "prakar",
+        category: "Declaration — Planned",
+        english:
+            "Planned keyword for defining enumerated types. This feature is not yet implemented.",
+        marathi:
+            "Enumeration type घोषित करण्यासाठी नियोजित शब्द. हे feature अद्याप implement केलेले नाही.",
+        syntax: "Planned — syntax to be finalized.",
+    },
+
+    rachna: {
+        token: "rachna",
+        category: "Declaration — Planned",
+        english:
+            "Planned keyword for defining structures. This feature is not yet implemented.",
+        marathi:
+            "Structure घोषित करण्यासाठी नियोजित शब्द. हे feature अद्याप implement केलेले नाही.",
+        syntax: "Planned — syntax to be finalized.",
+    },
+
+    varg: {
+        token: "varg",
+        category: "Declaration — Planned",
+        english:
+            "Planned keyword for defining classes. This feature is not yet implemented.",
+        marathi:
+            "Class घोषित करण्यासाठी नियोजित शब्द. हे feature अद्याप implement केलेले नाही.",
+        syntax: "Planned — syntax to be finalized.",
     },
 };
 
@@ -197,9 +319,15 @@ export interface MrCompletion {
     token: string;
     category:
         | "keyword"
+        | "modifier"
+        | "size-modifier"
+        | "scope-rule"
         | "type"
+        | "declaration"
         | "control"
         | "builtin"
+        | "boolean"
+        | "operator"
         | "variable"
         | "function"
         | "param";
@@ -208,158 +336,382 @@ export interface MrCompletion {
 }
 
 export const mrCompletions: MrCompletion[] = [
+    // Control flow
+
     {
         token: "jar",
         category: "control",
-        insertText: "jar () {\n    \n}",
-        cursorOffset: -7,
+        insertText: `jar () {
+    
+}`,
+        cursorOffset: -9,
     },
-    {
-        token: "jar-nahitar",
-        category: "control",
-        insertText: "jar () {\n    \n} nahitar {\n    \n}",
-        cursorOffset: -23,
-    },
+
     {
         token: "nahitar",
         category: "control",
-        insertText: "nahitar {\n    \n}",
-        cursorOffset: -2,
+        insertText: `nahitar () {
+    
+}`,
+        cursorOffset: -9,
     },
+
     {
         token: "anyatha",
         category: "control",
-        insertText: "anyatha jar () {\n    \n}",
-        cursorOffset: -7,
+        insertText: `anyatha {
+    
+}`,
+        cursorOffset: -5,
     },
+
+    {
+        token: "jar-nahitar",
+        category: "control",
+        insertText: `jar () {
+    
+} nahitar () {
+    
+}`,
+        cursorOffset: -21,
+    },
+
+    {
+        token: "jar-nahitar-anyatha",
+        category: "control",
+        insertText: `jar () {
+    
+} nahitar () {
+    
+} anyatha {
+    
+}`,
+        cursorOffset: -11,
+    },
+
     {
         token: "jovar",
         category: "control",
-        insertText: "jovar () {\n    \n}",
-        cursorOffset: -7,
+        insertText: `jovar () {
+    
+}`,
+        cursorOffset: -9,
     },
+
     {
         token: "pratyek",
         category: "control",
-        insertText: "pratyek (he ank i = 0; i < 10; i++) {\n    \n}",
-        cursorOffset: -2,
+        insertText: `pratyek (he ank i = 0; i < 10; i++) {
+    
+}`,
+        cursorOffset: -5,
     },
-    { token: "thamba", category: "control", insertText: "thamba;" },
-    { token: "pudhe", category: "control", insertText: "pudhe;" },
-    { token: "partav", category: "control", insertText: "partav " },
+
+    {
+        token: "thamba",
+        category: "control",
+        insertText: "thamba;",
+    },
+
+    {
+        token: "pudhe",
+        category: "control",
+        insertText: "pudhe;",
+    },
+
+    {
+        token: "partav",
+        category: "control",
+        insertText: "partav ",
+    },
+
     {
         token: "paryay",
         category: "control",
-        insertText: "paryay () {\n    \n}",
-        cursorOffset: -7,
+        insertText: `paryay () {
+    
+}`,
+        cursorOffset: -9,
     },
+
+    // Functions / builtins
+
     {
         token: "karya",
         category: "function",
-        insertText: "karya fnName() {\n    \n}",
-        cursorOffset: -12,
+        insertText: "karya(",
     },
+
     {
         token: "leeh",
         category: "builtin",
         insertText: "leeh();",
         cursorOffset: -2,
     },
-    { token: "shevti", category: "builtin", insertText: "shevti;" },
-    { token: "he", category: "keyword", insertText: "he " },
-    { token: "te", category: "keyword", insertText: "te " },
-    { token: "ank", category: "type", insertText: "ank " },
-    { token: "akshar", category: "type", insertText: "akshar " },
-    { token: "bhagank", category: "type", insertText: "bhagank " },
-    { token: "purnank", category: "type", insertText: "purnank " },
-    { token: "vidhan", category: "type", insertText: "vidhan " },
-    { token: "nirank", category: "type", insertText: "nirank" },
-    { token: "khare", category: "keyword", insertText: "khare" },
-    { token: "khote", category: "keyword", insertText: "khote" },
+
+    {
+        token: "shevti",
+        category: "builtin",
+        insertText: "shevti;",
+    },
+
+    // Modifiers
+
+    {
+        token: "he",
+        category: "modifier",
+        insertText: "he ",
+    },
+
+    {
+        token: "te",
+        category: "modifier",
+        insertText: "te ",
+    },
+
+    {
+        token: "ahe",
+        category: "modifier",
+        insertText: "ahe ",
+    },
+
+    {
+        token: "maze",
+        category: "modifier",
+        insertText: "maze ",
+    },
+
+    // Size modifiers
+
+    {
+        token: "lahan",
+        category: "size-modifier",
+        insertText: "lahan ",
+    },
+
+    {
+        token: "maha",
+        category: "size-modifier",
+        insertText: "maha ",
+    },
+
+    {
+        token: "uch",
+        category: "size-modifier",
+        insertText: "uch ",
+    },
+
+    // Scope rule
+
+    {
+        token: "sarve",
+        category: "scope-rule",
+        insertText: "sarve ",
+    },
+
+    // Types
+
+    {
+        token: "ank",
+        category: "type",
+        insertText: "ank ",
+    },
+
+    {
+        token: "akshar",
+        category: "type",
+        insertText: "akshar ",
+    },
+
+    {
+        token: "bhagank",
+        category: "type",
+        insertText: "bhagank ",
+    },
+
+    {
+        token: "purnank",
+        category: "type",
+        insertText: "purnank ",
+    },
+
+    {
+        token: "vidhan",
+        category: "type",
+        insertText: "vidhan ",
+    },
+
+    {
+        token: "nirank",
+        category: "type",
+        insertText: "nirank ",
+    },
+
+    // Boolean literals
+
+    {
+        token: "khare",
+        category: "boolean",
+        insertText: "khare",
+    },
+
+    {
+        token: "khote",
+        category: "boolean",
+        insertText: "khote",
+    },
+
+    // Word operators
+
+    {
+        token: "ani",
+        category: "operator",
+        insertText: "ani ",
+    },
+
+    {
+        token: "va",
+        category: "operator",
+        insertText: "va ",
+    },
+
+    // Planned declarations
+    // These are intentionally simple because their final syntax
+    // has not yet been implemented/finalized.
+
+    {
+        token: "prakar",
+        category: "declaration",
+        insertText: "prakar ",
+    },
+
+    {
+        token: "rachna",
+        category: "declaration",
+        insertText: "rachna ",
+    },
+
+    {
+        token: "varg",
+        category: "declaration",
+        insertText: "varg ",
+    },
 ];
 
 export function extractDynamicSymbols(code: string): MrCompletion[] {
     const list: MrCompletion[] = [];
     const seen = new Set<string>();
 
-    const fnMatch = /karya\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)/g;
-    let m: RegExpExecArray | null;
-    while ((m = fnMatch.exec(code)) !== null) {
-        const fnName = m[1];
-        if (!seen.has(fnName)) {
-            seen.add(fnName);
-            list.push({
-                token: fnName,
-                category: "function",
-                insertText: `${fnName}()`,
-                cursorOffset: -1,
-            });
-        }
-        const params = m[2].split(",");
-        for (const p of params) {
-            const trimmed = p.trim().split(/\s+/).pop();
-            if (
-                trimmed &&
-                /^[A-Za-z_][A-Za-z0-9_]*$/.test(trimmed) &&
-                !seen.has(trimmed)
-            ) {
-                seen.add(trimmed);
-                list.push({
-                    token: trimmed,
-                    category: "param",
-                    insertText: trimmed,
-                });
-            }
-        }
-    }
+    /*
+     * Function and parameter extraction should follow the
+     * actual .mr grammar rather than treating `karya` as if
+     * the function name always comes immediately after it.
+     *
+     * Dynamic function extraction can be expanded when the
+     * final named-function grammar is established.
+     */
 
-    const varMatch =
-        /(?:he|te)?\s*(?:ank|akshar|bhagank|purnank|vidhan|nirank)?\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:=|;)/g;
-    while ((m = varMatch.exec(code)) !== null) {
+    const paramMatch =
+        /\b(?:he|te)\s+(?:ank|akshar|bhagank|purnank|vidhan|nirank)\s+([A-Za-z_][A-Za-z0-9_]*)\b/g;
+
+    let m: RegExpExecArray | null;
+
+    while ((m = paramMatch.exec(code)) !== null) {
         const name = m[1];
+
         if (
             name &&
             !seen.has(name) &&
             !mrCompletions.some((c) => c.token === name)
         ) {
             seen.add(name);
-            list.push({ token: name, category: "variable", insertText: name });
+
+            list.push({
+                token: name,
+                category: "param",
+                insertText: name,
+            });
         }
     }
+
+    /*
+     * Scalar and collection variable declarations.
+     *
+     * Supports forms such as:
+     *
+     * he ank x = 10;
+     * he bhagank percentage = 91.5;
+     * te ank marks = [85, 91, 78];
+     *
+     * Modifiers may appear before the declaration.
+     */
+
+    const varMatch =
+        /\b(?:(?:ahe|maze|lahan|maha|uch)\s+)*(?:he|te)\s+(?:ank|akshar|bhagank|purnank|vidhan|nirank)\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:=|;)/g;
+
+    while ((m = varMatch.exec(code)) !== null) {
+        const name = m[1];
+
+        if (
+            name &&
+            !seen.has(name) &&
+            !mrCompletions.some((c) => c.token === name)
+        ) {
+            seen.add(name);
+
+            list.push({
+                token: name,
+                category: "variable",
+                insertText: name,
+            });
+        }
+    }
+
     return list;
 }
 
 export function formatMrCode(source: string): string {
     const lines = source.split("\n");
     let indent = 0;
+
     const tab = "    ";
     let inComment = false;
 
     return lines
         .map((lineRaw) => {
             const line = lineRaw.trim();
+
             if (!line) return "";
 
             if (inComment) {
-                if (line.includes("*/")) inComment = false;
+                if (line.includes("*/")) {
+                    inComment = false;
+                }
+
                 return `${tab.repeat(indent)}${line}`;
             }
+
             if (line.startsWith("/*") && !line.includes("*/")) {
                 inComment = true;
+
                 return `${tab.repeat(indent)}${line}`;
             }
 
             if (line.startsWith("}") || line.startsWith("]")) {
                 indent = Math.max(0, indent - 1);
             }
+
             const currentIndent = indent;
 
             let opens = 0;
             let closes = 0;
+
             let inStr = false;
             let quote = "";
+
             for (let i = 0; i < line.length; i++) {
                 const c = line[i];
+
                 if ((c === '"' || c === "'") && line[i - 1] !== "\\") {
                     if (!inStr) {
                         inStr = true;
@@ -368,9 +720,15 @@ export function formatMrCode(source: string): string {
                         inStr = false;
                     }
                 }
+
                 if (!inStr) {
-                    if (c === "{" || c === "[") opens++;
-                    if (c === "}" || c === "]") closes++;
+                    if (c === "{" || c === "[") {
+                        opens++;
+                    }
+
+                    if (c === "}" || c === "]") {
+                        closes++;
+                    }
                 }
             }
 
