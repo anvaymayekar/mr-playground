@@ -72,7 +72,7 @@ const playgroundHref = (slug: string) =>
     `/playground?example=${encodeURIComponent(slug)}`;
 
 function Mark() {
-    return <img src="/favicon.svg" className="mt-1 scale-80" />;
+    return <img src="/icon.svg" className="scale-80" />;
 }
 
 function Header() {
@@ -2160,18 +2160,6 @@ function Playground() {
                             output
                         </div>
                         <div className="flex items-center gap-1">
-                            <button
-                                onClick={() => setWrap((value) => !value)}
-                                className={cx(
-                                    "rounded px-2 py-0.5 md:py-1 font-mono text-[10px]",
-                                    wrap
-                                        ? "bg-secondary text-foreground"
-                                        : "text-muted-foreground hover:bg-secondary",
-                                )}
-                                data-testid="button-toggle-wrap"
-                            >
-                                wrap
-                            </button>
                             <span className="font-mono text-[10px] bg-none mr-1 ml-2 md:ml-3">
                                 {compileState === "success" ? (
                                     <span className="flex items-center gap-1 text-[#9ed6c5]">
@@ -2185,6 +2173,18 @@ function Playground() {
                                     "ready"
                                 )}
                             </span>
+                            <button
+                                onClick={() => setWrap((value) => !value)}
+                                className={cx(
+                                    "rounded px-2 py-0.5 md:py-1 font-mono text-[10px]",
+                                    wrap
+                                        ? "bg-secondary text-foreground"
+                                        : "text-muted-foreground hover:bg-secondary",
+                                )}
+                                data-testid="button-toggle-wrap"
+                            >
+                                wrap
+                            </button>
                             <button
                                 onClick={() => setOutput("")}
                                 className="rounded p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
