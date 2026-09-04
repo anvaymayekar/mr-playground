@@ -634,24 +634,24 @@ function ExamplesPage() {
 
     return (
         <Shell>
-            <main className="mx-auto max-w-[1240px] px-5 py-16 lg:px-8 lg:py-24">
+            <main className="mx-auto max-w-[1240px] px-4 sm:px-6 py-12 lg:px-8 lg:py-20">
                 <div className="max-w-2xl animate-rise-in">
                     <SectionEyebrow>Examples / उदाहरणे</SectionEyebrow>
-                    <h1 className="text-5xl font-semibold tracking-[-.065em] sm:text-6xl">
+                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-[-.065em]">
                         Learn by making
                         <br />
                         <span className="text-primary">
                             the machine answer.
                         </span>
                     </h1>
-                    <p className="mt-6 text-lg leading-8 text-muted-foreground">
+                    <p className="mt-4 sm:mt-6 text-base sm:text-lg leading-7 sm:leading-8 text-muted-foreground">
                         A small library of programs that show how .mr thinks.
                         Every ready example opens directly in the playground.
                     </p>
                 </div>
 
-                <div className="mt-12 flex flex-col gap-4 border-y border-border py-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="relative max-w-md flex-1">
+                <div className="mt-10 sm:mt-12 flex flex-col gap-4 border-y border-border py-4 lg:flex-row lg:items-center lg:justify-between">
+                    <div className="relative w-full lg:max-w-md">
                         <Search
                             size={16}
                             className="absolute left-3.5 top-3.5 text-muted-foreground"
@@ -664,13 +664,13 @@ function ExamplesPage() {
                             data-testid="input-search-examples"
                         />
                     </div>
-                    <div className="thin-scroll flex gap-1.5 overflow-x-auto pb-1">
+                    <div className="thin-scroll flex gap-1.5 overflow-x-auto pb-1 max-w-full">
                         {categories.map((item) => (
                             <button
                                 key={item}
                                 onClick={() => setCategory(item)}
                                 className={cx(
-                                    "whitespace-nowrap rounded-lg px-3 py-2 text-xs font-mono transition-colors",
+                                    "whitespace-nowrap rounded-lg px-3 py-2 text-xs font-mono transition-colors shrink-0",
                                     category === item
                                         ? "bg-primary text-primary-foreground font-semibold"
                                         : "text-muted-foreground hover:bg-secondary hover:text-foreground",
@@ -683,7 +683,7 @@ function ExamplesPage() {
                     </div>
                 </div>
 
-                <div className="mb-8 mt-8 flex items-center justify-between">
+                <div className="mb-6 mt-6 sm:mt-8 flex items-center justify-between">
                     <p
                         className="font-mono text-xs text-muted-foreground"
                         data-testid="text-example-count"
@@ -720,28 +720,28 @@ function ExamplesPage() {
                         </button>
                     </div>
                 ) : (
-                    <div className="space-y-10">
+                    <div className="space-y-8 sm:space-y-10">
                         {filtered.map((example, index) => {
                             const isFlipped = index % 2 !== 0;
                             return (
                                 <article
                                     key={example.slug}
                                     className={cx(
-                                        "group rounded-2xl border border-border/80 bg-card/50 p-6 sm:p-8 backdrop-blur-sm transition-all hover:border-primary/40 hover:shadow-2xl",
+                                        "group rounded-2xl border border-border/80 bg-card/50 p-5 sm:p-7 lg:p-8 backdrop-blur-sm transition-all hover:border-primary/40 hover:shadow-2xl overflow-hidden",
                                         `animate-rise-in-delay-${Math.min((index % 4) + 1, 3)}`,
                                     )}
                                     data-testid={`card-example-${example.slug}`}
                                 >
-                                    <div className="grid gap-8 lg:grid-cols-12 lg:items-start">
+                                    <div className="grid gap-6 sm:gap-8 lg:grid-cols-12 lg:items-start min-w-0">
                                         {/* Description / Text Column */}
                                         <div
                                             className={cx(
-                                                "flex flex-col justify-between lg:col-span-5 h-full",
+                                                "flex flex-col justify-between lg:col-span-5 h-full min-w-0",
                                                 isFlipped && "lg:order-2",
                                             )}
                                         >
                                             <div>
-                                                <div className="flex items-center justify-between border-b border-border/50 pb-3.5">
+                                                <div className="flex items-center justify-between border-b border-border/50 pb-3">
                                                     <div className="flex items-center gap-2">
                                                         <span className="rounded-md bg-secondary px-2.5 py-1 font-mono text-[10px] text-muted-foreground">
                                                             {example.category}
@@ -766,14 +766,14 @@ function ExamplesPage() {
                                                     </span>
                                                 </div>
 
-                                                <div className="mt-5">
-                                                    <h2 className="text-2xl font-semibold tracking-[-.03em] text-foreground transition-colors group-hover:text-primary">
+                                                <div className="mt-4 sm:mt-5">
+                                                    <h2 className="text-xl sm:text-2xl font-semibold tracking-[-.03em] text-foreground transition-colors group-hover:text-primary">
                                                         {example.title}
                                                     </h2>
                                                     <p className="mt-1 font-mono text-sm font-medium text-primary/85">
                                                         {example.marathiTitle}
                                                     </p>
-                                                    <div className="mt-4 space-y-2.5 text-sm leading-relaxed text-muted-foreground">
+                                                    <div className="mt-3 sm:mt-4 space-y-2 text-sm leading-relaxed text-muted-foreground">
                                                         <p>
                                                             {
                                                                 example.description
@@ -789,11 +789,11 @@ function ExamplesPage() {
                                             </div>
 
                                             {/* Action Button */}
-                                            <div className="mt-7 pt-4 border-t border-border/40">
+                                            <div className="mt-5 sm:mt-7 pt-4 border-t border-border/40">
                                                 {example.status === "ready" ? (
                                                     <PlaygroundAnchor
                                                         slug={example.slug}
-                                                        className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-4 py-2 text-xs font-mono font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                                                        className="inline-flex items-center gap-2 rounded-lg bg-primary/10 border border-primary/20 px-3.5 py-2 text-xs font-mono font-medium text-primary transition-all hover:bg-primary hover:text-primary-foreground hover:border-primary"
                                                     >
                                                         Open in Playground{" "}
                                                         <ArrowUpRight
@@ -808,28 +808,28 @@ function ExamplesPage() {
                                             </div>
                                         </div>
 
-                                        {/* Code Column (Full Natural Height - No Clipping) */}
+                                        {/* Code Column (Properly Constrained on Mobile) */}
                                         <div
                                             className={cx(
-                                                "lg:col-span-7",
+                                                "w-full min-w-0 lg:col-span-7",
                                                 isFlipped && "lg:order-1",
                                             )}
                                         >
-                                            <div className="relative overflow-hidden rounded-xl code border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.45)]">
+                                            <div className="relative w-full max-w-full overflow-hidden rounded-xl code border border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.45)]">
                                                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent" />
 
                                                 {/* Window Title Header */}
-                                                <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
-                                                    <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
+                                                <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-3.5 sm:px-4 py-2 sm:py-2.5">
+                                                    <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80 truncate">
                                                         <FileCode2
                                                             size={13}
-                                                            className="text-primary"
+                                                            className="text-primary shrink-0"
                                                         />
-                                                        <span className="text-foreground/85 font-mono">
+                                                        <span className="text-foreground/85 font-mono truncate">
                                                             {example.slug}.mr
                                                         </span>
                                                     </div>
-                                                    <span className="font-mono text-[10px] text-muted-foreground/50">
+                                                    <span className="font-mono text-[10px] text-muted-foreground/50 shrink-0 ml-2">
                                                         {
                                                             example.code.split(
                                                                 "\n",
@@ -839,27 +839,37 @@ function ExamplesPage() {
                                                     </span>
                                                 </div>
 
-                                                {/* Code View with Gutter */}
-                                                <div className="grid grid-cols-[36px_1fr] p-4 text-xs leading-6 code-font overflow-x-auto">
-                                                    <div className="select-none pr-3 text-right text-muted-foreground/35 font-mono text-xs leading-6 border-r border-white/[0.06]">
-                                                        {example.code
-                                                            .split("\n")
-                                                            .map((_, i) => (
-                                                                <div key={i}>
-                                                                    {String(
-                                                                        i + 1,
-                                                                    ).padStart(
-                                                                        2,
-                                                                        "0",
-                                                                    )}
-                                                                </div>
-                                                            ))}
+                                                {/* Code View with Horizontal Scroll Container */}
+                                                <div className="w-full overflow-x-auto p-3.5 sm:p-4 text-xs leading-6 code-font">
+                                                    <div className="flex min-w-fit">
+                                                        {/* Line Numbers */}
+                                                        <div className="w-8 sm:w-9 shrink-0 select-none pr-2.5 sm:pr-3 text-right text-muted-foreground/35 font-mono text-xs leading-6 border-r border-white/[0.06]">
+                                                            {example.code
+                                                                .split("\n")
+                                                                .map((_, i) => (
+                                                                    <div
+                                                                        key={i}
+                                                                    >
+                                                                        {String(
+                                                                            i +
+                                                                                1,
+                                                                        ).padStart(
+                                                                            2,
+                                                                            "0",
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                        </div>
+
+                                                        {/* Code Body */}
+                                                        <pre className="!m-0 pl-3 sm:pl-4 !bg-transparent text-xs leading-6 text-[#c5d1ee] font-mono whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                                                            <HighlightedCode
+                                                                code={
+                                                                    example.code
+                                                                }
+                                                            />
+                                                        </pre>
                                                     </div>
-                                                    <pre className="!m-0 pl-4 !bg-transparent text-xs leading-6 text-[#c5d1ee] font-mono whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                                                        <HighlightedCode
-                                                            code={example.code}
-                                                        />
-                                                    </pre>
                                                 </div>
                                             </div>
                                         </div>
@@ -896,17 +906,18 @@ function DocsPage() {
     const first = getExample("types-and-variables");
     return (
         <Shell>
-            <main className="mx-auto grid max-w-[1240px] gap-12 px-5 py-14 lg:grid-cols-[230px_1fr] lg:px-8 lg:py-20">
-                <aside className="lg:sticky lg:top-28 lg:h-fit">
+            <main className="mx-auto grid max-w-[1240px] min-w-0 w-full gap-8 px-4 sm:px-6 py-12 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-20">
+                {/* Sidebar Navigation */}
+                <aside className="w-full min-w-0 lg:sticky lg:top-28 lg:h-fit">
                     <SectionEyebrow>Docs / दस्तऐवज</SectionEyebrow>
-                    <div className="mb-6 flex rounded-lg border border-border bg-card p-1">
+                    <div className="mb-6 flex w-full rounded-lg border border-border bg-card p-1">
                         <button
                             onClick={() => setMarathi(false)}
                             className={cx(
-                                "flex-1 rounded-md px-3 py-2 text-xs",
+                                "flex-1 rounded-md px-3 py-2 text-xs transition-colors",
                                 !marathi
-                                    ? "bg-secondary text-foreground"
-                                    : "text-muted-foreground",
+                                    ? "bg-secondary text-foreground font-medium"
+                                    : "text-muted-foreground hover:text-foreground",
                             )}
                             data-testid="button-docs-english"
                         >
@@ -915,45 +926,63 @@ function DocsPage() {
                         <button
                             onClick={() => setMarathi(true)}
                             className={cx(
-                                "flex-1 rounded-md px-3 py-2 text-xs",
-                                !marathi
-                                    ? "text-muted-foreground"
-                                    : "bg-secondary text-foreground",
+                                "flex-1 rounded-md px-3 py-2 text-xs transition-colors",
+                                marathi
+                                    ? "bg-secondary text-foreground font-medium"
+                                    : "text-muted-foreground hover:text-foreground",
                             )}
                             data-testid="button-docs-marathi"
                         >
                             मराठी
                         </button>
                     </div>
+
+                    {/* Desktop sidebar links */}
                     <nav className="hidden space-y-1 lg:block">
                         {docsSections.map((section) => (
                             <a
                                 key={section.id}
                                 href={`#${section.id}`}
-                                className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                                 data-testid={`link-docs-${section.id}`}
                             >
                                 {marathi ? section.marathi : section.title}
                             </a>
                         ))}
                     </nav>
+
+                    {/* Mobile horizontal quick links */}
+                    <nav className="thin-scroll flex gap-2 overflow-x-auto pb-2 lg:hidden">
+                        {docsSections.map((section) => (
+                            <a
+                                key={section.id}
+                                href={`#${section.id}`}
+                                className="shrink-0 whitespace-nowrap rounded-md border border-border/70 bg-card px-3 py-1.5 font-mono text-xs text-muted-foreground hover:text-foreground"
+                            >
+                                {marathi ? section.marathi : section.title}
+                            </a>
+                        ))}
+                    </nav>
                 </aside>
-                <article className="max-w-3xl">
-                    <div className="mb-12 border-b border-border pb-10">
-                        <div className="mb-4 flex items-center gap-2 font-mono text-xs text-primary">
+
+                {/* Article Content Column */}
+                <article className="min-w-0 w-full max-w-3xl overflow-hidden">
+                    <div className="mb-10 sm:mb-12 border-b border-border pb-8 sm:pb-10">
+                        <div className="mb-3 flex items-center gap-2 font-mono text-xs text-primary">
                             <BookOpen size={14} /> language notes / 01
                         </div>
-                        <h1 className="text-5xl font-semibold tracking-[-.065em]">
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-.065em] break-words">
                             {marathi
                                 ? "मशीनला समजणारी मराठी."
                                 : "A language with a point of view."}
                         </h1>
-                        <p className="mt-5 max-w-xl text-lg leading-8 text-muted-foreground">
+                        <p className="mt-4 sm:mt-5 max-w-xl text-base sm:text-lg leading-7 sm:leading-8 text-muted-foreground">
                             {marathi
                                 ? "हे दस्तऐवज .mr च्या मूलभूत कल्पना, रचना आणि compiler पर्यंतचा प्रवास समजावतात."
                                 : "These notes introduce the shape of .mr, from the first binding to the compiler path beneath it."}
                         </p>
                     </div>
+
                     <DocSection
                         id="what-is-mr"
                         title={marathi ? " .mr म्हणजे काय?" : "What is .mr?"}
@@ -963,7 +992,7 @@ function DocsPage() {
                                 ? ".mr ही Marathi programming language आहे जी native machine code मध्ये compile होते. Source code Roman-script Marathi मध्ये राहतो, जेणेकरून तो लिहिणे आणि वाचणे दोन्ही सहज वाटेल."
                                 : ".mr is a Marathi programming language that compiles to native machine code. Its source stays in Roman-script Marathi: approachable to read, but never abstracted away from the machine."}
                         </p>
-                        <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-0 w-full">
                             {[
                                 ["Lexer", "words into tokens"],
                                 ["Parser", "tokens into structure"],
@@ -971,7 +1000,7 @@ function DocsPage() {
                             ].map(([title, copy]) => (
                                 <div
                                     key={title}
-                                    className="rounded-xl border border-border bg-card p-4"
+                                    className="rounded-xl border border-border bg-card p-4 min-w-0"
                                 >
                                     <span className="font-mono text-[10px] text-primary">
                                         {title}
@@ -983,6 +1012,7 @@ function DocsPage() {
                             ))}
                         </div>
                     </DocSection>
+
                     <DocSection
                         id="first-program"
                         title={
@@ -994,7 +1024,9 @@ function DocsPage() {
                                 ? "leeh हे .mr मधील output साठीचे मूलभूत विधान आहे."
                                 : "Start with the smallest useful conversation. `leeh` is the output statement in .mr."}
                         </p>
-                        <CodeBlock example={first} />
+                        <div className="w-full min-w-0 overflow-hidden">
+                            <CodeBlock example={first} />
+                        </div>
                         <p className="mt-4 text-sm text-muted-foreground">
                             {marathi
                                 ? "उदाहरण बदलून लगेच चालवून पाहा."
@@ -1009,6 +1041,7 @@ function DocsPage() {
                             </PlaygroundAnchor>
                         </p>
                     </DocSection>
+
                     <DocSection
                         id="values"
                         title={marathi ? "मूल्ये आणि प्रकार" : "Values & types"}
@@ -1018,10 +1051,13 @@ function DocsPage() {
                                 ? "चलांना मूल्ये द्या आणि compiler ला त्यांचा अर्थ तपासू द्या."
                                 : "Bind values, let the compiler check their meaning, and keep the source close to the problem."}
                         </p>
-                        <CodeBlock
-                            example={getExample("arithmetic-operators")}
-                        />
+                        <div className="w-full min-w-0 overflow-hidden">
+                            <CodeBlock
+                                example={getExample("arithmetic-operators")}
+                            />
+                        </div>
                     </DocSection>
+
                     <DocSection
                         id="control-flow"
                         title={marathi ? "नियंत्रण प्रवाह" : "Control flow"}
@@ -1031,8 +1067,11 @@ function DocsPage() {
                                 ? "jar, nahitar, pratyek आणि jovar या शब्दांनी program चा प्रवाह लिहा."
                                 : "Use `jar`, `nahitar`, `pratyek`, and `jovar` to describe the flow of a program."}
                         </p>
-                        <CodeBlock example={getExample("for-loop")} />
+                        <div className="w-full min-w-0 overflow-hidden">
+                            <CodeBlock example={getExample("for-loop")} />
+                        </div>
                     </DocSection>
+
                     <DocSection
                         id="functions"
                         title={marathi ? "कार्ये" : "Functions"}
@@ -1042,8 +1081,11 @@ function DocsPage() {
                                 ? "कार्ये पुन्हा वापरता येणाऱ्या कल्पनांना नाव देतात. Return value नसलेले function देखील उपयुक्त असते."
                                 : "Functions give reusable ideas a name. A function without a return value is useful too."}
                         </p>
-                        <CodeBlock example={getExample("void-functions")} />
+                        <div className="w-full min-w-0 overflow-hidden">
+                            <CodeBlock example={getExample("void-functions")} />
+                        </div>
                     </DocSection>
+
                     <DocSection
                         id="compiler"
                         title={
@@ -1055,7 +1097,7 @@ function DocsPage() {
                                 ? ".mr चा compiler custom lexer, parser, AST, semantic analysis आणि native code generation या थरांतून काम करतो."
                                 : "The compiler is built from scratch in C++20: a custom lexer, parser, AST, semantic analysis, native code generation, x86-64 assembly, and testing."}
                         </p>
-                        <div className="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-5">
+                        <div className="mt-6 rounded-xl border border-primary/25 bg-primary/5 p-4 sm:p-5 min-w-0">
                             <div className="flex items-center gap-2 text-sm font-medium text-primary">
                                 <Info size={15} />A note on the edge
                             </div>
@@ -1083,12 +1125,12 @@ function DocSection({
     return (
         <section
             id={id}
-            className="scroll-mt-28 border-b border-border py-10 first:pt-0 last:border-0"
+            className="scroll-mt-28 border-b border-border py-8 sm:py-10 first:pt-0 last:border-0 min-w-0 w-full overflow-hidden"
         >
-            <h2 className="mb-5 text-2xl font-medium tracking-[-.04em]">
+            <h2 className="mb-4 sm:mb-5 text-xl sm:text-2xl font-medium tracking-[-.04em] break-words">
                 {title}
             </h2>
-            <div className="space-y-5 text-sm leading-7 text-muted-foreground">
+            <div className="space-y-4 sm:space-y-5 text-sm leading-7 text-muted-foreground min-w-0 w-full">
                 {children}
             </div>
         </section>
