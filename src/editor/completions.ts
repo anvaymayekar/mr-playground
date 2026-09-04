@@ -1,3 +1,9 @@
+// formatMrCode used to be duplicated here (and diverged from
+// formatter.ts — 4-space vs 2-space indent). formatter.ts is now the
+// single source of truth; re-exported here so existing imports of
+// formatMrCode from "@/editor/completions" keep working unchanged.
+export { formatMrCode } from "./formatter";
+
 export interface TokenDoc {
     token: string;
     category: string;
@@ -668,77 +674,4 @@ export function extractDynamicSymbols(code: string): MrCompletion[] {
     }
 
     return list;
-}
-
-export function formatMrCode(source: string): string {
-    const lines = source.split("\n");
-    let indent = 0;
-
-    const tab = "    ";
-    let inComment = false;
-
-    return lines
-        .map((lineRaw) => {
-            const line = lineRaw.trim();
-
-            if (!line) return "";
-
-            if (inComment) {
-                if (line.includes("*/")) {
-                    inComment = false;
-                }
-
-                return `${tab.repeat(indent)}${line}`;
-            }
-
-            if (line.startsWith("/*") && !line.includes("*/")) {
-                inComment = true;
-
-                return `${tab.repeat(indent)}${line}`;
-            }
-
-            if (line.startsWith("}") || line.startsWith("]")) {
-                indent = Math.max(0, indent - 1);
-            }
-
-            const currentIndent = indent;
-
-            let opens = 0;
-            let closes = 0;
-
-            let inStr = false;
-            let quote = "";
-
-            for (let i = 0; i < line.length; i++) {
-                const c = line[i];
-
-                if ((c === '"' || c === "'") && line[i - 1] !== "\\") {
-                    if (!inStr) {
-                        inStr = true;
-                        quote = c;
-                    } else if (quote === c) {
-                        inStr = false;
-                    }
-                }
-
-                if (!inStr) {
-                    if (c === "{" || c === "[") {
-                        opens++;
-                    }
-
-                    if (c === "}" || c === "]") {
-                        closes++;
-                    }
-                }
-            }
-
-            if (line.startsWith("}") || line.startsWith("]")) {
-                indent = Math.max(0, currentIndent + opens);
-            } else {
-                indent = Math.max(0, indent + opens - closes);
-            }
-
-            return `${tab.repeat(currentIndent)}${line}`;
-        })
-        .join("\n");
 }

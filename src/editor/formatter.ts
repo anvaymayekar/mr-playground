@@ -1,7 +1,7 @@
 export function formatMrCode(code: string): string {
     const lines = code.split("\n");
     let indentLevel = 0;
-    const indentStr = "  ";
+    const indentStr = "    "; // 4 spaces — matches the rest of the codebase
     let inMultilineComment = false;
 
     const formattedLines = lines.map((rawLine) => {
@@ -11,7 +11,7 @@ export function formatMrCode(code: string): string {
             if (line.includes("*/")) {
                 inMultilineComment = false;
             }
-            return `${indentStr.repeat(indentLevel)} ${line}`;
+            return `${indentStr.repeat(indentLevel)}${line}`;
         }
 
         if (line.startsWith("/*") && !line.includes("*/")) {
