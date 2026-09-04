@@ -33,8 +33,12 @@ export interface CompileClient {
     reset(): void;
 }
 
+const DEFAULT_ENDPOINT =
+    (import.meta.env.VITE_MR_BACKEND_URL as string | undefined) ??
+    "http://localhost:8000";
+
 export function createCompileClient(
-    endpoint: string = "/api/compile",
+    endpoint: string = `${DEFAULT_ENDPOINT.replace(/\/$/, "")}/compile`,
 ): CompileClient {
     let lastFingerprint: string | null = null;
     let lastResult: CompileResult | null = null;

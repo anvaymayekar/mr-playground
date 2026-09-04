@@ -35,6 +35,7 @@ import {
 import { HighlightedCode } from "@/editor/syntax";
 import { cx } from "@/lib/format";
 import { Mark } from "@/components/layout/Mark";
+import { createCompileClient } from "@/editor/compileClient";
 
 type CompileState = "idle" | "running" | "success" | "error" | "unavailable";
 
@@ -80,6 +81,7 @@ export default function Playground() {
     const lineNumbersRef = useRef<HTMLDivElement>(null);
     const idleTimerRef = useRef<number | null>(null);
     const hoverDebounceRef = useRef<number | null>(null);
+    const compileClientRef = useRef(createCompileClient()).current;
 
     const selected = selectedSlug
         ? examples.find((example) => example.slug === selectedSlug)
@@ -362,28 +364,14 @@ export default function Playground() {
         setCompletionOpen(false);
         setHoverDoc(null);
         try {
-            const response = await fetch("/api/compile", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ code }),
-            });
-            const payload = await response.json().catch(() => ({}));
-            if (!response.ok)
-                throw new Error(
-                    payload?.message ||
-                        `Compiler responded with ${response.status}`,
-                );
-            const result =
-                payload?.output ?? payload?.stdout ?? payload?.result ?? "";
+            const result = await compileClientRef.run(code);
             setOutput(
-                typeof result === "string"
-                    ? result
-                    : JSON.stringify(result, null, 2),
+                result.success
+                    ? result.output
+                    : (result.error ?? "Compilation failed."),
             );
-            setExitCode(
-                typeof payload?.exitCode === "number" ? payload.exitCode : 0,
-            );
-            setCompileState("success");
+            setExitCode(result.exitCode ?? (result.success ? 0 : 1));
+            setCompileState(result.success ? "success" : "error");
         } catch (error) {
             setExitCode(1);
             setCompileState(
@@ -391,7 +379,7 @@ export default function Playground() {
             );
             setOutput(
                 error instanceof TypeError
-                    ? "Compiler unavailable — /api/compile could not be reached."
+                    ? "Compiler unavailable — could not reach the compiler backend."
                     : `Compile error — ${error instanceof Error ? error.message : "the compiler could not process this program."}`,
             );
         }
