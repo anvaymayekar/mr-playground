@@ -78,7 +78,7 @@ export default function Home() {
                                     size={13}
                                     className="animate-spin [animation-duration:8s]"
                                 />{" "}
-                                Created by Anvay with Prem &amp; Pride.
+                                Crafted by Anvay with Prem &amp; Pride.
                             </div>
                             <h1 className="max-w-[700px] text-[clamp(3.1rem,7vw,6.6rem)] font-semibold leading-[.96] tracking-[-.075em] text-foreground">
                                 Marathi,
@@ -301,4 +301,3 @@ export default function Home() {
         </Shell>
     );
 }
-

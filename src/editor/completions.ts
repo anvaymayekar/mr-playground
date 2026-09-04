@@ -130,7 +130,7 @@ export const tokenDocs: Record<string, TokenDoc> = {
         category: "Builtin",
         english: "Terminates program execution.",
         marathi: "प्रोग्रामची अंमलबजावणी समाप्त करण्यासाठी वापरले जाते.",
-        syntax: "shevti;",
+        syntax: "shevti(exitCode);",
     },
 
     ank: {
@@ -458,7 +458,7 @@ export const mrCompletions: MrCompletion[] = [
     {
         token: "shevti",
         category: "builtin",
-        insertText: "shevti;",
+        insertText: "shevti();",
     },
 
     // Modifiers

@@ -64,7 +64,17 @@ export function createCompileClient(
                 );
             }
 
-            const result: CompileResult = await response.json();
+            const data = await response.json();
+
+            const result: CompileResult = {
+                success: data.success,
+                output: data.output ?? "",
+                error: data.error ?? null,
+                exitCode: data.exit_code ?? null,
+                cached: false,
+                fingerprint: fp,
+                executionTime: data.execution_time,
+            };
 
             lastFingerprint = fp;
             lastResult = result;

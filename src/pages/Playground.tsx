@@ -386,7 +386,7 @@ export default function Playground() {
                     ? result.output
                     : (result.error ?? "Compilation failed."),
             );
-            setExitCode(result.exitCode ?? (result.success ? 0 : 1));
+            setExitCode(result.exitCode ?? 1);
             setCompileState(result.success ? "success" : "error");
         } catch (error) {
             setExitCode(1);

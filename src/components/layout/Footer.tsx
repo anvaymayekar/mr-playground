@@ -15,7 +15,7 @@ export function Footer() {
                 </div>
                 <div className="text-left sm:text-right">
                     <p className="font-mono text-xs text-muted-foreground">
-                        Created by Anvay Mayekar with Prem &amp; Pride.
+                        Crafted by Anvay Mayekar with Prem &amp; Pride.
                     </p>
                     <div className="mt-3 flex gap-4 sm:justify-end">
                         <Link
