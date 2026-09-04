@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from "react";
+import { useMemo } from "react";
 
 export const modifiers = new Set(["he", "te", "maze", "ahe"]);
 export const types = new Set([
@@ -10,9 +10,7 @@ export const types = new Set([
     "nirank",
 ]);
 export const sizeModifiers = new Set(["lahan", "maha", "uch"]);
-
 export const scopeRules = new Set(["sarve"]);
-
 export const controls = new Set([
     "jar",
     "nahitar",
@@ -24,13 +22,30 @@ export const controls = new Set([
     "partav",
     "paryay",
 ]);
-
 export const declarations = new Set(["prakar", "rachna", "varg"]);
 export const functions = new Set(["karya", "leeh", "shevti"]);
 export const booleans = new Set(["khare", "khote"]);
 export const wordOperators = new Set(["ani", "va"]);
-export const operators =
-    /^(?:==|!=|<=|>=|<<|>>|\+\+|--|&&|\|\||[+\-*/%&|^~!<>=])$/;
+export const compoundOps = new Set([
+    "==",
+    "!=",
+    "<=",
+    ">=",
+    "<<",
+    ">>",
+    "++",
+    "--",
+    "+=",
+    "-=",
+    "*=",
+    "/=",
+    "%=",
+    "&=",
+    "|=",
+    "^=",
+    "&&",
+    "||",
+]);
 
 export interface HighlightSpan {
     text: string;
@@ -57,12 +72,14 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
     let i = 0;
 
     while (i < len) {
-        // Multiline comment
+        // 1. Multiline comment: /* ... */
         if (code[i] === "/" && code[i + 1] === "*") {
             const start = i;
             i += 2;
-            while (i < len && !(code[i] === "*" && code[i + 1] === "/")) i++;
-            if (i < len) i += 2;
+            while (i < len && !(code[i] === "*" && code[i + 1] === "/")) {
+                i++;
+            }
+            if (i < len) i += 2; // include */
             spans.push({
                 text: code.slice(start, i),
                 className: "syntax-comment",
@@ -70,7 +87,7 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
             continue;
         }
 
-        // Single-line comment
+        // 2. Single-line comment: // ...
         if (code[i] === "/" && code[i + 1] === "/") {
             const start = i;
             while (i < len && code[i] !== "\n") i++;
@@ -81,7 +98,7 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
             continue;
         }
 
-        // Strings
+        // 3. String literals
         if (code[i] === '"' || code[i] === "'") {
             const quote = code[i];
             const start = i;
@@ -98,7 +115,7 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
             continue;
         }
 
-        // Numbers
+        // 4. Numbers
         if (/[0-9]/.test(code[i])) {
             const start = i;
             while (i < len && /[0-9.]/.test(code[i])) i++;
@@ -109,7 +126,7 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
             continue;
         }
 
-        // Identifiers / keywords
+        // 5. Identifiers / Keywords
         if (/[A-Za-z_]/.test(code[i])) {
             const start = i;
             while (i < len && /[A-Za-z0-9_]/.test(code[i])) i++;
@@ -119,34 +136,33 @@ export function parseCodeSpans(code: string): HighlightSpan[] {
             continue;
         }
 
-        // Two-character operators
+        // 6. Two-character operators
         const twoChar = code.slice(i, i + 2);
-        if (operators.test(twoChar)) {
+        if (compoundOps.has(twoChar)) {
             spans.push({ text: twoChar, className: "syntax-operator" });
             i += 2;
             continue;
         }
 
-        // Single-character operators
-        if (operators.test(code[i])) {
+        // 7. Single-character operators
+        if (/[+\-*/%&|^~!<>=]/.test(code[i])) {
             spans.push({ text: code[i], className: "syntax-operator" });
             i++;
             continue;
         }
 
-        // Punctuation
+        // 8. Punctuation
         if (/[{}()[\];:,.]/.test(code[i])) {
             spans.push({ text: code[i], className: "syntax-punctuation" });
             i++;
             continue;
         }
 
-        // Whitespace and unclassified text
+        // 9. Whitespace / Newlines
         const start = i;
         while (
             i < len &&
-            !/[A-Za-z0-9_{}()[\];:,.+\-*/%&|^~!<>"'/]/.test(code[i]) &&
-            !(code[i] === "/" && (code[i + 1] === "/" || code[i + 1] === "*"))
+            !/[A-Za-z0-9_{}()[\];:,.+\-*/%&|^~!<>"']/.test(code[i])
         ) {
             i++;
         }
