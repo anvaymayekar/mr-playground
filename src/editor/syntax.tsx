@@ -1,14 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 
-export const modifiers = new Set([
-    "he",
-    "te",
-    "maze",
-    "lahan",
-    "maha",
-    "uch",
-    "ahe",
-]);
+export const modifiers = new Set(["he", "te", "maze", "ahe"]);
 export const types = new Set([
     "ank",
     "akshar",
@@ -17,6 +9,10 @@ export const types = new Set([
     "vidhan",
     "nirank",
 ]);
+export const sizeModifiers = new Set(["lahan", "maha", "uch"]);
+
+export const scopeRules = new Set(["sarve"]);
+
 export const controls = new Set([
     "jar",
     "nahitar",
@@ -28,6 +24,8 @@ export const controls = new Set([
     "partav",
     "paryay",
 ]);
+
+export const declarations = new Set(["prakar", "rachna", "varg"]);
 export const functions = new Set(["karya", "leeh", "shevti"]);
 export const booleans = new Set(["khare", "khote"]);
 export const wordOperators = new Set(["ani", "va"]);
@@ -42,6 +40,9 @@ export interface HighlightSpan {
 export function classifyWord(word: string, afterWord: string): string {
     if (modifiers.has(word)) return "syntax-modifier";
     if (types.has(word)) return "syntax-type";
+    if (scopeRules.has(word)) return "syntax-scope-rule";
+    if (sizeModifiers.has(word)) return "syntax-size-modifier";
+    if (declarations.has(word)) return "syntax-declaration";
     if (controls.has(word)) return "syntax-control";
     if (functions.has(word) || /^\s*\(/.test(afterWord))
         return "syntax-function";

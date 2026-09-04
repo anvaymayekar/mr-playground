@@ -319,6 +319,207 @@ paryay (grade) {                // paryay -> switch
         output: "B",
         status: "ready",
     },
+    {
+        slug: "scope-size-levels",
+        title: "Scope Size Levels",
+        marathiTitle: "Scope आकार स्तर",
+        category: "Language",
+        description:
+            "sarve can establish the default size level for declarations within a scope.",
+        marathiDescription:
+            "sarve scope मधील declarations साठी default size level निश्चित करू शकते.",
+        code: `sarve lahan;
+
+he ank x = 10;
+
+sarve;
+he ank y = 20;
+
+sarve mahan;
+he ank z = 30;
+
+sarve uch;
+he ank w = 40;`,
+        output: "Each scope follows its selected size rule.",
+        status: "planned",
+    },
+
+    {
+        slug: "array-declaration",
+        title: "Arrays",
+        marathiTitle: "सरणी",
+        category: "Data",
+        description:
+            "te declares a collection, such as a one-dimensional array.",
+        marathiDescription:
+            "te चा वापर एक-आयामी collection किंवा array साठी केला जातो.",
+        code: `te ank marks = [85, 91, 78, 94, 88];
+
+leeh(marks[0]);
+leeh(marks[3]);`,
+        output: "85\n94",
+        status: "planned",
+    },
+
+    {
+        slug: "array-assignment",
+        title: "Array Element Assignment",
+        marathiTitle: "सरणी घटक assignment",
+        category: "Data",
+        description:
+            "Individual elements of an array can be accessed and assigned using an index.",
+        marathiDescription:
+            "Array मधील individual elements index वापरून access आणि assign करता येतात.",
+        code: `te ank marks = [85, 91, 78, 94, 88];
+
+marks[2] = 100;
+leeh(marks[2]);`,
+        output: "100",
+        status: "planned",
+    },
+
+    {
+        slug: "array-iteration",
+        title: "Array Iteration",
+        marathiTitle: "सरणी iteration",
+        category: "Control flow",
+        description: "Arrays can be traversed using a loop.",
+        marathiDescription:
+            "Loop वापरून array मधील प्रत्येक element traverse करता येतो.",
+        code: `te ank marks = [85, 91, 78, 94, 88];
+
+pratyek (marks) {
+    leeh(marks);
+}`,
+        output: "85\n91\n78\n94\n88",
+        status: "planned",
+    },
+
+    {
+        slug: "struct-rachna",
+        title: "Structures",
+        marathiTitle: "रचना",
+        category: "User-defined types",
+        description:
+            "rachna defines a structure that groups related data members together.",
+        marathiDescription:
+            "rachna संबंधित data members एकत्रित करण्यासाठी structure define करते.",
+        code: `rachna Student {
+    he ank roll;
+    he akshar name;
+    he bhagank percentage;
+}
+
+Student student;
+student.roll = 30;
+student.name = "Anvay";
+student.percentage = 91.5;`,
+        output: "Student structure created successfully.",
+        status: "planned",
+    },
+
+    {
+        slug: "enum-prakar",
+        title: "Enumerations",
+        marathiTitle: "प्रकार",
+        category: "User-defined types",
+        description:
+            "prakar defines an enumeration containing a fixed set of named values.",
+        marathiDescription:
+            "prakar निश्चित named values असलेला enumeration define करते.",
+        code: `prakar Grade {
+    A,
+    B,
+    C,
+    D
+}
+
+Grade grade = Grade.A;
+leeh(grade);`,
+        output: "A",
+        status: "planned",
+    },
+
+    {
+        slug: "class-varg",
+        title: "Classes",
+        marathiTitle: "वर्ग",
+        category: "Object-oriented programming",
+        description:
+            "varg defines a class containing data and functions, with class members private by default.",
+        marathiDescription:
+            "varg data आणि functions असलेला class define करते. Class members default ने private असतात.",
+        code: `varg Student {
+    he ank roll;
+    he akshar name;
+
+    nirank karya() {
+        leeh(name);
+    }
+}`,
+        output: "Student class created successfully.",
+        status: "planned",
+    },
+
+    {
+        slug: "function-overloading",
+        title: "Function Overloading",
+        marathiTitle: "Function Overloading",
+        category: "Functions",
+        description:
+            "Functions with the same name can be defined with different parameter signatures.",
+        marathiDescription:
+            "वेगवेगळ्या parameter signatures सह एकाच नावाची functions define करता येतात.",
+        code: `ank karya(he ank a, he ank b) {
+    partav a + b;
+}
+
+bhagank karya(he bhagank a, he bhagank b) {
+    partav a + b;
+}
+
+leeh(karya(10, 20));
+leeh(karya(10.5, 20.5));`,
+        output: "30\n31.0",
+        status: "planned",
+    },
+
+    {
+        slug: "pointers",
+        title: "Pointers",
+        marathiTitle: "Pointers",
+        category: "Memory",
+        description:
+            "Pointers provide direct access to memory addresses and indirect access to stored values.",
+        marathiDescription:
+            "Pointers memory addresses चा direct access आणि stored values चा indirect access देतात.",
+        code: `he ank x = 10;
+he ank* p = &x;
+
+leeh(*p);`,
+        output: "10",
+        status: "planned",
+    },
+
+    {
+        slug: "pointer-parameters",
+        title: "Pointer Parameters",
+        marathiTitle: "Pointer Parameters",
+        category: "Functions",
+        description:
+            "Pointers can be passed to functions to allow indirect modification of values.",
+        marathiDescription:
+            "Value indirect पद्धतीने modify करण्यासाठी pointers functions मध्ये pass करता येतात.",
+        code: `nirank karya(he ank* x) {
+    *x = 100;
+}
+
+he ank value = 10;
+karya(&value);
+leeh(value);`,
+        output: "100",
+        status: "planned",
+    },
 ];
 
 export const readyExamples = examples.filter(

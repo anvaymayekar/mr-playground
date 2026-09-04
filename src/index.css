@@ -236,6 +236,18 @@
 .syntax-punctuation {
     color: #a6acd1;
 }
+.syntax-declaration {
+    color: #f07178;
+}
+
+.syntax-size-modifier {
+    color: #ff9cac;
+}
+
+.syntax-scope-rule {
+    color: #89ddff;
+    font-style: italic;
+}
 .completion-panel {
     scrollbar-color: hsl(var(--border)) transparent;
 }
