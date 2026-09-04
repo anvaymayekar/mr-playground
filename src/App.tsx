@@ -1332,7 +1332,6 @@ function Playground() {
     const [pickerOpen, setPickerOpen] = useState(false);
     const [wrap, setWrap] = useState(true);
     const [fontSize, setFontSize] = useState(14);
-    const [mobileTab, setMobileTab] = useState<"code" | "output">("code");
     const [split, setSplit] = useState(58);
     const [copied, setCopied] = useState(false);
     const [cursor, setCursor] = useState({ line: 1, column: 1 });
@@ -1434,18 +1433,36 @@ function Playground() {
         const colIdx = lines[lineIdx].length;
 
         const lineHeight = 28;
-        const charWidth = fontSize * 0.6;
+        const charWidth = fontSize * 0.602;
         const rect = textarea.getBoundingClientRect();
+        const isMobile = window.innerWidth < 768;
 
-        const topOffset = lineIdx * lineHeight - textarea.scrollTop + 56;
+        // Y position of the active typing line inside the textarea viewport
+        const cursorTop = lineIdx * lineHeight - textarea.scrollTop + 56;
         const leftOffset = colIdx * charWidth - textarea.scrollLeft + 20;
 
-        const showAbove = topOffset + 180 > rect.height;
+        // Dynamic height calculation: ~32px per suggestion + padding
+        const suggestionCount = Math.max(
+            1,
+            Math.min(activeSuggestions.length, 8),
+        );
+        const estimatedMenuHeight = suggestionCount * 32 + 10;
+
+        // Flip above only if placing it below would overflow the visible viewport
+        const showAbove =
+            cursorTop + lineHeight + estimatedMenuHeight > rect.height - 8;
+
+        const menuWidth = isMobile ? Math.min(220, rect.width - 24) : 208;
+        const maxLeft = Math.max(8, rect.width - menuWidth - 12);
+        const clampedLeft = Math.max(8, Math.min(leftOffset, maxLeft));
+
         return {
+            // When showing above: sit exactly 6px above the top of the current line
+            // When showing below: sit exactly 4px below the bottom of the current line
             top: showAbove
-                ? Math.max(8, topOffset - 175)
-                : topOffset + lineHeight,
-            left: Math.min(Math.max(12, leftOffset), rect.width - 240),
+                ? Math.max(56, cursorTop - estimatedMenuHeight - 6)
+                : cursorTop + lineHeight + 4,
+            left: clampedLeft,
             showAbove,
         };
     };
@@ -1632,7 +1649,6 @@ function Playground() {
                 typeof payload?.exitCode === "number" ? payload.exitCode : 0,
             );
             setCompileState("success");
-            setMobileTab("output");
         } catch (error) {
             setExitCode(1);
             setCompileState(
@@ -1643,7 +1659,6 @@ function Playground() {
                     ? "Compiler unavailable — /api/compile could not be reached."
                     : `Compile error — ${error instanceof Error ? error.message : "the compiler could not process this program."}`,
             );
-            setMobileTab("output");
         }
     };
 
@@ -1800,7 +1815,6 @@ function Playground() {
                     </div>
                 </div>
             )}
-
             <header className="flex h-14 shrink-0 items-center justify-between border-b border-border bg-sidebar px-3 sm:px-5">
                 <div className="flex items-center gap-3">
                     <Link
@@ -1877,53 +1891,28 @@ function Playground() {
                     </span>
                 </button>
             </header>
-
-            <div className="flex shrink-0 items-center justify-between border-b border-border bg-card px-3 py-2 md:hidden">
-                <div className="flex rounded-md bg-secondary p-0.5">
-                    <button
-                        onClick={() => setMobileTab("code")}
-                        className={cx(
-                            "rounded px-3 py-1.5 text-xs",
-                            mobileTab === "code" &&
-                                "bg-sidebar text-foreground",
-                        )}
-                        data-testid="button-mobile-code"
-                    >
-                        Code
-                    </button>
-                    <button
-                        onClick={() => setMobileTab("output")}
-                        className={cx(
-                            "rounded px-3 py-1.5 text-xs",
-                            mobileTab === "output" &&
-                                "bg-sidebar text-foreground",
-                        )}
-                        data-testid="button-mobile-output"
-                    >
-                        Output
-                    </button>
-                </div>
-                <span className="font-mono text-[10px] text-muted-foreground">
-                    Ctrl + Enter to run
-                </span>
-            </div>
-
-            <main className="flex min-h-0 flex-1 overflow-hidden md:flex-row">
+            {/* Vertical Stack on Mobile, Resizable Horizontal Split on Desktop */}
+            <main className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
                 {/* Code Editor Column */}
                 <section
-                    className={cx(
-                        "code relative flex h-full min-h-0 min-w-0 flex-col overflow-hidden",
-                        mobileTab === "output" && "hidden md:flex",
-                    )}
-                    style={{ flexBasis: `${split}%` }}
+                    className="code relative flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden md:flex-none"
+                    style={{
+                        flexBasis:
+                            typeof window !== "undefined" &&
+                            window.innerWidth >= 768
+                                ? `${split}%`
+                                : undefined,
+                    }}
                 >
                     {/* Floating Frosted Control Toolbar */}
                     <div className="absolute top-1 left-2 right-2 z-20 flex h-11 items-center justify-between border-b border-border/60 px-4 frost rounded-lg">
-                        <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
-                            <span className="h-2 w-2 rounded-full bg-accent" />
-                            {selected?.title ?? "untitled.mr"}
+                        <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground truncate">
+                            <span className="h-2 w-2 rounded-full bg-accent shrink-0" />
+                            <span className="truncate">
+                                {selected?.title ?? "untitled.mr"}
+                            </span>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 shrink-0">
                             <button
                                 onClick={() =>
                                     setFontSize((size) =>
@@ -1979,7 +1968,7 @@ function Playground() {
                         {/* Intelligent Completion Menu */}
                         {completionOpen && activeSuggestions.length > 0 && (
                             <div
-                                className="absolute z-30 w-52 overflow-hidden rounded-lg frost"
+                                className="absolute z-30 w-[calc(100%-24px)] max-w-[210px] overflow-hidden rounded-lg frost shadow-xl"
                                 style={{
                                     top: `${menuPosition.top}px`,
                                     left: `${menuPosition.left}px`,
@@ -2088,8 +2077,7 @@ function Playground() {
                         </div>
                     </div>
                 </section>
-
-                {/* Divider Handle */}
+                {/* Divider Handle (Desktop Only) */}
                 <div
                     className="group relative hidden w-1.5 rounded-2xl h-1/2 self-center shrink-0 cursor-col-resize items-center justify-center bg-border/40 hover:bg-primary/50 md:flex"
                     onPointerDown={() => {
@@ -2101,15 +2089,9 @@ function Playground() {
                 >
                     <span className="h-9 w-0.5 rounded bg-muted-foreground/40 group-hover:bg-primary" />
                 </div>
-
-                {/* Output Console Column */}
-                <section
-                    className={cx(
-                        "code border-l-0 flex h-full min-h-0 min-w-0 flex-1 flex-col overflow-hidden",
-                        mobileTab === "code" && "hidden md:flex",
-                    )}
-                >
-                    <div className="flex h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
+                {/* Output Console Column: Fixed 38% height on mobile, fills rest of space on desktop */}
+                <section className="code border-t md:border-t-0 md:border-l-0 flex h-[38%] md:h-full shrink-0 md:shrink md:min-h-0 min-w-0 md:flex-1 flex-col overflow-hidden">
+                    <div className="flex h-9 md:h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
                         <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
                             <Terminal size={14} className="text-primary" />{" "}
                             output
@@ -2118,7 +2100,7 @@ function Playground() {
                             <button
                                 onClick={() => setWrap((value) => !value)}
                                 className={cx(
-                                    "rounded px-2 py-1 font-mono text-[10px]",
+                                    "rounded px-2 py-0.5 md:py-1 font-mono text-[10px]",
                                     wrap
                                         ? "bg-secondary text-foreground"
                                         : "text-muted-foreground hover:bg-secondary",
@@ -2127,7 +2109,7 @@ function Playground() {
                             >
                                 wrap
                             </button>
-                            <span className="font-mono text-[10px] bg-none mr-1 ml-3">
+                            <span className="font-mono text-[10px] bg-none mr-1 ml-2 md:ml-3">
                                 {compileState === "success" ? (
                                     <span className="flex items-center gap-1 text-[#9ed6c5]">
                                         <CircleCheck size={12} /> exited cleanly
@@ -2135,7 +2117,6 @@ function Playground() {
                                 ) : compileState === "unavailable" ? (
                                     <span className="flex items-center gap-1 text-primary">
                                         <CircleAlert size={12} /> no compiler
-                                        connection
                                     </span>
                                 ) : (
                                     "ready"
@@ -2143,17 +2124,17 @@ function Playground() {
                             </span>
                             <button
                                 onClick={() => setOutput("")}
-                                className="rounded p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+                                className="rounded p-1 text-muted-foreground hover:bg-secondary hover:text-foreground"
                                 aria-label="Clear output"
                                 data-testid="button-clear-output"
                             >
-                                <X size={14} />
+                                <X size={13} />
                             </button>
                         </div>
                     </div>
                     <div
                         className={cx(
-                            "editor-scroll min-h-0 flex-1 overflow-auto p-5 pb-12 font-mono text-sm leading-7",
+                            "editor-scroll min-h-0 flex-1 overflow-auto p-4 md:p-5 pb-10 font-mono text-xs md:text-sm leading-6 md:leading-7",
                             wrap
                                 ? "whitespace-pre-wrap break-words"
                                 : "whitespace-pre",
@@ -2163,19 +2144,16 @@ function Playground() {
                         {compileState === "idle" && !output ? (
                             <div className="flex h-full flex-col items-center justify-center text-center text-muted-foreground">
                                 <PanelBottom
-                                    size={24}
-                                    className="mb-4 text-primary/70"
+                                    size={20}
+                                    className="mb-2 text-primary/70 md:size-6 md:mb-4"
                                 />
-                                <p className="text-sm">
+                                <p className="text-xs md:text-sm">
                                     Run your program to see its output.
-                                </p>
-                                <p className="mt-1 text-xs">
-                                    The terminal never guesses.
                                 </p>
                             </div>
                         ) : (
                             <>
-                                <div className="mb-3 flex items-center gap-2 text-[10px] text-muted-foreground">
+                                <div className="mb-2 flex items-center gap-2 text-[10px] text-muted-foreground">
                                     <span
                                         className={cx(
                                             "h-1.5 w-1.5 rounded-full",
@@ -2209,16 +2187,20 @@ function Playground() {
                     </div>
                 </section>
             </main>
-
-            {/* Floating Frost Glass Status Bar with Background Pass-Through */}
+            {/* Status Bar: In-flow footer sitting firmly below the workspace */}
+            {/* Translucent Frosted Acrylic Status Bar */}
             <footer
-                className="workspace-status fixed bottom-0 left-0 right-0 z-30 flex h-7 shrink-0 items-center justify-between border-t px-8 font-mono text-[10px] text-muted-foreground sm:px-5 frost backdrop-blur-md"
+                className="fixed bottom-0 left-0 right-0 z-30 flex h-7 shrink-0 items-center justify-between border-t border-white/[0.08] px-4 font-mono text-[10px] text-muted-foreground sm:px-5 frost backdrop-saturate-150"
+                style={{
+                    boxShadow:
+                        "inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 -8px 24px rgba(0, 0, 0, 0.4)",
+                }}
                 aria-label="Compiler status"
             >
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                     <span
                         className={cx(
-                            "flex items-center gap-2",
+                            "flex items-center gap-1.5",
                             compileState === "success"
                                 ? "text-[#9ed6c5]"
                                 : compileState === "error"
@@ -2247,12 +2229,12 @@ function Playground() {
                               : compileState === "error"
                                 ? "Error"
                                 : compileState === "unavailable"
-                                  ? "Compiler unavailable"
+                                  ? "Unavailable"
                                   : "Ready"}
                     </span>
                     <span>Code {exitCode ?? ""}</span>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 md:gap-4">
                     <span>
                         Ln {cursor.line}, Col {cursor.column}
                     </span>
