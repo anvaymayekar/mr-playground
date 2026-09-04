@@ -911,12 +911,21 @@ interface DocSectionItem {
 const docsSections: DocSectionItem[] = [
     {
         id: "what-is-mr",
-        index: "01",
+        index: "00",
         englishTitle: "What is .mr?",
         marathiTitle: ".mr म्हणजे काय?",
         token: ".mr",
         subtitle: "A language with a point of view",
         marathiSubtitle: "मशीनला समजणारी मराठी",
+    },
+    {
+        id: "installation",
+        index: "01",
+        englishTitle: "Installation & Toolchain",
+        marathiTitle: "इन्स्टॉलेशन आणि टूलचेन",
+        token: "setup",
+        subtitle: "Building the native compiler",
+        marathiSubtitle: "कम्पायलर सेट करणे",
     },
     {
         id: "first-program",
@@ -1339,7 +1348,7 @@ function DocsPage() {
                     {/* 1. What is .mr? */}
                     <DocSection
                         id="what-is-mr"
-                        index="01"
+                        index="00"
                         token=".mr"
                         englishTitle="What is .mr?"
                         marathiTitle=".mr म्हणजे काय?"
@@ -1384,7 +1393,146 @@ function DocsPage() {
                             ))}
                         </div>
                     </DocSection>
+                    {/* Installation & Toolchain */}
+                    {/* Installation & Toolchain */}
+                    <DocSection
+                        id="installation"
+                        index="01"
+                        token="setup"
+                        englishTitle="Installation & Toolchain"
+                        marathiTitle="इन्स्टॉलेशन आणि टूलचेन"
+                    >
+                        <p>
+                            {marathi
+                                ? ".mr चा कम्पायलर CMake, C++20 आणि Netwide Assembler (NASM) वापरून थेट Linux x86-64 साठी तयार होतो. Windows वापरकर्त्यांसाठी WSL2 (Ubuntu) वापरणे अनिवार्य आहे, कारण तयार होणारी एक्झिक्युटेबल फाईल नेटिव्ह ELF64 बायनरी असते."
+                                : "The .mr toolchain is built with modern CMake and C++20, targeting Linux x86-64 NASM. Because the compiler outputs native Linux ELF64 executables, Windows users must run inside WSL2."}
+                        </p>
 
+                        {/* Prerequisites Pill Cards */}
+                        <div className="my-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div className="rounded-xl border border-border bg-card p-3.5">
+                                <span className="font-mono text-xs font-bold text-primary">
+                                    Toolchain
+                                </span>
+                                <p className="mt-1 text-xs text-muted-foreground leading-5">
+                                    {marathi
+                                        ? "build-essential (g++ C++20) & cmake"
+                                        : "build-essential (g++ C++20) & CMake"}
+                                </p>
+                            </div>
+                            <div className="rounded-xl border border-border bg-card p-3.5">
+                                <span className="font-mono text-xs font-bold text-primary">
+                                    Assembler
+                                </span>
+                                <p className="mt-1 text-xs text-muted-foreground leading-5">
+                                    {marathi
+                                        ? "Netwide Assembler (NASM)"
+                                        : "Netwide Assembler (NASM)"}
+                                </p>
+                            </div>
+                            <div className="rounded-xl border border-border bg-card p-3.5">
+                                <span className="font-mono text-xs font-bold text-primary">
+                                    Environment
+                                </span>
+                                <p className="mt-1 text-xs text-muted-foreground leading-5">
+                                    {marathi
+                                        ? "Ubuntu / Debian किंवा Windows WSL2"
+                                        : "Ubuntu / Debian or Windows WSL2"}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Windows WSL Note */}
+                        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs sm:text-sm">
+                            <div className="flex items-center gap-2 font-mono text-xs font-semibold text-primary">
+                                <Terminal size={14} />
+                                {marathi
+                                    ? "Windows वापरकर्त्यांसाठी (WSL2 सेटअप)"
+                                    : "Windows Users — WSL2 Setup"}
+                            </div>
+                            <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                                {marathi
+                                    ? "Windows वर PowerShell ॲडमिनिस्ट्रेटर म्हणून उघडा आणि `wsl --install` चालवून संगणक रीस्टार्ट करा. त्यानंतर Ubuntu टर्मिनल उघडून खालील कमांड्स द्या."
+                                    : "Open PowerShell as Administrator, run `wsl --install`, and restart your PC. Once Ubuntu launches, run the commands below directly inside the WSL terminal."}
+                            </p>
+                        </div>
+
+                        {/* Build Steps Terminal Block */}
+                        <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                            <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
+                                <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
+                                    <Terminal
+                                        size={13}
+                                        className="text-primary"
+                                    />
+                                    <span>bash — clone, build &amp; run</span>
+                                </div>
+                                <span className="font-mono text-[10px] text-primary/80">
+                                    linux-x86_64
+                                </span>
+                            </div>
+                            <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                                {`# 1. Install prerequisites (Ubuntu / WSL2)
+sudo apt update
+sudo apt install -y build-essential cmake nasm git
+
+# 2. Clone the official repository and enter the directory
+git clone https://github.com/anvaymayekar/custom-compiler.git
+cd custom-compiler
+
+# (Optional) If you already have the repo, pull the latest updates
+git pull origin main
+
+# 3. Configure and build the compiler with CMake
+cmake -S . -B build/
+cmake --build build
+
+# This outputs:
+#   build/compiler        -> The .mr native compiler binary
+#   build/tests/mr_tests  -> The unit test suite
+
+# 4. Compile a .mr source file
+./build/compiler source.mr
+
+# 5. Run the produced native executable
+./out
+
+# 6. Inspect the process exit code (from shevti)
+echo $?`}
+                            </pre>
+                        </div>
+
+                        {/* Pipeline Execution Details */}
+                        <div className="space-y-2 text-xs leading-6 text-muted-foreground pt-1">
+                            <p>
+                                <strong className="text-foreground font-mono">
+                                    git clone ... / git pull
+                                </strong>{" "}
+                                :{" "}
+                                {marathi
+                                    ? "GitHub वरून custom-compiler चा सोर्स कोड स्थानिक मशीनवर आणतो आणि नवीनतम अपडेट्स synchronise करतो."
+                                    : "Clones the custom-compiler repository locally or syncs the latest commits from the main branch."}
+                            </p>
+                            <p>
+                                <strong className="text-foreground font-mono">
+                                    ./build/compiler source.mr
+                                </strong>{" "}
+                                :{" "}
+                                {marathi
+                                    ? "सोर्स कोडचे टोकन्स, पार्सिंग, आणि सिमेंटिक चेकिंग करून x86-64 असेंब्ली कोड तयार करतो आणि NASM द्वारे थेट `./out` ही बायनरी बनवतो."
+                                    : "Runs lexing, parsing, semantic verification, emits x86-64 NASM assembly, and links the final `./out` ELF64 binary."}
+                            </p>
+                            <p>
+                                <strong className="text-foreground font-mono">
+                                    echo $?
+                                </strong>{" "}
+                                :{" "}
+                                {marathi
+                                    ? "प्रोग्रामचा एक्झिट स्टेटस दाखवतो. .mr मधील `shevti(code)` द्वारे दिलेला एक्झिट कोड येथे तपासता येतो."
+                                    : "Prints the process termination code, allowing you to directly inspect the exit value returned by `shevti(code)`."}
+                            </p>
+                        </div>
+                    </DocSection>
                     {/* 2. Your first program */}
                     <DocSection
                         id="first-program"
