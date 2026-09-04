@@ -888,39 +888,258 @@ function ExamplesPage() {
     );
 }
 
-const docsSections = [
-    { id: "what-is-mr", title: "What is .mr?", marathi: ".mr म्हणजे काय?" },
+interface DocSectionItem {
+    id: string;
+    index: string;
+    englishTitle: string;
+    marathiTitle: string;
+    token: string;
+    subtitle: string;
+    marathiSubtitle: string;
+}
+
+const docsSections: DocSectionItem[] = [
+    {
+        id: "what-is-mr",
+        index: "01",
+        englishTitle: "What is .mr?",
+        marathiTitle: ".mr म्हणजे काय?",
+        token: ".mr",
+        subtitle: "A language with a point of view",
+        marathiSubtitle: "मशीनला समजणारी मराठी",
+    },
     {
         id: "first-program",
-        title: "Your first program",
-        marathi: "पहिला प्रोग्राम",
+        index: "02",
+        englishTitle: "Your first program",
+        marathiTitle: "पहिला प्रोग्राम",
+        token: "leeh",
+        subtitle: "Speaking directly to stdout",
+        marathiSubtitle: "पडद्यावर आउटपुट दाखवणे",
     },
     {
-        id: "values-and-modifiers",
-        title: "Values & modifiers",
-        marathi: "मूल्ये आणि मॉडिफायर्स",
+        id: "scalars-collections",
+        index: "03",
+        englishTitle: "Singular and plural bindings",
+        marathiTitle: "एकवचन आणि अनेकवचन",
+        token: "he & te",
+        subtitle: "Scalars vs collections",
+        marathiSubtitle: "एक मूल्य विरुद्ध संग्रह",
     },
-    { id: "data-types", title: "Data types", marathi: "डेटा प्रकार" },
     {
-        id: "operators",
-        title: "Operators & logic",
-        marathi: "ऑपरेटर्स आणि तर्क",
+        id: "immutability-ahe",
+        index: "04",
+        englishTitle: "Truths that do not change",
+        marathiTitle: "अपरिवर्तनीय मूल्ये",
+        token: "ahe",
+        subtitle: "Immutable constant bindings",
+        marathiSubtitle: "स्थिर चलांची निर्मिती",
     },
-    { id: "control-flow", title: "Control flow", marathi: "नियंत्रण प्रवाह" },
-    { id: "functions", title: "Functions", marathi: "कार्ये (karya)" },
     {
-        id: "compiler",
-        title: "The compiler path",
-        marathi: "Compiler चा प्रवास",
+        id: "access-maze",
+        index: "05",
+        englishTitle: "Keeping things quiet",
+        marathiTitle: "मर्यादित ॲक्सेस",
+        token: "maze",
+        subtitle: "Private, restricted scope",
+        marathiSubtitle: "स्कोप मर्यादा आणि सुरक्षा",
+    },
+    {
+        id: "size-modifiers",
+        index: "06",
+        englishTitle: "Scale and capacity",
+        marathiTitle: "आकार आणि क्षमता",
+        token: "lahan, maha, uch",
+        subtitle: "Small, large, and ultra scaling",
+        marathiSubtitle: "लहान, मोठे आणि अतिविशाल",
+    },
+    {
+        id: "scope-sarve",
+        index: "07",
+        englishTitle: "A rule for the whole room",
+        marathiTitle: "संपूर्ण स्कोपचा नियम",
+        token: "sarve",
+        subtitle: "Block-wide scope directives",
+        marathiSubtitle: "ब्लॉकसाठी स्वतंत्र नियम",
+    },
+    {
+        id: "type-ank",
+        index: "08",
+        englishTitle: "Signed integers",
+        marathiTitle: "पूर्णांक संख्या",
+        token: "ank",
+        subtitle: "Whole numbers, positive or negative",
+        marathiSubtitle: "धन आणि ऋण पूर्णांक",
+    },
+    {
+        id: "type-akshar",
+        index: "09",
+        englishTitle: "Characters and words",
+        marathiTitle: "अक्षर आणि शब्द",
+        token: "akshar",
+        subtitle: "Letters, phrases, and strings",
+        marathiSubtitle: "वर्ण आणि मजकूर रचना",
+    },
+    {
+        id: "type-bhagank",
+        index: "10",
+        englishTitle: "Fractions and precision",
+        marathiTitle: "अपूर्णांक आणि दशांश",
+        token: "bhagank",
+        subtitle: "Floating-point numbers",
+        marathiSubtitle: "दशांश अपूर्णांक मूल्ये",
+    },
+    {
+        id: "type-purnank",
+        index: "11",
+        englishTitle: "Non-negative counting",
+        marathiTitle: "ऋण नसलेली गणना",
+        token: "purnank",
+        subtitle: "Unsigned whole integers",
+        marathiSubtitle: "केवळ धन पूर्णांक",
+    },
+    {
+        id: "type-vidhan",
+        index: "12",
+        englishTitle: "Pure boolean truths",
+        marathiTitle: "सत्य आणि असत्य",
+        token: "vidhan",
+        subtitle: "khare (true) and khote (false)",
+        marathiSubtitle: "खरे किंवा खोटे तर्क",
+    },
+    {
+        id: "type-nirank",
+        index: "13",
+        englishTitle: "Working without returning",
+        marathiTitle: "शून्य रिटर्न प्रकार",
+        token: "nirank",
+        subtitle: "Void procedures and side effects",
+        marathiSubtitle: "मूल्य परत न करणारी कार्ये",
+    },
+    {
+        id: "operators-arithmetic",
+        index: "14",
+        englishTitle: "Arithmetic and changing state",
+        marathiTitle: "अंकगणित आणि बदल",
+        token: "+, -, *, /, %",
+        subtitle: "Math and compound assignments",
+        marathiSubtitle: "गणितीय संकारक व असाइनमेंट",
+    },
+    {
+        id: "operators-relational",
+        index: "15",
+        englishTitle: "Asking questions of values",
+        marathiTitle: "मूल्यांची तुलना आणि बिट्स",
+        token: "==, !=, &, |",
+        subtitle: "Relational checks and bitwise math",
+        marathiSubtitle: "तुलना आणि बिट्सवरील प्रक्रिया",
+    },
+    {
+        id: "words-ani-va",
+        index: "16",
+        englishTitle: "Words for logic",
+        marathiTitle: "तार्किक जोडशब्द",
+        token: "ani & va",
+        subtitle: "Native logical AND & OR",
+        marathiSubtitle: "मराठीतील AND आणि OR",
+    },
+    {
+        id: "control-jar",
+        index: "17",
+        englishTitle: "Choosing a path",
+        marathiTitle: "सशर्त मार्ग निवड",
+        token: "jar",
+        subtitle: "Primary if conditional",
+        marathiSubtitle: "प्राथमिक अट तपासणी",
+    },
+    {
+        id: "control-nahitar",
+        index: "18",
+        englishTitle: "Another possibility",
+        marathiTitle: "पर्यायी अट",
+        token: "nahitar",
+        subtitle: "Mandatory condition else-if",
+        marathiSubtitle: "कंसातील अनिवार्य पर्यायी अट",
+    },
+    {
+        id: "control-anyatha",
+        index: "19",
+        englishTitle: "When nothing else matches",
+        marathiTitle: "अंतिम पर्याय",
+        token: "anyatha",
+        subtitle: "Unconditional fallback else",
+        marathiSubtitle: "बिनशर्त शेवटचा पर्याय",
+    },
+    {
+        id: "loops-pratyek",
+        index: "20",
+        englishTitle: "Known iterations",
+        marathiTitle: "ठरविक फेऱ्यांचे लूप",
+        token: "pratyek",
+        subtitle: "Traditional 3-part for loop",
+        marathiSubtitle: "सुरूवात, अट आणि वाढ",
+    },
+    {
+        id: "loops-jovar",
+        index: "21",
+        englishTitle: "Going as long as it holds",
+        marathiTitle: "अट असेपर्यंत लूप",
+        token: "jovar",
+        subtitle: "Repeating while condition is khare",
+        marathiSubtitle: "व्हाइल लूप पुनरावृत्ती",
+    },
+    {
+        id: "jumps-thamba-pudhe",
+        index: "22",
+        englishTitle: "Breaking and stepping forward",
+        marathiTitle: "थांबणे आणि पुढे जाणे",
+        token: "thamba & pudhe",
+        subtitle: "Loop break and continue",
+        marathiSubtitle: "लूप थांबवणे व पुढची फेरी",
+    },
+    {
+        id: "functions-karya",
+        index: "23",
+        englishTitle: "Giving ideas a name",
+        marathiTitle: "कार्ये आणि परतावा",
+        token: "karya & partav",
+        subtitle: "Type-first functions and return",
+        marathiSubtitle: "प्रकार आधी येणारी रचना",
+    },
+    {
+        id: "exit-shevti",
+        index: "24",
+        englishTitle: "Leaving the machine",
+        marathiTitle: "प्रक्रिया समाप्ती",
+        token: "shevti",
+        subtitle: "Explicit process exit status",
+        marathiSubtitle: "थेट प्रोग्राम समाप्ती",
+    },
+    {
+        id: "paryay-switch",
+        index: "25",
+        englishTitle: "Matching options",
+        marathiTitle: "पर्यायांची निवड",
+        token: "paryay",
+        subtitle: "Multi-branch switch structure",
+        marathiSubtitle: "केस मॅचिंग व anyatha: डीफॉल्ट",
+    },
+    {
+        id: "planned-specs",
+        index: "26",
+        englishTitle: "On the horizon",
+        marathiTitle: "नियोजित रचना",
+        token: "rachna, varg, prakar",
+        subtitle: "Upcoming structs, classes & enums",
+        marathiSubtitle: "कम्पायलरच्या पुढच्या पायऱ्या",
     },
 ];
 
 function DocsPage() {
     const [marathi, setMarathi] = useState(false);
     const [activeSection, setActiveSection] = useState("what-is-mr");
-    const first = getExample("types-and-variables");
 
-    // Scroll spy: highlights current reading section in the sidebar
+    // Scroll spy: tracks which chapter header is currently visible
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -931,7 +1150,7 @@ function DocsPage() {
                 });
             },
             {
-                rootMargin: "-20% 0px -65% 0px",
+                rootMargin: "-12% 0px -75% 0px",
                 threshold: 0,
             },
         );
@@ -952,7 +1171,7 @@ function DocsPage() {
         const element = document.getElementById(id);
         if (element) {
             const y =
-                element.getBoundingClientRect().top + window.pageYOffset - 100;
+                element.getBoundingClientRect().top + window.pageYOffset - 96;
             window.scrollTo({ top: y, behavior: "smooth" });
             setActiveSection(id);
         }
@@ -960,82 +1179,139 @@ function DocsPage() {
 
     return (
         <Shell>
-            <main className="mx-auto grid max-w-[1240px] min-w-0 w-full gap-8 px-4 sm:px-6 py-12 lg:grid-cols-[230px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-20">
-                {/* Sidebar Navigation */}
-                <aside className="w-full min-w-0 lg:sticky lg:top-28 lg:h-fit">
-                    <SectionEyebrow>Docs / प्रलेखन</SectionEyebrow>
-                    <div className="mb-6 flex w-full rounded-lg border border-border bg-card p-1">
-                        <button
-                            onClick={() => setMarathi(false)}
-                            className={cx(
-                                "flex-1 rounded-md px-3 py-2 text-xs transition-colors",
-                                !marathi
-                                    ? "bg-secondary text-foreground font-medium"
-                                    : "text-muted-foreground hover:text-foreground",
-                            )}
-                            data-testid="button-docs-english"
-                        >
-                            English
-                        </button>
-                        <button
-                            onClick={() => setMarathi(true)}
-                            className={cx(
-                                "flex-1 rounded-md px-3 py-2 text-xs transition-colors",
-                                marathi
-                                    ? "bg-secondary text-foreground font-medium"
-                                    : "text-muted-foreground hover:text-foreground",
-                            )}
-                            data-testid="button-docs-marathi"
-                        >
-                            मराठी
-                        </button>
+            <main className="mx-auto grid max-w-[1280px] min-w-0 w-full gap-8 px-4 sm:px-6 py-12 lg:grid-cols-[270px_minmax(0,1fr)] lg:gap-12 lg:px-8 lg:py-20">
+                {/* Sticky Left Sidebar Navigation */}
+                {/* Clean, Non-Glitched Sidebar */}
+                <aside className="w-full min-w-0 lg:sticky lg:top-24 lg:h-[calc(100vh-7.5rem)] lg:flex lg:flex-col">
+                    <div className="shrink-0 mb-4">
+                        <SectionEyebrow>Docs / प्रलेखन</SectionEyebrow>
+                        {/* Language Switcher */}
+                        <div className="flex w-full rounded-lg border border-border bg-card p-1 shadow-sm">
+                            <button
+                                onClick={() => setMarathi(false)}
+                                className={cx(
+                                    "flex-1 rounded-md px-3 py-1.5 text-xs transition-colors",
+                                    !marathi
+                                        ? "bg-secondary text-foreground font-medium shadow-sm"
+                                        : "text-muted-foreground hover:text-foreground",
+                                )}
+                                data-testid="button-docs-english"
+                            >
+                                English
+                            </button>
+                            <button
+                                onClick={() => setMarathi(true)}
+                                className={cx(
+                                    "flex-1 rounded-md px-3 py-1.5 text-xs transition-colors",
+                                    marathi
+                                        ? "bg-secondary text-foreground font-medium shadow-sm"
+                                        : "text-muted-foreground hover:text-foreground",
+                                )}
+                                data-testid="button-docs-marathi"
+                            >
+                                मराठी
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Desktop sidebar links */}
-                    <nav className="hidden space-y-1 lg:block">
-                        {docsSections.map((section) => (
-                            <a
-                                key={section.id}
-                                href={`#${section.id}`}
-                                onClick={(e) => scrollToSection(e, section.id)}
-                                className={cx(
-                                    "block rounded-md px-3 py-2 text-sm transition-colors",
-                                    activeSection === section.id
-                                        ? "bg-primary/10 text-primary font-medium border-l-2 border-primary"
-                                        : "text-muted-foreground hover:bg-secondary hover:text-foreground",
-                                )}
-                                data-testid={`link-docs-${section.id}`}
-                            >
-                                {marathi ? section.marathi : section.title}
-                            </a>
-                        ))}
+                    {/* Desktop Sidebar with Native Isolation */}
+                    <nav
+                        className="hidden flex-1 overflow-y-auto pr-2 space-y-1 thin-scroll lg:block"
+                        style={{ overscrollBehavior: "contain" }}
+                    >
+                        {docsSections.map((sec) => {
+                            const isActive = activeSection === sec.id;
+                            return (
+                                <a
+                                    key={sec.id}
+                                    id={`nav-link-${sec.id}`}
+                                    href={`#${sec.id}`}
+                                    onClick={(e) => scrollToSection(e, sec.id)}
+                                    className={cx(
+                                        "group relative flex items-start gap-2.5 rounded-lg px-3 py-2 transition-all text-left",
+                                        isActive
+                                            ? "bg-primary/10 border border-primary/25 shadow-sm"
+                                            : "hover:bg-secondary/60 border border-transparent",
+                                    )}
+                                    data-testid={`link-docs-${sec.id}`}
+                                >
+                                    {/* Number Tag */}
+                                    <span
+                                        className={cx(
+                                            "mt-0.5 font-mono text-[10px] select-none",
+                                            isActive
+                                                ? "text-primary font-bold"
+                                                : "text-muted-foreground/45 group-hover:text-muted-foreground",
+                                        )}
+                                    >
+                                        {sec.index}
+                                    </span>
+
+                                    {/* Two-Line Title/Subtitle Hierarchy */}
+                                    <div className="min-w-0 flex-1">
+                                        <div
+                                            className={cx(
+                                                "font-mono text-xs font-semibold leading-4 truncate transition-colors",
+                                                isActive
+                                                    ? "text-primary"
+                                                    : "text-foreground/90 group-hover:text-foreground",
+                                            )}
+                                        >
+                                            {sec.token}
+                                        </div>
+                                        <div
+                                            className={cx(
+                                                "text-[10px] leading-tight truncate mt-0.5 transition-colors",
+                                                isActive
+                                                    ? "text-primary/75"
+                                                    : "text-muted-foreground/70 group-hover:text-muted-foreground",
+                                            )}
+                                        >
+                                            {marathi
+                                                ? sec.marathiSubtitle
+                                                : sec.subtitle}
+                                        </div>
+                                    </div>
+
+                                    {/* Active Refraction Dot */}
+                                    {isActive && (
+                                        <span className="h-1.5 w-1.5 rounded-full bg-primary shrink-0 self-center" />
+                                    )}
+                                </a>
+                            );
+                        })}
                     </nav>
 
-                    {/* Mobile horizontal quick links */}
+                    {/* Mobile Horizontal Quick-Rail */}
                     <nav className="thin-scroll flex gap-2 overflow-x-auto pb-2 lg:hidden">
-                        {docsSections.map((section) => (
-                            <a
-                                key={section.id}
-                                href={`#${section.id}`}
-                                onClick={(e) => scrollToSection(e, section.id)}
-                                className={cx(
-                                    "shrink-0 whitespace-nowrap rounded-md border px-3 py-1.5 font-mono text-xs transition-colors",
-                                    activeSection === section.id
-                                        ? "border-primary/70 bg-primary/15 text-primary font-semibold"
-                                        : "border-border/70 bg-card text-muted-foreground hover:text-foreground",
-                                )}
-                            >
-                                {marathi ? section.marathi : section.title}
-                            </a>
-                        ))}
+                        {docsSections.map((sec) => {
+                            const isActive = activeSection === sec.id;
+                            return (
+                                <a
+                                    key={sec.id}
+                                    href={`#${sec.id}`}
+                                    onClick={(e) => scrollToSection(e, sec.id)}
+                                    className={cx(
+                                        "shrink-0 rounded-lg border px-3 py-1.5 font-mono text-xs transition-colors",
+                                        isActive
+                                            ? "border-primary/80 bg-primary/15 text-primary font-semibold"
+                                            : "border-border/70 bg-card text-muted-foreground hover:text-foreground",
+                                    )}
+                                >
+                                    {sec.token}
+                                </a>
+                            );
+                        })}
                     </nav>
                 </aside>
 
                 {/* Article Content Column */}
+                {/* Article Content Column */}
                 <article className="min-w-0 w-full max-w-3xl overflow-hidden">
-                    <div className="mb-10 sm:mb-12 border-b border-border pb-8 sm:pb-10">
+                    {/* Header Banner */}
+                    <div className="mb-10 border-b border-border pb-8">
                         <div className="mb-3 flex items-center gap-2 font-mono text-xs text-primary">
-                            <BookOpen size={14} /> language notes /
+                            <BookOpen size={14} /> language notes / master
                             specification
                         </div>
                         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-[-.065em] break-words">
@@ -1043,52 +1319,55 @@ function DocsPage() {
                                 ? "मशीनला समजणारी मराठी."
                                 : "A language with a point of view."}
                         </h1>
-                        <p className="mt-4 sm:mt-5 max-w-xl text-base sm:text-lg leading-7 sm:leading-8 text-muted-foreground">
+                        <p className="mt-4 max-w-xl text-base sm:text-lg leading-7 text-muted-foreground">
                             {marathi
-                                ? "हे दस्तऐवज .mr च्या मूलभूत संकल्पना, वाक्यरचना, प्रकार आणि Linux x86-64 कम्पायलर पर्यंतचा प्रवास सविस्तर समजावतात."
-                                : "These notes document the formal design of .mr — from core grammar and variable declarations to functions and the native x86-64 assembly pipeline."}
+                                ? ".mr भाषेचे अधिकृत नियम, टोकन्स, प्रत्येक डेटा प्रकार आणि Linux x86-64 NASM असेंब्लीपर्यंतचा सविस्तर अभ्यास."
+                                : "The exhaustive specification for .mr — individual token grammar, primitive numeric representations, storage qualifiers, and native compilation."}
                         </p>
                     </div>
 
                     {/* 1. What is .mr? */}
                     <DocSection
                         id="what-is-mr"
-                        title={marathi ? ".mr म्हणजे काय?" : "What is .mr?"}
+                        index="01"
+                        token=".mr"
+                        englishTitle="What is .mr?"
+                        marathiTitle=".mr म्हणजे काय?"
                     >
                         <p>
                             {marathi
-                                ? ".mr ही एक गंभीर, सिस्टीम-स्तरीय प्रोग्रामिंग भाषा आहे जी थेट Linux x86-64 मशीन कोडमध्ये compile होते. ती केवळ शब्दांतर नसून एक स्वतंत्र, सुसंगत व्याकरण आहे. Source code Roman-script Marathi मध्ये राहतो, जेणेकरून तो कोणत्याही सामान्य कीबोर्डवर सहज लिहिता आणि वाचता येतो."
-                                : ".mr is a serious, Marathi-inspired programming language that compiles directly to Linux x86-64 NASM assembly. It is not an interpreted wrapper or a word-for-word toy translation: its grammar preserves familiar programming structure while expressing concepts through an authentic, coherent Marathi vocabulary."}
+                                ? ".mr ही एक मूळ, सिस्टीम-स्तरीय प्रोग्रामिंग भाषा आहे जी थेट Linux x86-64 मशीन कोडमध्ये compile होते. ती केवळ वरवरचे भाषांतर नाही. स्त्रोत कोड आंतरराष्ट्रीय कीबोर्डवर सहज लिहिता यावा म्हणून Roman-script Marathi मध्ये ठेवला आहे."
+                                : ".mr is a serious native programming language compiled directly to Linux x86-64 NASM assembly. Its design goal is Marathi as an authentic programming language vocabulary with coherent grammar, structured syntax, and direct hardware mapping."}
                         </p>
-                        <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-0 w-full">
+                        <div className="my-5 grid grid-cols-1 sm:grid-cols-3 gap-3 min-w-0 w-full">
                             {[
                                 [
-                                    "Lexer",
+                                    "Tokenizer / Lexer",
                                     marathi
-                                        ? "अक्षरे व टोकन्स"
-                                        : "words into tokens",
+                                        ? "शब्दांचे टोकन्स"
+                                        : "source into tokens",
                                 ],
                                 [
                                     "Parser & AST",
                                     marathi
-                                        ? "रचना व वृक्ष"
-                                        : "tokens into structure",
+                                        ? "रचना आणि झाड"
+                                        : "tokens into typed AST",
                                 ],
                                 [
-                                    "Codegen",
+                                    "NASM Codegen",
                                     marathi
-                                        ? "थेट x86-64 NASM"
-                                        : "structure into x86-64",
+                                        ? "थेट x86-64 कोड"
+                                        : "AST into assembly",
                                 ],
                             ].map(([title, copy]) => (
                                 <div
                                     key={title}
                                     className="rounded-xl border border-border bg-card p-4 min-w-0"
                                 >
-                                    <span className="font-mono text-[10px] text-primary">
+                                    <span className="font-mono text-[10px] text-primary font-semibold">
                                         {title}
                                     </span>
-                                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                                    <p className="mt-1.5 text-xs leading-5 text-muted-foreground">
                                         {copy}
                                     </p>
                                 </div>
@@ -1099,410 +1378,470 @@ function DocsPage() {
                     {/* 2. Your first program */}
                     <DocSection
                         id="first-program"
-                        title={
-                            marathi ? "पहिला प्रोग्राम" : "Your first program"
-                        }
+                        index="02"
+                        token="leeh"
+                        englishTitle="Your first program"
+                        marathiTitle="पहिला प्रोग्राम"
                     >
                         <p>
                             {marathi
-                                ? "leeh हे .mr मधील output साठीचे मूळ विधान आहे. कोणत्याही मूल्याची किंवा गणनेची प्रिंट काढण्यासाठी leeh(...) वापरले जाते."
-                                : "Start with the smallest useful statement. `leeh` is the language's built-in output facility, taking strings, variables, or arbitrary arithmetic expressions."}
+                                ? "leeh हे .mr मधील आउटपुटसाठीचे मूलभूत विधान आहे. मजकूर, चल किंवा थेट गणिती मांडणी पडद्यावर दाखवण्यासाठी leeh वापरले जाते."
+                                : "Start with the simplest interaction. `leeh` is the language's built-in output statement, accepting strings, variable bindings, or compound arithmetic expressions."}
                         </p>
-                        <div className="w-full min-w-0 overflow-hidden">
-                            <CodeBlock example={first} />
-                        </div>
-                        <p className="mt-4 text-sm text-muted-foreground">
-                            {marathi
-                                ? "हे उदाहरण थेट प्लेग्राउंडमध्ये उघडून बदल करा आणि लगेच चालवून पाहा."
-                                : "Open and edit this example in a live playground tab."}{" "}
-                            <PlaygroundAnchor
-                                slug={first.slug}
-                                className="text-primary hover:underline inline-flex items-center gap-1 font-mono text-xs"
-                                data-testid="link-docs-run-first"
-                            >
-                                Open in Playground{" "}
-                                <ArrowUpRight size={12} className="inline" />
-                            </PlaygroundAnchor>
-                        </p>
+                        <CodeBlock
+                            example={{
+                                slug: "types-and-variables",
+                                title: "first_program.mr",
+                                marathiTitle: "पहिला प्रोग्राम",
+                                category: "Foundations",
+                                description:
+                                    "Hello world and basic output statement in .mr",
+                                marathiDescription:
+                                    "पहिला leeh आउटपुट प्रोग्राम",
+                                code: `leeh("Namaskar, .mr!");\n\nhe ank year = 2026;\nleeh(year);`,
+                                output: "Namaskar, .mr!\n2026",
+                                status: "ready",
+                            }}
+                        />
                     </DocSection>
 
-                    {/* 3. Values & Modifiers */}
+                    {/* 3. he & te */}
                     <DocSection
-                        id="values-and-modifiers"
-                        title={
-                            marathi
-                                ? "मूल्ये आणि मॉडिफायर्स"
-                                : "Values & modifiers"
-                        }
+                        id="scalars-collections"
+                        index="03"
+                        token="he & te"
+                        englishTitle="Singular and plural bindings"
+                        marathiTitle="एकवचन आणि अनेकवचन"
                     >
                         <p>
                             {marathi
-                                ? ".mr मध्ये चलांची व्याख्या (Declaration) करताना एकवचन आणि संग्रह यामध्ये स्पष्ट भेद केला जातो:"
-                                : ".mr explicitly distinguishes between single values and collections right at declaration:"}
+                                ? ".mr मध्ये चलांची घोषणा करताना मूल्याच्या स्वरूपावर आधारलेला मूलभूत फरक केला जातो. 'he' हा एका सुट्या मूल्यासाठी (Scalar) वापरला जातो, तर 'te' हा मूल्यांच्या संग्रहासाठी (Collection/Array) वापरला जातो. (te चा अर्थ immutable असा होत नाही)."
+                                : ".mr differentiates storage multiplicity at declaration time. `he` denotes an individual scalar value, while `te` denotes an array or collection binding. Crucially, `te` does NOT mean constant or immutable."}
                         </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0 w-full my-2">
-                            <div className="rounded-xl border border-border bg-card p-4">
-                                <span className="font-mono text-xs font-semibold text-primary">
-                                    he (Scalar / एकवचन)
-                                </span>
-                                <p className="mt-1 text-xs text-muted-foreground leading-5">
-                                    {marathi
-                                        ? "एकाच मूल्याचे प्रतिनिधित्व करतो."
-                                        : "Denotes an individual scalar value."}
-                                </p>
-                                <pre className="mt-2 rounded bg-sidebar/80 p-2 font-mono text-[11px] text-[#c3e88d]">
-                                    he ank x = 10;
-                                </pre>
-                            </div>
-                            <div className="rounded-xl border border-border bg-card p-4">
-                                <span className="font-mono text-xs font-semibold text-primary">
-                                    te (Collection / संग्रह)
-                                </span>
-                                <p className="mt-1 text-xs text-muted-foreground leading-5">
-                                    {marathi
-                                        ? "मूल्यांचा संग्रह/अ‍ॅरे दर्शवतो. (हे immutable नाही)."
-                                        : "Denotes a collection or array. (Not immutable)."}
-                                </p>
-                                <pre className="mt-2 rounded bg-sidebar/80 p-2 font-mono text-[11px] text-[#c3e88d]">
-                                    te ank marks = [85, 91, 78];
-                                </pre>
-                            </div>
-                        </div>
-                        <div className="space-y-3 pt-2 text-sm leading-6">
-                            <p>
-                                <strong className="font-mono text-foreground">
-                                    ahe
-                                </strong>{" "}
-                                :{" "}
-                                {marathi
-                                    ? "अपरिवर्तनीय (constant/immutable) चल दर्शवतो. एकदा मूल्य दिल्यावर ते पुन्हा बदलता येत नाही."
-                                    : "Represents an immutable/constant binding. The value cannot subsequently be reassigned."}
-                                <span className="block font-mono text-xs text-primary/80 mt-1">
-                                    ahe ank MAX = 100;
-                                </span>
-                            </p>
-                            <p>
-                                <strong className="font-mono text-foreground">
-                                    maze
-                                </strong>{" "}
-                                :{" "}
-                                {marathi
-                                    ? "प्रायव्हेट किंवा मर्यादित स्कोपचा ॲक्सेस मॉडिफायर (private scope modifier)."
-                                    : "Scope-level access modifier denoting private visibility."}
-                            </p>
-                            <p>
-                                <strong className="font-mono text-foreground">
-                                    lahan, maha, uch
-                                </strong>{" "}
-                                :{" "}
-                                {marathi
-                                    ? "आकार मॉडिफायर्स (Size scale modifiers) — अनुक्रमे लहान (small), मोठे (large), आणि अतिविशाल (ultra) मूल्यांसाठी."
-                                    : "Size scale modifiers that classify the scale of a declaration (small, large, and ultra)."}
-                            </p>
-                            <p>
-                                <strong className="font-mono text-foreground">
-                                    sarve
-                                </strong>{" "}
-                                :{" "}
-                                {marathi
-                                    ? "स्कोप-स्तरीय स्वतंत्र नियम. हे ब्लॉकच्या वर लिहिले जाते आणि पुढील संपूर्ण स्कोपला लागू होते."
-                                    : "A standalone scope-level directive written above a block that applies uniformly across the entire following scope."}
-                                <span className="block font-mono text-xs text-primary/80 mt-1">
-                                    sarve uch; &#123; ... &#125;
-                                </span>
-                            </p>
-                        </div>
+                        <CodeBlock example={getExample("array-declaration")} />
                     </DocSection>
 
-                    {/* 4. Data types */}
+                    {/* 4. ahe */}
                     <DocSection
-                        id="data-types"
-                        title={marathi ? "डेटा प्रकार" : "Data types"}
+                        id="immutability-ahe"
+                        index="04"
+                        token="ahe"
+                        englishTitle="Truths that do not change"
+                        marathiTitle="अपरिवर्तनीय मूल्ये"
                     >
                         <p>
                             {marathi
-                                ? ".mr मध्ये मूळ सिस्टिम प्रकारांसाठी खालील निश्चित कीवर्ड्स वापरले जातात:"
-                                : ".mr defines native types recognized by the semantic analyzer and code generator:"}
+                                ? "'ahe' हा कीवर्ड अपरिवर्तनीय (constant / immutable) चलांसाठी वापरला जातो. एकदा मूल्य नियुक्त केल्यानंतर ते पुन्हा बदलता येत नाही. 'ahe' आणि 'te' मध्ये गल्लत करू नये."
+                                : "`ahe` represents an immutable / constant declaration in .mr. Once assigned, its value cannot subsequently be overwritten or reassigned. Never confuse `ahe` with `te`."}
                         </p>
-                        <div className="w-full min-w-0 overflow-x-auto my-2">
-                            <table className="w-full border border-border text-left font-mono text-xs">
-                                <thead className="border-b border-border bg-sidebar text-muted-foreground">
-                                    <tr>
-                                        <th className="p-2.5">Type</th>
-                                        <th className="p-2.5">Meaning</th>
-                                        <th className="p-2.5">Example</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-border/60">
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            ank
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "पूर्णांक (Integer)"
-                                                : "Signed integer type"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            he ank count = 10;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            akshar
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "अक्षर / मजकूर (Character / Text)"
-                                                : "Character and string type"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            he akshar name = &quot;Anvay&quot;;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            bhagank
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "अपूर्णांक (Floating-point)"
-                                                : "Fractional / floating-point type"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            he bhagank price = 99.5;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            purnank
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "ऋण नसलेला पूर्णांक (Unsigned integer)"
-                                                : "Non-negative whole integer"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            he purnank total = 42;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            vidhan
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "बुलियन (Boolean: khare / khote)"
-                                                : "Boolean (khare = true, khote = false)"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            he vidhan ok = khare;
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="p-2.5 text-primary font-semibold">
-                                            nirank
-                                        </td>
-                                        <td className="p-2.5 text-muted-foreground">
-                                            {marathi
-                                                ? "मूल्य नसलेला प्रकार (Void)"
-                                                : "Void / no return type"}
-                                        </td>
-                                        <td className="p-2.5">
-                                            nirank karya(...) &#123; &#125;
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <CodeBlock
+                            example={getExample("types-and-variables")}
+                        />
                     </DocSection>
 
-                    {/* 5. Operators */}
+                    {/* 5. maze */}
                     <DocSection
-                        id="operators"
-                        title={
-                            marathi ? "ऑपरेटर्स आणि तर्क" : "Operators & logic"
-                        }
+                        id="access-maze"
+                        index="05"
+                        token="maze"
+                        englishTitle="Keeping things quiet"
+                        marathiTitle="मर्यादित ॲक्सेस"
                     >
                         <p>
                             {marathi
-                                ? "मूलभूत अंकगणित (+, -, *, /, %) आणि असाइनमेंट (+=, -=) सोबत तार्किक संबंधांसाठी .mr मध्ये अस्सल शब्दांचा वापर होतो:"
-                                : "Along with arithmetic (+, -, *, /, %), compound assignments, and comparisons (==, !=, &lt;, &gt;, &lt;=, &gt;=), .mr provides dedicated Marathi word operators for boolean logic:"}
+                                ? "'maze' हा प्रायव्हेट किंवा प्रतिबंधित स्कोपचा ॲक्सेस मॉडिफायर आहे. हा डेटा प्रकार नसून केवळ ॲक्सेस लेव्हल नियंत्रित करतो."
+                                : "`maze` represents private / access-restricted scope modifier. It is an access modifier analogous to private visibility, never a data type."}
                         </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0 w-full my-2">
-                            <div className="rounded-xl border border-border bg-card p-4">
-                                <span className="font-mono text-xs font-semibold text-primary">
-                                    ani (तार्किक AND)
-                                </span>
-                                <p className="mt-1 text-xs text-muted-foreground leading-5">
-                                    {marathi
-                                        ? "दोन्ही अटी सत्य असणे आवश्यक (&&)."
-                                        : "Logical AND operator, equivalent to &&."}
-                                </p>
-                                <pre className="mt-2 rounded bg-sidebar/80 p-2 font-mono text-[11px] text-[#c3e88d]">
-                                    jar (x &gt; 0 ani x &lt; 10)
-                                </pre>
-                            </div>
-                            <div className="rounded-xl border border-border bg-card p-4">
-                                <span className="font-mono text-xs font-semibold text-primary">
-                                    va (तार्किक OR)
-                                </span>
-                                <p className="mt-1 text-xs text-muted-foreground leading-5">
-                                    {marathi
-                                        ? "किमान एक अट सत्य असणे आवश्यक (||)."
-                                        : "Logical OR operator, equivalent to ||."}
-                                </p>
-                                <pre className="mt-2 rounded bg-sidebar/80 p-2 font-mono text-[11px] text-[#c3e88d]">
-                                    jar (x == 0 va x == 10)
-                                </pre>
-                            </div>
-                        </div>
-                        <p className="text-xs text-muted-foreground pt-1">
-                            {marathi
-                                ? "बिटवाइझ ऑपरेशन्ससाठी (&, |, ^, ~, &lt;&lt;, &gt;&gt;) हे स्वतंत्र ऑपरेटर्स वापरले जातात."
-                                : "Bitwise operations remain distinct (&, |, ^, ~, <<, >>) with full expression precedence in the compiler."}
-                        </p>
+                        <CodeBlock
+                            example={getExample("functions-and-arguments")}
+                        />
                     </DocSection>
 
-                    {/* 6. Control flow */}
+                    {/* 6. lahan, maha, uch */}
                     <DocSection
-                        id="control-flow"
-                        title={marathi ? "नियंत्रण प्रवाह" : "Control flow"}
+                        id="size-modifiers"
+                        index="06"
+                        token="lahan, maha, uch"
+                        englishTitle="Scale and capacity"
+                        marathiTitle="आकार आणि क्षमता"
                     >
                         <p>
                             {marathi
-                                ? "सशर्त विधाने (Conditionals) आणि लूप्ससाठी .mr मध्ये कठोर आणि स्पष्ट नियम आहेत:"
-                                : "Conditional branching and iterations follow a strict, well-defined grammar in .mr:"}
+                                ? "डेटा प्रकाराच्या आकाराचे प्रमाण दर्शवण्यासाठी .mr मध्ये तीन स्वतंत्र मॉडिफायर्स आहेत: 'lahan' (लहान/small), 'maha' (मोठे/large), आणि 'uch' (अतिविशाल/ultra scale)."
+                                : "The language provides dedicated scale modifiers to adjust the storage capacity of types: `lahan` (small), `maha` (large), and `uch` (ultra scale)."}
                         </p>
-                        <div className="space-y-2.5 text-xs sm:text-sm">
-                            <div className="rounded-lg border border-border bg-card p-3">
-                                <span className="font-mono font-bold text-primary">
-                                    jar (condition) &#123; ... &#125;
-                                </span>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    {marathi
-                                        ? "प्राथमिक 'if' अट."
-                                        : "The standard conditional 'if' block."}
-                                </p>
-                            </div>
-                            <div className="rounded-lg border border-border bg-card p-3">
-                                <span className="font-mono font-bold text-primary">
-                                    nahitar (condition) &#123; ... &#125;
-                                </span>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    {marathi
-                                        ? "हे 'else if' आहे. यासाठी अट असणे बंधनकारक आहे."
-                                        : "Represents 'else if'. Always requires a condition in parentheses."}
-                                </p>
-                            </div>
-                            <div className="rounded-lg border border-border bg-card p-3">
-                                <span className="font-mono font-bold text-primary">
-                                    anyatha &#123; ... &#125;
-                                </span>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                    {marathi
-                                        ? "हे बिनशर्त 'else' आहे. याला कोणतीही अट लागत नाही."
-                                        : "Represents unconditional 'else'. Never accepts a condition."}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="w-full min-w-0 overflow-hidden mt-3">
+                        <CodeBlock example={getExample("type-sizes")} />
+                    </DocSection>
+
+                    {/* 7. sarve */}
+                    <DocSection
+                        id="scope-sarve"
+                        index="07"
+                        token="sarve"
+                        englishTitle="A rule for the whole room"
+                        marathiTitle="संपूर्ण स्कोपचा नियम"
+                    >
+                        <p>
+                            {marathi
+                                ? "'sarve' हा सामान्य चल मॉडिफायर नसून संपूर्ण स्कोपसाठीचा स्वतंत्र नियम आहे. तो ब्लॉकच्या वर लिहिला जातो आणि पुढील संपूर्ण ब्लॉकला लागू होतो. कंसात लिहू नये."
+                                : "`sarve` is a standalone scope-level directive. It is written directly above a block without parentheses and applies uniformly across the entire following scope."}
+                        </p>
+                        <CodeBlock example={getExample("scope-size-levels")} />
+                    </DocSection>
+
+                    {/* 8. ank */}
+                    <DocSection
+                        id="type-ank"
+                        index="08"
+                        token="ank"
+                        englishTitle="Signed integers"
+                        marathiTitle="पूर्णांक संख्या"
+                    >
+                        <p>
+                            {marathi
+                                ? "'ank' हा .mr मधील मूलभूत स्वाक्षरीयुक्त पूर्णांक प्रकार (Signed Integer) आहे. तो धन व ऋण दोन्ही संख्या साठवू शकतो."
+                                : "`ank` represents the standard signed integer numeric type in .mr, backed by machine registers for integer arithmetic."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("arithmetic-operators")}
+                        />
+                    </DocSection>
+
+                    {/* 9. akshar */}
+                    <DocSection
+                        id="type-akshar"
+                        index="09"
+                        token="akshar"
+                        englishTitle="Characters and words"
+                        marathiTitle="अक्षर आणि शब्द"
+                    >
+                        <p>
+                            {marathi
+                                ? "'akshar' हा एकल वर्ण (Character) तसेच मजकूर (Text / String) साठवण्यासाठीचा मूलभूत डेटा प्रकार आहे."
+                                : "`akshar` is the character and text-oriented type. It handles individual character literals ('A') as well as complete string literals (\"Anvay\")."}
+                        </p>
+                        <CodeBlock example={getExample("void-functions")} />
+                    </DocSection>
+
+                    {/* 10. bhagank */}
+                    <DocSection
+                        id="type-bhagank"
+                        index="10"
+                        token="bhagank"
+                        englishTitle="Fractions and precision"
+                        marathiTitle="अपूर्णांक आणि दशांश"
+                    >
+                        <p>
+                            {marathi
+                                ? "'bhagank' हा दशांश चिन्हांकित अपूर्णांक संख्यांसाठीचा (Floating-point) प्रकार आहे."
+                                : "`bhagank` denotes the fractional / floating-point numeric type, designed for values with decimal components."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("conditional-statements")}
+                        />
+                    </DocSection>
+
+                    {/* 11. purnank */}
+                    <DocSection
+                        id="type-purnank"
+                        index="11"
+                        token="purnank"
+                        englishTitle="Non-negative counting"
+                        marathiTitle="ऋण नसलेली गणना"
+                    >
+                        <p>
+                            {marathi
+                                ? "'purnank' हा केवळ ऋण नसलेल्या धन पूर्णांक संख्यांसाठी (Unsigned integer) वापरला जाणारा डेटा प्रकार आहे."
+                                : "`purnank` represents the non-negative / unsigned whole-number integer type, intended for non-negative indices and memory measurements."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("types-and-variables")}
+                        />
+                    </DocSection>
+
+                    {/* 12. vidhan */}
+                    <DocSection
+                        id="type-vidhan"
+                        index="12"
+                        token="vidhan"
+                        englishTitle="Pure boolean truths"
+                        marathiTitle="सत्य आणि असत्य"
+                    >
+                        <p>
+                            {marathi
+                                ? "'vidhan' हा बुलियन डेटा प्रकार आहे. या प्रकारामध्ये केवळ दोनच लिटरल्स वैध असतात: 'khare' (true) आणि 'khote' (false)."
+                                : "`vidhan` is the boolean type. It accepts strictly two boolean literals: `khare` (true) and `khote` (false)."}
+                        </p>
+                        <CodeBlock example={getExample("logical-operators")} />
+                    </DocSection>
+
+                    {/* 13. nirank */}
+                    <DocSection
+                        id="type-nirank"
+                        index="13"
+                        token="nirank"
+                        englishTitle="Working without returning"
+                        marathiTitle="शून्य रिटर्न प्रकार"
+                    >
+                        <p>
+                            {marathi
+                                ? "'nirank' हा मूल्य नसलेला (Void) प्रकार आहे. ज्या कार्यांमधून (functions) कोणतेही मूल्य परत पाठवायचे नसते, तिथे nirank वापरला जातो."
+                                : "`nirank` represents the void / no-return-value type. It is designated for functions that execute side effects without returning data to the caller."}
+                        </p>
+                        <CodeBlock example={getExample("void-functions")} />
+                    </DocSection>
+
+                    {/* 14. Arithmetic */}
+                    <DocSection
+                        id="operators-arithmetic"
+                        index="14"
+                        token="+,-,*,/,%"
+                        englishTitle="Arithmetic and changing state"
+                        marathiTitle="अंकगणित आणि बदल"
+                    >
+                        <p>
+                            {marathi
+                                ? "मूलभूत अंकगणिती संकारक (+, -, *, /, %) तसेच चक्रवाढ असाइनमेंट (+=, -=, *=, /=, %=) पूर्णपणे समर्थित आहेत."
+                                : ".mr supports full mathematical operator precedence alongside standard compound assignments."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("arithmetic-operators")}
+                        />
+                    </DocSection>
+
+                    {/* 15. Relational & Bitwise */}
+                    <DocSection
+                        id="operators-relational"
+                        index="15"
+                        token="==,!=,&,|"
+                        englishTitle="Asking questions of values"
+                        marathiTitle="मूल्यांची तुलना आणि बिट्स"
+                    >
+                        <p>
+                            {marathi
+                                ? "मूल्यांची तुलना करण्यासाठी (==, !=, <, >, <=, >=) आणि थेट बिट्सवर प्रक्रिया करण्यासाठी (&, |, ^, ~, <<, >>) ऑपरेटर्स उपलब्ध आहेत."
+                                : "Comparison and low-level bitwise operations are distinct expressions inside the compiler pipeline."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("relational-operators")}
+                        />
+                        <div className="mt-4">
                             <CodeBlock
-                                example={getExample("conditional-statements")}
+                                example={getExample("bitwise-operators")}
                             />
                         </div>
-                        <p className="pt-2 text-xs sm:text-sm">
-                            {marathi
-                                ? "लूप्ससाठी jovar (while) आणि pratyek (for) वापरले जातात. लूप थांबवण्यासाठी thamba (break) आणि पुढील फेरीत जाण्यासाठी pudhe (continue) वापरतात."
-                                : "Loop constructs include `jovar` (while loop) and `pratyek` (traditional 3-part for loop). Use `thamba` for break and `pudhe` for continue."}
-                        </p>
-                        <div className="w-full min-w-0 overflow-hidden">
-                            <CodeBlock example={getExample("for-loop")} />
-                        </div>
                     </DocSection>
 
-                    {/* 7. Functions */}
+                    {/* 16. ani & va */}
                     <DocSection
-                        id="functions"
-                        title={marathi ? "कार्ये (karya)" : "Functions"}
+                        id="words-ani-va"
+                        index="16"
+                        token="ani & va"
+                        englishTitle="Words for logic"
+                        marathiTitle="तार्किक जोडशब्द"
                     >
                         <p>
                             {marathi
-                                ? ".mr मध्ये फंक्शन बनवताना return प्रकार नेहमी `karya` शब्दाच्या आधी येतो. फंक्शनमधून परत येण्यासाठी `partav` आणि प्रोग्राम थेट बंद करण्यासाठी `shevti()` वापरले जाते:"
-                                : "In .mr, the return type comes strictly before the `karya` keyword. Functions return values with `partav`, while `shevti()` explicitly terminates the executable process:"}
+                                ? "तार्किक संबंधांसाठी .mr मध्ये इंग्रजी प्रतीकांऐवजी अस्सल मराठी शब्द वापरले जातात: 'ani' म्हणजे Logical AND, आणि 'va' म्हणजे Logical OR."
+                                : "Boolean conjunction and disjunction use dedicated Marathi words: `ani` stands for logical AND (`&&`), and `va` stands for logical OR (`||`)."}
                         </p>
-                        <div className="w-full min-w-0 overflow-hidden">
-                            <CodeBlock example={getExample("void-functions")} />
-                        </div>
-                        <div className="mt-4 rounded-xl border border-border bg-card p-4">
-                            <span className="font-mono text-xs font-semibold text-primary">
-                                {marathi
-                                    ? "पर्याय (Pattern matching with paryay)"
-                                    : "Switch / Match Construct (paryay)"}
-                            </span>
-                            <p className="text-xs text-muted-foreground mt-1">
-                                {marathi
-                                    ? "paryay मध्ये प्रत्येक पर्यायासाठी केस लेबल आणि डीफॉल्टसाठी anyatha: वापरले जाते."
-                                    : "`paryay` provides multi-branch matching where `anyatha:` serves as the default fallback case."}
-                            </p>
-                            <pre className="mt-3 rounded bg-sidebar/80 p-3 font-mono text-[11px] leading-5 text-[#c3e88d] whitespace-pre overflow-x-auto">
-                                {`paryay (grade) {
-    1:
-        leeh("Distinction");
-    2:
-        leeh("First Class");
-    anyatha:
-        leeh("Unknown");
-}`}
-                            </pre>
-                        </div>
+                        <CodeBlock example={getExample("logical-operators")} />
                     </DocSection>
 
-                    {/* 8. Compiler path & Planned features */}
+                    {/* 17. jar */}
                     <DocSection
-                        id="compiler"
-                        title={
-                            marathi ? "Compiler चा प्रवास" : "The compiler path"
-                        }
+                        id="control-jar"
+                        index="17"
+                        token="jar"
+                        englishTitle="Choosing a path"
+                        marathiTitle="सशर्त मार्ग निवड"
                     >
                         <p>
                             {marathi
-                                ? ".mr चा compiler C++20 मध्ये स्वतःच्या लेक्सिकल ॲनालायझर, पार्सर, AST आणि कोड जनरेटरच्या साह्याने बनवला आहे, जो Linux x86-64 NASM असेंब्ली कोड तयार करतो."
-                                : "The compiler is engineered from scratch in C++20 with a custom tokenizer, recursive-descent parser, typed AST, semantic symbol validation, and native Linux x86-64 NASM assembly code generation."}
+                                ? "'jar' म्हणजे 'if'. अट नेहमी कंसात असावी लागते. कंसाशिवाय jar लिहू नये."
+                                : "`jar` defines the initial conditional branch (`if`). The condition must strictly reside inside parentheses."}
                         </p>
-                        <div className="mt-4 rounded-xl border border-primary/25 bg-primary/5 p-4 sm:p-5 min-w-0">
-                            <div className="flex items-center gap-2 text-sm font-medium text-primary">
-                                <Info size={15} />
-                                {marathi
-                                    ? "नियोजित वैशिष्ट्ये (Planned features)"
-                                    : "Planned / To be implemented"}
+                        <CodeBlock
+                            example={getExample("conditional-statements")}
+                        />
+                    </DocSection>
+
+                    {/* 18. nahitar */}
+                    <DocSection
+                        id="control-nahitar"
+                        index="18"
+                        token="nahitar"
+                        englishTitle="Another possibility"
+                        marathiTitle="पर्यायी अट"
+                    >
+                        <p>
+                            {marathi
+                                ? "'nahitar' म्हणजे 'else if'. यासाठी अट असणे बंधनकारक आहे. हे अंतिम else नसून पर्यायी अट तपासणीसाठी आहे."
+                                : "`nahitar` represents `else if`. It is NOT unconditional else; it MUST always take a parenthesized condition."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("conditional-statements")}
+                        />
+                    </DocSection>
+
+                    {/* 19. anyatha */}
+                    <DocSection
+                        id="control-anyatha"
+                        index="19"
+                        token="anyatha"
+                        englishTitle="When nothing else matches"
+                        marathiTitle="अंतिम पर्याय"
+                    >
+                        <p>
+                            {marathi
+                                ? "'anyatha' म्हणजे बिनशर्त 'else'. याच्यासमोर कोणतीही अट किंवा कंस लिहू नयेत."
+                                : "`anyatha` represents unconditional fallback (`else`). It NEVER takes a condition or parentheses."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("conditional-statements")}
+                        />
+                    </DocSection>
+
+                    {/* 20. pratyek */}
+                    <DocSection
+                        id="loops-pratyek"
+                        index="20"
+                        token="pratyek"
+                        englishTitle="Known iterations"
+                        marathiTitle="ठरविक फेऱ्यांचे लूप"
+                    >
+                        <p>
+                            {marathi
+                                ? "'pratyek' हा पारंपारिक तीन-भागांचा फॉर लूप दर्शवतो: सुरूवात; अट; आणि वाढ किंवा घट."
+                                : "`pratyek` defines the traditional 3-part loop: initialization, condition, and step increment/decrement."}
+                        </p>
+                        <CodeBlock example={getExample("for-loop")} />
+                    </DocSection>
+
+                    {/* 21. jovar */}
+                    <DocSection
+                        id="loops-jovar"
+                        index="21"
+                        token="jovar"
+                        englishTitle="Going as long as it holds"
+                        marathiTitle="अट असेपर्यंत लूप"
+                    >
+                        <p>
+                            {marathi
+                                ? "'jovar' हा व्हाइल लूप आहे. जोपर्यंत कंसामधील अट सत्य (khare) असते, तोपर्यंत हा लूप चालतो."
+                                : "`jovar` defines a while loop that continues iterating as long as its condition evaluates to `khare`."}
+                        </p>
+                        <CodeBlock example={getExample("while-loop")} />
+                    </DocSection>
+
+                    {/* 22. thamba & pudhe */}
+                    <DocSection
+                        id="jumps-thamba-pudhe"
+                        index="22"
+                        token="thamba & pudhe"
+                        englishTitle="Breaking and stepping forward"
+                        marathiTitle="थांबणे आणि पुढे जाणे"
+                    >
+                        <p>
+                            {marathi
+                                ? "लूपमधून तात्काळ बाहेर पडण्यासाठी 'thamba' (break) आणि उर्वरित कोड वगळून पुढील फेरीत जाण्यासाठी 'pudhe' (continue) वापरतात."
+                                : "Loop flow is intercepted using `thamba` (break early from loop) and `pudhe` (skip to next iteration)."}
+                        </p>
+                        <CodeBlock example={getExample("while-loop")} />
+                    </DocSection>
+
+                    {/* 23. karya & partav */}
+                    <DocSection
+                        id="functions-karya"
+                        index="23"
+                        token="karya & partav"
+                        englishTitle="Giving ideas a name"
+                        marathiTitle="कार्ये आणि परतावा"
+                    >
+                        <p>
+                            {marathi
+                                ? ".mr मध्ये फंक्शन तयार करताना return प्रकार नेहमी 'karya' शब्दाच्या आधी येतो. फंक्शनमधून मूल्य परत पाठवण्यासाठी 'partav' वापरतात."
+                                : "In .mr, the return type is placed strictly BEFORE the `karya` declaration keyword. Return expressions use `partav`."}
+                        </p>
+                        <CodeBlock
+                            example={getExample("functions-and-arguments")}
+                        />
+                    </DocSection>
+
+                    {/* 24. shevti */}
+                    <DocSection
+                        id="exit-shevti"
+                        index="24"
+                        token="shevti"
+                        englishTitle="Leaving the machine"
+                        marathiTitle="प्रक्रिया समाप्ती"
+                    >
+                        <p>
+                            {marathi
+                                ? "'shevti' हा फंक्शनमधून परत येण्यासाठी नसून संपूर्ण प्रोग्राम व प्रक्रिया (Exit process) बंद करण्यासाठी वापरला जातो. partav आणि shevti वेगळे आहेत."
+                                : "`shevti` explicitly terminates the executable process with an exit status. Never confuse `partav` (return from function) with `shevti` (program termination)."}
+                        </p>
+                        <CodeBlock example={getExample("exit-code")} />
+                    </DocSection>
+
+                    {/* 25. paryay */}
+                    <DocSection
+                        id="paryay-switch"
+                        index="25"
+                        token="paryay"
+                        englishTitle="Matching options"
+                        marathiTitle="पर्यायांची निवड"
+                    >
+                        <p>
+                            {marathi
+                                ? "मल्टी-केस मॅचिंगसाठी 'paryay' वापरले जाते. यामध्ये डीफॉल्ट पर्यायासाठी 'anyatha:' हे लेबल वापरले जाते."
+                                : "`paryay` provides multi-case matching where `anyatha:` serves as the fallback default label."}
+                        </p>
+                        <CodeBlock example={getExample("switch-statement")} />
+                    </DocSection>
+
+                    {/* 26. Planned Specifications */}
+                    <DocSection
+                        id="planned-specs"
+                        index="26"
+                        token="rachna, varg, prakar"
+                        englishTitle="On the horizon"
+                        marathiTitle="नियोजित रचना"
+                    >
+                        <p>
+                            {marathi
+                                ? "खालील कीवर्ड्स .mr भाषेच्या व्याकरण शब्दकोशात राखीव आहेत आणि आगामी आवृत्तीत उपलब्ध केले जातील:"
+                                : "The following structures are formally reserved in the language grammar and scheduled for implementation:"}
+                        </p>
+                        <div className="mt-4 space-y-4">
+                            <div>
+                                <h4 className="font-mono text-xs text-primary font-bold mb-1">
+                                    rachna (Structures)
+                                </h4>
+                                <CodeBlock
+                                    example={getExample("struct-rachna")}
+                                />
                             </div>
-                            <p className="mt-2 text-xs sm:text-sm leading-6 text-muted-foreground">
-                                {marathi
-                                    ? "खालील घटक व्याकरणासाठी राखीव असून ते आगामी कम्पायलर आवृत्तीत उपलब्ध केले जातील:"
-                                    : "The following constructs are officially reserved in the .mr language grammar but marked as planned for upcoming compiler releases:"}
-                            </p>
-                            <ul className="mt-2 list-disc pl-5 font-mono text-xs space-y-1 text-muted-foreground">
-                                <li>
-                                    <span className="text-primary font-semibold">
-                                        rachna
-                                    </span>{" "}
-                                    — struct / user data layouts
-                                </li>
-                                <li>
-                                    <span className="text-primary font-semibold">
-                                        varg
-                                    </span>{" "}
-                                    — class / object model
-                                </li>
-                                <li>
-                                    <span className="text-primary font-semibold">
-                                        prakar
-                                    </span>{" "}
-                                    — enum types
-                                </li>
-                                <li>Pointers &amp; function overloading</li>
-                            </ul>
+                            <div>
+                                <h4 className="font-mono text-xs text-primary font-bold mb-1">
+                                    varg (Classes)
+                                </h4>
+                                <CodeBlock example={getExample("class-varg")} />
+                            </div>
+                            <div>
+                                <h4 className="font-mono text-xs text-primary font-bold mb-1">
+                                    prakar (Enumerations)
+                                </h4>
+                                <CodeBlock
+                                    example={getExample("enum-prakar")}
+                                />
+                            </div>
+                            <div>
+                                <h4 className="font-mono text-xs text-primary font-bold mb-1">
+                                    Pointers
+                                </h4>
+                                <CodeBlock example={getExample("pointers")} />
+                            </div>
                         </div>
                     </DocSection>
                 </article>
@@ -1513,22 +1852,48 @@ function DocsPage() {
 
 function DocSection({
     id,
-    title,
+    index,
+    englishTitle,
+    marathiTitle,
+    token,
     children,
 }: {
     id: string;
-    title: string;
+    index: string;
+    englishTitle: string;
+    marathiTitle: string;
+    token: string;
     children: ReactNode;
 }) {
     return (
         <section
             id={id}
-            className="scroll-mt-28 border-b border-border py-8 sm:py-10 first:pt-0 last:border-0 min-w-0 w-full overflow-hidden"
+            className="scroll-mt-24 border-b border-border/80 py-10 sm:py-12 first:pt-0 last:border-0 min-w-0 w-full overflow-hidden"
         >
-            <h2 className="mb-4 sm:mb-5 text-xl sm:text-2xl font-medium tracking-[-.04em] break-words">
-                {title}
+            {/* Metadata Pill */}
+            <div className="mb-3 flex items-center gap-2">
+                <span className="font-mono text-[11px] font-semibold text-primary">
+                    {index}
+                </span>
+                <span className="h-1 w-1 rounded-full bg-border" />
+                <span className="rounded border border-primary/25 bg-primary/5 px-2 py-0.5 font-mono text-[11px] font-medium text-primary">
+                    {token}
+                </span>
+            </div>
+
+            {/* Bilingual Header */}
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-[-.04em] text-foreground flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <span>{englishTitle}</span>
+                <span className="text-muted-foreground/40 font-light select-none">
+                    /
+                </span>
+                <span className="marathi-font text-xl sm:text-2xl font-semibold text-muted-foreground">
+                    {marathiTitle}
+                </span>
             </h2>
-            <div className="space-y-4 sm:space-y-5 text-sm leading-7 text-muted-foreground min-w-0 w-full">
+
+            {/* Content Body */}
+            <div className="mt-5 space-y-4 text-sm leading-7 text-muted-foreground min-w-0 w-full">
                 {children}
             </div>
         </section>
