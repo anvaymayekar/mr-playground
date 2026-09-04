@@ -78,6 +78,7 @@ export default function Playground() {
     const dragging = useRef(false);
     const editorRef = useRef<HTMLTextAreaElement>(null);
     const preRef = useRef<HTMLPreElement>(null);
+    const pickerRef = useRef<HTMLDivElement>(null);
     const lineNumbersRef = useRef<HTMLDivElement>(null);
     const idleTimerRef = useRef<number | null>(null);
     const hoverDebounceRef = useRef<number | null>(null);
@@ -119,6 +120,21 @@ export default function Playground() {
             )
             .slice(0, 8);
     }, [completionPool, completionQuery]);
+
+    useEffect(() => {
+        if (!pickerOpen) return;
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                pickerRef.current &&
+                !pickerRef.current.contains(event.target as Node)
+            ) {
+                setPickerOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+            document.removeEventListener("mousedown", handleClickOutside);
+    }, [pickerOpen]);
 
     useEffect(() => {
         const move = (event: PointerEvent) => {
@@ -556,7 +572,10 @@ export default function Playground() {
                         playground
                     </span>
                 </div>
-                <div className="relative flex items-center gap-2">
+                <div
+                    className="relative flex items-center gap-2"
+                    ref={pickerRef}
+                >
                     <button
                         onClick={() => setPickerOpen((open) => !open)}
                         className="focus-ring flex max-w-[180px] items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-left text-xs hover:border-primary/60 sm:max-w-none"
