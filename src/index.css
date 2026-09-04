@@ -61,7 +61,9 @@
     --app-font-sans:
         "Outfit", "Noto Sans Devanagari Space", "Noto Sans Devanagari",
         sans-serif;
-    --app-font-devanagari: "Noto Sans Devanagari", "Nirmala UI", sans-serif;
+    --app-font-devanagari:
+        "Noto Sans Devanagari Space", "Noto Sans Devanagari", "Nirmala UI",
+        sans-serif;
     --app-font-serif: Georgia, serif;
     --app-font-mono: "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
     --radius: 0.7rem;

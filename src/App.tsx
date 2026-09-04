@@ -229,7 +229,7 @@ function Shell({ children }: { children: ReactNode }) {
 
 function SectionEyebrow({ children }: { children: ReactNode }) {
     return (
-        <p className="mb-4 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.18em] text-primary">
+        <p className="mb-4 flex items-center gap-2 font-mono text-[12px] uppercase tracking-[.18em] text-primary">
             <span className="h-px w-5 bg-primary" />
             {children}
         </p>
@@ -1156,7 +1156,7 @@ function AboutPage() {
                         </p>
                     </div>
                     <div className="border-l border-primary/40 pl-7 lg:mt-16 lg:pl-10">
-                        <p className="font-mono text-sm leading-7 text-foreground/80">
+                        <p className="font-devanagari text-xl leading-7 text-foreground/80 text-primary">
                             मराठी, संगणकासाठी.
                         </p>
                         <p className="mt-4 max-w-lg text-2xl leading-9 tracking-[-.02em]">
