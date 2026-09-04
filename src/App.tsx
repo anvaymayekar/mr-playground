@@ -2167,7 +2167,7 @@ function Playground() {
                 {/* Output Console Column: Fixed 38% height on mobile, fills rest of space on desktop */}
                 <section className="code border-t md:border-t-0 md:border-l-0 flex h-[38%] md:h-full shrink-0 md:shrink md:min-h-0 min-w-0 md:flex-1 flex-col overflow-hidden">
                     <div className="flex h-9 md:h-11 shrink-0 items-center justify-between border-b border-border/60 px-4 frost rounded-lg mx-2 mt-1">
-                        <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground">
+                        <div className="flex items-center gap-2 font-mono text-[12px] text-muted-foreground">
                             <Terminal size={14} className="text-primary" />{" "}
                             output
                         </div>
