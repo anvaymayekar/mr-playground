@@ -85,7 +85,7 @@ leeh(a < b);        // < -> less than
 leeh(a > b);        // > -> greater than
 leeh(a <= b);       // <= -> less/equal
 leeh(a >= b);       // >= -> greater/equal`,
-        output: "khote\nkhare\nkhare\nkhote\nkhare\nkhote",
+        output: "0\m1\n1\n0\n1\n0",
         status: "ready",
     },
     {
@@ -105,7 +105,7 @@ he vidhan b = khote;
 leeh(a ani b);      // ani -> logical AND
 leeh(a va b);       // va -> logical OR
 leeh(!a);           // ! -> logical NOT`,
-        output: "khote\nkhare\nkhote",
+        output: "0\n1\n0",
         status: "ready",
     },
     {
