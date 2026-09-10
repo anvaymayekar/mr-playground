@@ -388,8 +388,8 @@ leeh(marks[2]);`,
             "Loop वापरून array मधील प्रत्येक element traverse करता येतो.",
         code: `te ank marks = [85, 91, 78, 94, 88];
 
-pratyek (marks) {
-    leeh(marks);
+pratyek (he ank mark: marks) {
+    leeh(mark);
 }`,
         output: "85\n91\n78\n94\n88",
         status: "planned",
@@ -453,7 +453,7 @@ leeh(grade);`,
     he ank roll;
     he akshar name;
 
-    nirank karya() {
+    nirank karya info() {
         leeh(name);
     }
 }`,
@@ -470,16 +470,16 @@ leeh(grade);`,
             "Functions with the same name can be defined with different parameter signatures.",
         marathiDescription:
             "वेगवेगळ्या parameter signatures सह एकाच नावाची functions define करता येतात.",
-        code: `ank karya(he ank a, he ank b) {
+        code: `ank karya sum(he ank a, he ank b) {
     partav a + b;
 }
 
-bhagank karya(he bhagank a, he bhagank b) {
+bhagank karya sum(he bhagank a, he bhagank b) {
     partav a + b;
 }
 
-leeh(karya(10, 20));
-leeh(karya(10.5, 20.5));`,
+leeh(sum(10, 20));
+leeh(sum(10.5, 20.5));`,
         output: "30\n31.0",
         status: "planned",
     },
@@ -510,12 +510,12 @@ leeh(*p);`,
             "Pointers can be passed to functions to allow indirect modification of values.",
         marathiDescription:
             "Value indirect पद्धतीने modify करण्यासाठी pointers functions मध्ये pass करता येतात.",
-        code: `nirank karya(he ank* x) {
+        code: `he nirank karya assign(he ank* x) {
     *x = 100;
 }
 
 he ank value = 10;
-karya(&value);
+assign(&value);
 leeh(value);`,
         output: "100",
         status: "planned",
