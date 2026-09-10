@@ -146,7 +146,7 @@ export const tokenDocs: Record<string, TokenDoc> = {
         category: "Data Type",
         english: "Character or text data type.",
         marathi: "अक्षर किंवा मजकूर साठवण्यासाठी वापरला जाणारा डेटा प्रकार.",
-        syntax: `he akshar name = "Anvay";`,
+        syntax: `te akshar name = "Anvay"; // str\nhe akshar c = 'A'; // char`,
     },
 
     bhagank: {
