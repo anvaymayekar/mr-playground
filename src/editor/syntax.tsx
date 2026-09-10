@@ -11,6 +11,7 @@ export const types = new Set([
 ]);
 export const sizeModifiers = new Set(["lahan", "maha", "uch"]);
 export const scopeRules = new Set(["sarve"]);
+export const storageModifiers = new Set(["sthir"]);
 export const controls = new Set([
     "jar",
     "nahitar",
@@ -56,6 +57,7 @@ export function classifyWord(word: string, afterWord: string): string {
     if (modifiers.has(word)) return "syntax-modifier";
     if (types.has(word)) return "syntax-type";
     if (scopeRules.has(word)) return "syntax-scope-rule";
+    if (storageModifiers.has(word)) return "syntax-storage-modifier";
     if (sizeModifiers.has(word)) return "syntax-size-modifier";
     if (declarations.has(word)) return "syntax-declaration";
     if (controls.has(word)) return "syntax-control";

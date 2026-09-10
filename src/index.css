@@ -222,7 +222,7 @@
     color: #82aaff;
 }
 .syntax-boolean {
-    color: #c3e88d;
+    color: #ff5874;
 }
 .syntax-string {
     color: #c3e88d;
@@ -246,6 +246,10 @@
 
 .syntax-scope-rule {
     color: #89ddff;
+    font-style: italic;
+}
+.syntax-storage-modifier {
+    color: #e0af68;
     font-style: italic;
 }
 .completion-panel {

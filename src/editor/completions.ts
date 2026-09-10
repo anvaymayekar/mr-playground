@@ -251,7 +251,15 @@ export const tokenDocs: Record<string, TokenDoc> = {
             "ज्या scope मध्ये ते वापरले जाते त्या संपूर्ण scope साठी नियम निश्चित करते.",
         syntax: "sarve uch;",
     },
-
+    sthir: {
+        token: "sthir",
+        category: "Storage Modifier",
+        english:
+            "Marks a declaration as static: its storage persists across function calls instead of being reinitialized each time.",
+        marathi:
+            "घोषणा static म्हणून चिन्हांकित करते: प्रत्येक function call मध्ये पुन्हा सुरू न होता तिचा storage कायम राहतो.",
+        syntax: "sthir ank;",
+    },
     khare: {
         token: "khare",
         category: "Boolean",
@@ -328,6 +336,7 @@ export interface MrCompletion {
         | "modifier"
         | "size-modifier"
         | "scope-rule"
+        | "storage-modifier"
         | "type"
         | "declaration"
         | "control"
@@ -513,6 +522,13 @@ export const mrCompletions: MrCompletion[] = [
         token: "sarve",
         category: "scope-rule",
         insertText: "sarve ",
+    },
+    // Scope rule
+
+    {
+        token: "sthir",
+        category: "storage-modifier",
+        insertText: "sthir ",
     },
 
     // Types
