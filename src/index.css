@@ -222,7 +222,7 @@
     color: #82aaff;
 }
 .syntax-boolean {
-    color: #ff5874;
+    color: #eb8f9e;
 }
 .syntax-string {
     color: #c3e88d;
@@ -249,8 +249,7 @@
     font-style: italic;
 }
 .syntax-storage-modifier {
-    color: #e0af68;
-    font-style: italic;
+    color: rgb(151, 135, 241);
 }
 .completion-panel {
     scrollbar-color: hsl(var(--border)) transparent;
