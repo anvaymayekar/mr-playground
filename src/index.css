@@ -249,7 +249,7 @@
     font-style: italic;
 }
 .syntax-storage-modifier {
-    color: rgb(151, 135, 241);
+    color: rgb(247, 134, 247);
 }
 .completion-panel {
     scrollbar-color: hsl(var(--border)) transparent;

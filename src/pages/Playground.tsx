@@ -591,27 +591,30 @@ export default function Playground() {
                         <ChevronDown size={13} />
                     </button>
                     {pickerOpen && (
-                        <div className="absolute right-0 top-11 z-30 w-72 overflow-hidden rounded-xl border border-border glass p-1 shadow-[var(--shadow-lg)]">
+                        <div className="absolute right-0 top-11 z-30 w-72 overflow-hidden rounded-xl border border-border frost p-1 shadow-[var(--shadow-lg)]">
                             <div className="px-3 py-2 font-mono text-[10px] uppercase tracking-[.15em] text-muted-foreground">
                                 examples / उदाहरणे
                             </div>
-                            {readyExamples.map((example) => (
-                                <button
-                                    key={example.slug}
-                                    onClick={() => chooseExample(example)}
-                                    className={cx(
-                                        "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs hover:bg-secondary",
-                                        example.slug === selectedSlug &&
-                                            "bg-primary/10 text-primary",
-                                    )}
-                                    data-testid={`button-pick-${example.slug}`}
-                                >
-                                    <span>{example.title}</span>
-                                    {example.slug === selectedSlug && (
-                                        <Check size={13} />
-                                    )}
-                                </button>
-                            ))}
+
+                            <div className="max-h-80 overflow-y-auto">
+                                {readyExamples.map((example) => (
+                                    <button
+                                        key={example.slug}
+                                        onClick={() => chooseExample(example)}
+                                        className={cx(
+                                            "flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-xs hover:bg-secondary",
+                                            example.slug === selectedSlug &&
+                                                "bg-primary/10 text-primary",
+                                        )}
+                                        data-testid={`button-pick-${example.slug}`}
+                                    >
+                                        <span>{example.title}</span>
+                                        {example.slug === selectedSlug && (
+                                            <Check size={13} />
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     )}
                 </div>
