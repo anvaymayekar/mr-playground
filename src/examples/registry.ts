@@ -130,6 +130,53 @@ leeh(a >> 1);       // >> -> right shift`,
         status: "ready",
     },
     {
+        slug: "unary-operators",
+        title: "Unary Operators",
+        marathiTitle: "युनरी ऑपरेटर्स",
+        category: "Foundation",
+        description: "Work with a single value using unary operators.",
+        marathiDescription: "युनरी ऑपरेटर्स वापरून एका व्हॅल्यूसोबत काम करा.",
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+
+he ank x = 5;
+
+leeh(++x); // prefix: increment before use
+leeh(x++); // postfix: increment after use
+leeh(x);
+
+leeh(--x); // prefix: decrement before use
+leeh(x--); // postfix: decrement after use
+leeh(x);`,
+        output: "6\n6\n7\n6\n6\n5",
+        status: "ready",
+    },
+    {
+        slug: "nested-scopes",
+        title: "Nested Scopes",
+        marathiTitle: "नेस्टेड स्कोप्स",
+        category: "Foundation",
+        description: "Define variables within nested scopes.",
+        marathiDescription: "नेस्टेड स्कोपमध्ये व्हेरिएबल्स परिभाषित करा.",
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+
+he ank x = 10; // available in the outer scope
+
+{
+    he bhagank y = 26.705; // available only in this scope
+    leeh(x);
+    leeh(y);
+
+    {
+        he akshar z = 'a'; // available only in the nested scope
+        leeh(x);
+        leeh(y);
+        leeh(z);
+    }
+}`,
+        output: "10\n26.705\n10\n26.705\na",
+        status: "ready",
+    },
+    {
         slug: "conditional-statements",
         title: "Conditional Statements",
         marathiTitle: "अटाधारित स्टेटमेंट्स",
@@ -150,6 +197,7 @@ jar (temperature >= 40.0) {
         output: "Garam",
         status: "ready",
     },
+
     {
         slug: "for-loop",
         title: "For Loop",
@@ -210,7 +258,7 @@ leeh(sum);`,
             "पुन्हा वापरता येणाऱ्या कल्पनेला नाव द्या आणि मूल्ये पाठवा.",
         code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
-he maze ank karya maximum(
+he ank karya maximum(
     he ank a,
     he ank b
 ) {
@@ -244,6 +292,31 @@ greet("Anvay");`,
         output: "Namaskar Anvay",
         status: "ready",
         note: "The te parameter is intentional: it is part of the language example.",
+    },
+    {
+        slug: "static-variable",
+        title: "Static Variables",
+        marathiTitle: "स्टॅटिक व्हेरिएबल्स",
+        category: "Runtime",
+        description:
+            "Keep a variable's value alive across multiple function calls.",
+        marathiDescription:
+            "अनेक फंक्शन कॉल्समध्ये व्हेरिएबलची किंमत टिकवून ठेवा.",
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+
+he ank karya counter() {
+    he sthir ank n = 0;     // sthir -> static
+    partav n++;
+}
+
+/* Syntax: he sthir <type> <name> = <initial_value>; */
+
+leeh(counter());
+leeh(counter());
+leeh(counter());
+leeh(counter());`,
+        output: "0\n1\n2\n3",
+        status: "ready",
     },
     {
         slug: "type-sizes",

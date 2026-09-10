@@ -63,13 +63,13 @@ const docsSections: DocSectionItem[] = [
         marathiSubtitle: "स्थिर चलांची निर्मिती",
     },
     {
-        id: "access-maze",
+        id: "static-sthir",
         index: "05",
-        englishTitle: "Keeping things quiet",
-        marathiTitle: "मर्यादित ॲक्सेस",
-        token: "maze",
-        subtitle: "Private, restricted scope",
-        marathiSubtitle: "स्कोप मर्यादा आणि सुरक्षा",
+        englishTitle: "Keeping values alive",
+        marathiTitle: "किंमत टिकवून ठेवणे",
+        token: "sthir",
+        subtitle: "Static storage and persistence",
+        marathiSubtitle: "स्टॅटिक स्टोरेज आणि किंमत टिकवणे",
     },
     {
         id: "size-modifiers",
@@ -704,24 +704,23 @@ echo $?`}
                         />
                     </DocSection>
 
-                    {/* 5. maze */}
+                    {/* 5. sthir */}
+
                     <DocSection
-                        id="access-maze"
+                        id="static-sthir"
                         index="05"
-                        token="maze"
-                        englishTitle="Keeping things quiet"
-                        marathiTitle="मर्यादित ॲक्सेस"
+                        token="sthir"
+                        englishTitle="Keeping values alive"
+                        marathiTitle="किंमत टिकवून ठेवणे"
                     >
                         <p>
                             {marathi
-                                ? "'maze' हा प्रायव्हेट किंवा प्रतिबंधित स्कोपचा ॲक्सेस मॉडिफायर आहे. हा डेटा प्रकार नसून केवळ ॲक्सेस लेव्हल नियंत्रित करतो."
-                                : "`maze` represents private / access-restricted scope modifier. It is an access modifier analogous to private visibility, never a data type."}
+                                ? "'sthir' हा स्टॅटिक स्टोरेज मॉडिफायर आहे. व्हेरिएबलची किंमत फंक्शन कॉल्सनंतरही टिकवून ठेवतो आणि तो पुन्हा पुन्हा इनिशियलाइज होत नाही."
+                                : "`sthir` represents static storage. It preserves a variable's value across function calls and is initialized only once."}
                         </p>
-                        <CodeBlock
-                            example={getExample("functions-and-arguments")}
-                        />
-                    </DocSection>
 
+                        <CodeBlock example={getExample("static-variable")} />
+                    </DocSection>
                     {/* 6. lahan, maha, uch */}
                     <DocSection
                         id="size-modifiers"
@@ -1164,4 +1163,3 @@ function DocSection({
         </section>
     );
 }
-
