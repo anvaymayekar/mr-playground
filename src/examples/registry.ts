@@ -258,7 +258,7 @@ leeh(sum);`,
             "पुन्हा वापरता येणाऱ्या कल्पनेला नाव द्या आणि मूल्ये पाठवा.",
         code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
 
-he ank karya maximum(
+he maze ank karya maximum(
     he ank a,
     he ank b
 ) {
@@ -292,6 +292,44 @@ greet("Anvay");`,
         output: "Namaskar Anvay",
         status: "ready",
         note: "The te parameter is intentional: it is part of the language example.",
+    },
+    {
+        slug: "combined-control-flow",
+        title: "Combining Control Flow",
+        marathiTitle: "कंट्रोल फ्लोचे संयोजन",
+        category: "Control flow",
+        description:
+            "Combine functions, conditions, loops, returns, and loop control.",
+        marathiDescription:
+            "फंक्शन, अटी, लूप, रिटर्न आणि लूप कंट्रोल एकत्र वापरा.",
+        code: `// @anvaymayekar: https://github.com/anvaymayekar/custom-compiler
+
+he vidhan karya isPrime(he ank x){      // typed function with parameter
+    he vidhan prime = khare;
+
+    jar (x <= 1){
+        partav khote;       // return a value
+    }
+
+    pratyek (he ank i = 2; i*i <= x; i++) {        // for loop
+        jar (x % i == 0){
+            prime = khote;
+            thamba;         // exit the loop
+        }
+    }
+
+    partav prime;
+}
+
+he ank limit ahe 10;        // immutable variable
+
+pratyek (he ank i = 2; i < limit; i++) {
+    jar (isPrime(i)){       // function call in condition
+        leeh(i);
+    }
+}`,
+        output: "2\n3\n5\n7",
+        status: "ready",
     },
     {
         slug: "static-variable",
