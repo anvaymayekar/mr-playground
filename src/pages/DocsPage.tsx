@@ -452,7 +452,6 @@ export default function DocsPage() {
                                 : "The exhaustive specification for .mr — individual token grammar, primitive numeric representations, storage qualifiers, and native compilation."}
                         </p>
                     </div>
-
                     {/* 1. What is .mr? */}
                     <DocSection
                         id="what-is-mr"
@@ -511,8 +510,8 @@ export default function DocsPage() {
                     >
                         <p>
                             {marathi
-                                ? ".mr चा कम्पायलर CMake, C++20 आणि Netwide Assembler (NASM) वापरून थेट Linux x86-64 साठी तयार होतो. Windows वापरकर्त्यांसाठी WSL2 (Ubuntu) वापरणे अनिवार्य आहे, कारण तयार होणारी एक्झिक्युटेबल फाईल नेटिव्ह ELF64 बायनरी असते."
-                                : "The .mr toolchain is built with modern CMake and C++20, targeting Linux x86-64 NASM. Because the compiler outputs native Linux ELF64 executables, Windows users must run inside WSL2."}
+                                ? ".mr कम्पायलर C++20 आणि CMake वर आधारित आहे आणि Linux x86-64 साठी native ELF64 executable तयार करतो. Ubuntu/Debian वर setup.sh आवश्यक dependencies तपासून फक्त missing packages install करतो आणि compiler clean CMake configuration मधून build करतो. Windows वापरकर्त्यांनी WSL2 (Ubuntu) मध्ये हे commands चालवावेत."
+                                : "The .mr compiler is built with C++20 and CMake and produces native Linux x86-64 ELF64 executables. On Ubuntu/Debian, setup.sh checks for the required dependencies, installs only what is missing, and builds the compiler from a clean CMake configuration. Windows users should run the toolchain inside WSL2 (Ubuntu)."}
                         </p>
 
                         {/* Prerequisites Pill Cards */}
@@ -523,20 +522,20 @@ export default function DocsPage() {
                                 </span>
                                 <p className="mt-1 text-xs text-muted-foreground leading-5">
                                     {marathi
-                                        ? "build-essential (g++ C++20) & cmake"
-                                        : "build-essential (g++ C++20) & CMake"}
+                                        ? "g++ C++20, CMake"
+                                        : "g++ C++20, CMake"}
                                 </p>
                             </div>
+
                             <div className="rounded-xl border border-border bg-card p-3.5">
                                 <span className="font-mono text-xs font-bold text-primary">
                                     Assembler
                                 </span>
                                 <p className="mt-1 text-xs text-muted-foreground leading-5">
-                                    {marathi
-                                        ? "Netwide Assembler (NASM)"
-                                        : "Netwide Assembler (NASM)"}
+                                    NASM
                                 </p>
                             </div>
+
                             <div className="rounded-xl border border-border bg-card p-3.5">
                                 <span className="font-mono text-xs font-bold text-primary">
                                     Environment
@@ -554,90 +553,373 @@ export default function DocsPage() {
                             <div className="flex items-center gap-2 font-mono text-xs font-semibold text-primary">
                                 <Terminal size={14} />
                                 {marathi
-                                    ? "Windows वापरकर्त्यांसाठी (WSL2 सेटअप)"
-                                    : "Windows Users — WSL2 Setup"}
+                                    ? "Windows वापरकर्त्यांसाठी — WSL2"
+                                    : "Windows Users — WSL2"}
                             </div>
+
                             <p className="mt-2 text-xs leading-6 text-muted-foreground">
                                 {marathi
-                                    ? "Windows वर PowerShell ॲडमिनिस्ट्रेटर म्हणून उघडा आणि `wsl --install` चालवून संगणक रीस्टार्ट करा. त्यानंतर Ubuntu टर्मिनल उघडून खालील कमांड्स द्या."
-                                    : "Open PowerShell as Administrator, run `wsl --install`, and restart your PC. Once Ubuntu launches, run the commands below directly inside the WSL terminal."}
+                                    ? "Windows वर PowerShell ॲडमिनिस्ट्रेटर म्हणून उघडा आणि `wsl --install` चालवा. PC रीस्टार्ट केल्यानंतर Ubuntu उघडा आणि खालील commands WSL terminal मध्ये चालवा."
+                                    : "On Windows, open PowerShell as Administrator and run `wsl --install`. Restart your PC, launch Ubuntu, and run the commands below inside the WSL terminal."}
                             </p>
                         </div>
 
-                        {/* Build Steps Terminal Block */}
-                        <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                        {/* Quick Setup */}
+                        <div className="mt-4 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
                             <div className="flex items-center justify-between border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
                                 <div className="flex items-center gap-2 font-mono text-[11px] text-muted-foreground/80">
                                     <Terminal
                                         size={13}
                                         className="text-primary"
                                     />
-                                    <span>bash — clone, build &amp; run</span>
+                                    <span>bash — quick setup</span>
                                 </div>
+
                                 <span className="font-mono text-[10px] text-primary/80">
-                                    linux-x86_64
+                                    Ubuntu / Debian
                                 </span>
                             </div>
-                            <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
-                                {`# 1. Install prerequisites (Ubuntu / WSL2)
-sudo apt update
-sudo apt install -y build-essential cmake nasm git
 
-# 2. Clone the official repository and enter the directory
+                            <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]">
+                                {`# Clone the official repository
 git clone https://github.com/anvaymayekar/custom-compiler.git
+
+# Enter the project directory
 cd custom-compiler
 
-# (Optional) If you already have the repo, pull the latest updates
-git pull origin main
-
-# 3. Configure and build the compiler with CMake
-cmake -S . -B build/
-cmake --build build
-
-# This outputs:
-#   build/compiler        -> The .mr native compiler binary
-#   build/tests/mr_tests  -> The unit test suite
-
-# 4. Compile a .mr source file
-./build/compiler source.mr
-
-# 5. Run the produced native executable
-./out
-
-# 6. Inspect the process exit code (from shevti)
-echo $?`}
+# Run the automatic setup
+./setup.sh`}
                             </pre>
                         </div>
 
-                        {/* Pipeline Execution Details */}
-                        <div className="space-y-2 text-xs leading-6 text-muted-foreground pt-1">
+                        {/* Quick Setup Details */}
+                        <div className="space-y-2 text-xs leading-6 text-muted-foreground pt-3">
                             <p>
                                 <strong className="text-foreground font-mono">
-                                    git clone ... / git pull
+                                    ./setup.sh
                                 </strong>{" "}
                                 :{" "}
                                 {marathi
-                                    ? "GitHub वरून custom-compiler चा सोर्स कोड स्थानिक मशीनवर आणतो आणि नवीनतम अपडेट्स synchronise करतो."
-                                    : "Clones the custom-compiler repository locally or syncs the latest commits from the main branch."}
+                                    ? "आवश्यक dependencies तपासतो, फक्त missing dependencies install करतो, जुना `build/` directory आणि CMake cache काढतो, project configure करतो आणि `.mr` compiler build करतो."
+                                    : "Checks for the required dependencies, installs only what is missing, removes the existing `build/` directory and CMake cache, configures the project, and builds the `.mr` compiler."}
                             </p>
+
                             <p>
                                 <strong className="text-foreground font-mono">
-                                    ./build/compiler source.mr
+                                    build/compiler
                                 </strong>{" "}
                                 :{" "}
                                 {marathi
-                                    ? "सोर्स कोडचे टोकन्स, पार्सिंग, आणि सिमेंटिक चेकिंग करून x86-64 असेंब्ली कोड तयार करतो आणि NASM द्वारे थेट `./out` ही बायनरी बनवतो."
-                                    : "Runs lexing, parsing, semantic verification, emits x86-64 NASM assembly, and links the final `./out` ELF64 binary."}
+                                    ? "Build झाल्यानंतर तयार होणारा `.mr` compiler binary."
+                                    : "The `.mr` compiler binary produced by the build."}
                             </p>
-                            <p>
-                                <strong className="text-foreground font-mono">
-                                    echo $?
-                                </strong>{" "}
-                                :{" "}
+                        </div>
+
+                        {/* Manual Installation */}
+                        <div className="mt-5">
+                            <div className="mb-2 flex items-center gap-2 font-mono text-xs font-semibold text-primary">
+                                <Terminal size={13} />
                                 {marathi
-                                    ? "प्रोग्रामचा एक्झिट स्टेटस दाखवतो. .mr मधील `shevti(code)` द्वारे दिलेला एक्झिट कोड येथे तपासता येतो."
-                                    : "Prints the process termination code, allowing you to directly inspect the exit value returned by `shevti(code)`."}
+                                    ? "Manual Installation"
+                                    : "Manual Installation"}
+                            </div>
+
+                            <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                                <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre">
+                                    {`# Install dependencies
+sudo apt install build-essential cmake nasm
+
+# Configure the project
+cmake -S . -B build/
+
+# Compile and link
+cmake --build build`}
+                                </pre>
+                            </div>
+
+                            <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                                {marathi
+                                    ? "`cmake -S . -B build/` CMake build system configure करतो, तर `cmake --build build` compiler आणि test suite compile व link करतो."
+                                    : "`cmake -S . -B build/` configures the CMake build system, while `cmake --build build` compiles and links the compiler and test suite."}
                             </p>
+
+                            <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                                {marathi ? "Build नंतर:" : "This produces:"}
+                            </p>
+
+                            <pre className="mt-2 overflow-x-auto rounded-xl border border-white/[0.08] bg-white/[0.02] p-4 font-mono text-xs leading-6 text-[#c5d1ee]">
+                                {`build/compiler
+build/tests/mr_tests`}
+                            </pre>
+                        </div>
+
+                        {/* VS Code Extension */}
+                        <div className="mt-5">
+                            <div className="mb-2 flex items-center gap-2 font-mono text-xs font-semibold text-primary">
+                                <Terminal size={13} />
+                                {marathi
+                                    ? "VS Code Extension"
+                                    : "VS Code Extension"}
+                            </div>
+
+                            <p className="text-xs leading-6 text-muted-foreground">
+                                {marathi
+                                    ? "Project मध्ये `marathi-mr` VS Code extension समाविष्ट आहे. यात syntax highlighting, snippets, language configuration आणि custom icon आहे."
+                                    : "The project includes the `marathi-mr` VS Code extension with syntax highlighting, snippets, language configuration, and a custom icon."}
+                            </p>
+
+                            <div className="mt-3 overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                                <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre">
+                                    {`# Install the VS Code Extension Manager
+npm install -g @vscode/vsce
+
+# Build the extension
+cd tools/vscode-mr
+vsce package`}
+                                </pre>
+                            </div>
+
+                            <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                                {marathi
+                                    ? "यामुळे `marathi-mr-1.0.0.vsix` तयार होईल."
+                                    : "This generates `marathi-mr-1.0.0.vsix`."}
+                            </p>
+
+                            <div className="mt-3 rounded-xl border border-border bg-card p-3.5">
+                                <p className="text-xs leading-6 text-muted-foreground">
+                                    <strong className="text-foreground">
+                                        Terminal:
+                                    </strong>{" "}
+                                    <code>
+                                        code --install-extension
+                                        marathi-mr-1.0.0.vsix
+                                    </code>
+                                </p>
+
+                                <p className="mt-2 text-xs leading-6 text-muted-foreground">
+                                    <strong className="text-foreground">
+                                        VS Code:
+                                    </strong>{" "}
+                                    {marathi
+                                        ? "`Extensions` → `...` → `Install from VSIX...` → `marathi-mr-1.0.0.vsix` निवडा."
+                                        : "`Extensions` → `...` → `Install from VSIX...` → Select `marathi-mr-1.0.0.vsix`."}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Running */}
+                        <div className="mt-5">
+                            <div className="mb-2 flex items-center gap-2 font-mono text-xs font-semibold text-primary">
+                                <Terminal size={13} />
+                                {marathi
+                                    ? "Compiler चालवणे"
+                                    : "Running the Compiler"}
+                            </div>
+
+                            <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02] backdrop-blur-xl shadow-2xl">
+                                <pre className="overflow-x-auto p-4 font-mono text-xs leading-6 text-[#c5d1ee] whitespace-pre">
+                                    {`# Compile a .mr program
+./build/compiler source.mr
+
+# Run the resulting native executable
+./out
+
+# Check the program exit status
+echo $?`}
+                                </pre>
+                            </div>
+                        </div>
+
+                        {/* Compiler Pipeline */}
+                        <div className="mt-5">
+                            <div className="mb-3 flex items-center justify-between">
+                                <p className="font-mono text-xs font-semibold text-primary">
+                                    {marathi
+                                        ? "Compiler Pipeline"
+                                        : "Compiler Pipeline"}
+                                </p>
+                                <span className="font-mono text-[10px] text-muted-foreground/60">
+                                    .mr → ELF64
+                                </span>
+                            </div>
+
+                            <div className="rounded-xl border border-border bg-card/40 p-4">
+                                {/* Source */}
+                                <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-xs font-bold text-primary">
+                                            .mr
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground">
+                                            Source
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center py-1.5">
+                                    <span className="font-mono text-primary/50">
+                                        ↓
+                                    </span>
+                                </div>
+
+                                {/* Frontend */}
+                                <div className="grid grid-cols-3 gap-2">
+                                    {[
+                                        ["lex", "Tokens"],
+                                        ["parse", "AST"],
+                                        ["semantic", "Validation"],
+                                    ].map(([stage, desc]) => (
+                                        <div
+                                            key={stage}
+                                            className="rounded-lg border border-border bg-background/40 px-2 py-2.5 text-center"
+                                        >
+                                            <div className="font-mono text-[11px] font-bold text-foreground">
+                                                {stage}
+                                            </div>
+                                            <div className="mt-0.5 text-[9px] text-muted-foreground">
+                                                {desc}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="flex justify-center py-1.5">
+                                    <span className="font-mono text-primary/50">
+                                        ↓
+                                    </span>
+                                </div>
+
+                                {/* Assembly */}
+                                <div className="rounded-lg border border-border bg-background/40 px-4 py-3">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-xs font-bold text-foreground">
+                                            out.asm
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground">
+                                            x86-64 NASM
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex justify-center py-1.5">
+                                    <span className="font-mono text-primary/50">
+                                        ↓
+                                    </span>
+                                </div>
+
+                                {/* Backend */}
+                                <div className="flex items-center justify-center gap-2">
+                                    <span className="rounded-md border border-border bg-background/40 px-3 py-1.5 font-mono text-[10px]">
+                                        nasm -f elf64
+                                    </span>
+                                    <span className="text-primary/40">→</span>
+                                    <span className="rounded-md border border-border bg-background/40 px-3 py-1.5 font-mono text-[10px]">
+                                        ld
+                                    </span>
+                                </div>
+
+                                <div className="flex justify-center py-1.5">
+                                    <span className="font-mono text-primary/50">
+                                        ↓
+                                    </span>
+                                </div>
+
+                                {/* Output */}
+                                <div className="rounded-lg border border-primary/20 bg-primary/5 px-4 py-3">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-xs font-bold text-primary">
+                                            ./out
+                                        </span>
+                                        <span className="text-[10px] text-muted-foreground">
+                                            Native ELF64 Binary
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p className="mt-3 text-xs leading-6 text-muted-foreground">
+                            {marathi
+                                ? "`./build/compiler source.mr` `.mr` source चे lexing, parsing आणि semantic analysis करून `out.asm` तयार करतो. त्यानंतर NASM x86-64 ELF64 object तयार करतो आणि `ld` अंतिम native executable link करतो."
+                                : "`./build/compiler source.mr` lexes, parses, and semantically analyzes the `.mr` source before generating `out.asm`. NASM assembles it into an x86-64 ELF64 object, and `ld` links the final native executable."}
+                        </p>
+
+                        {/* Exit Codes */}
+                        <div className="mt-5">
+                            <p className="mb-2 font-mono text-xs font-semibold text-primary">
+                                {marathi
+                                    ? "Compiler Exit Codes"
+                                    : "Compiler Exit Codes"}
+                            </p>
+
+                            <div className="overflow-x-auto rounded-xl border border-border">
+                                <table className="w-full text-xs">
+                                    <thead className="border-b border-border bg-card">
+                                        <tr>
+                                            <th className="px-3 py-2 text-left font-mono">
+                                                Exit code
+                                            </th>
+                                            <th className="px-3 py-2 text-left font-mono">
+                                                {marathi ? "अर्थ" : "Meaning"}
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody className="text-muted-foreground">
+                                        <tr className="border-b border-border">
+                                            <td className="px-3 py-2 font-mono text-foreground">
+                                                0
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {marathi ? "यशस्वी" : "Success"}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="border-b border-border">
+                                            <td className="px-3 py-2 font-mono text-foreground">
+                                                1
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {marathi
+                                                    ? "Usage error"
+                                                    : "Usage error"}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="border-b border-border">
+                                            <td className="px-3 py-2 font-mono text-foreground">
+                                                2
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {marathi
+                                                    ? "फाईल वाचता आली नाही किंवा `out.asm` लिहिता आले नाही"
+                                                    : "Couldn't read the file or write `out.asm`"}
+                                            </td>
+                                        </tr>
+
+                                        <tr className="border-b border-border">
+                                            <td className="px-3 py-2 font-mono text-foreground">
+                                                3
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {marathi
+                                                    ? "`.mr` source मध्ये lexical, syntax किंवा semantic error"
+                                                    : "Lexical, syntax, or semantic errors in the `.mr` source"}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td className="px-3 py-2 font-mono text-foreground">
+                                                4
+                                            </td>
+                                            <td className="px-3 py-2">
+                                                {marathi
+                                                    ? "`nasm` किंवा `ld` failed"
+                                                    : "`nasm` or `ld` failed"}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </DocSection>
                     {/* 2. Your first program */}
@@ -669,7 +951,6 @@ echo $?`}
                             }}
                         />
                     </DocSection>
-
                     {/* 3. he & te */}
                     <DocSection
                         id="scalars-collections"
@@ -685,7 +966,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("array-declaration")} />
                     </DocSection>
-
                     {/* 4. ahe */}
                     <DocSection
                         id="immutability-ahe"
@@ -703,9 +983,7 @@ echo $?`}
                             example={getExample("types-and-variables")}
                         />
                     </DocSection>
-
                     {/* 5. sthir */}
-
                     <DocSection
                         id="static-sthir"
                         index="05"
@@ -736,7 +1014,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("type-sizes")} />
                     </DocSection>
-
                     {/* 7. sarve */}
                     <DocSection
                         id="scope-sarve"
@@ -752,7 +1029,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("scope-size-levels")} />
                     </DocSection>
-
                     {/* 8. ank */}
                     <DocSection
                         id="type-ank"
@@ -770,7 +1046,6 @@ echo $?`}
                             example={getExample("arithmetic-operators")}
                         />
                     </DocSection>
-
                     {/* 9. akshar */}
                     <DocSection
                         id="type-akshar"
@@ -786,7 +1061,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("void-functions")} />
                     </DocSection>
-
                     {/* 10. bhagank */}
                     <DocSection
                         id="type-bhagank"
@@ -804,7 +1078,6 @@ echo $?`}
                             example={getExample("conditional-statements")}
                         />
                     </DocSection>
-
                     {/* 11. purnank */}
                     <DocSection
                         id="type-purnank"
@@ -822,7 +1095,6 @@ echo $?`}
                             example={getExample("types-and-variables")}
                         />
                     </DocSection>
-
                     {/* 12. vidhan */}
                     <DocSection
                         id="type-vidhan"
@@ -838,7 +1110,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("logical-operators")} />
                     </DocSection>
-
                     {/* 13. nirank */}
                     <DocSection
                         id="type-nirank"
@@ -854,7 +1125,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("void-functions")} />
                     </DocSection>
-
                     {/* 14. Arithmetic */}
                     <DocSection
                         id="operators-arithmetic"
@@ -872,7 +1142,6 @@ echo $?`}
                             example={getExample("arithmetic-operators")}
                         />
                     </DocSection>
-
                     {/* 15. Relational & Bitwise */}
                     <DocSection
                         id="operators-relational"
@@ -895,7 +1164,6 @@ echo $?`}
                             />
                         </div>
                     </DocSection>
-
                     {/* 16. ani & va */}
                     <DocSection
                         id="words-ani-va"
@@ -911,7 +1179,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("logical-operators")} />
                     </DocSection>
-
                     {/* 17. jar */}
                     <DocSection
                         id="control-jar"
@@ -929,7 +1196,6 @@ echo $?`}
                             example={getExample("conditional-statements")}
                         />
                     </DocSection>
-
                     {/* 18. nahitar */}
                     <DocSection
                         id="control-nahitar"
@@ -947,7 +1213,6 @@ echo $?`}
                             example={getExample("conditional-statements")}
                         />
                     </DocSection>
-
                     {/* 19. anyatha */}
                     <DocSection
                         id="control-anyatha"
@@ -965,7 +1230,6 @@ echo $?`}
                             example={getExample("conditional-statements")}
                         />
                     </DocSection>
-
                     {/* 20. pratyek */}
                     <DocSection
                         id="loops-pratyek"
@@ -981,7 +1245,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("for-loop")} />
                     </DocSection>
-
                     {/* 21. jovar */}
                     <DocSection
                         id="loops-jovar"
@@ -997,7 +1260,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("while-loop")} />
                     </DocSection>
-
                     {/* 22. thamba & pudhe */}
                     <DocSection
                         id="jumps-thamba-pudhe"
@@ -1013,7 +1275,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("while-loop")} />
                     </DocSection>
-
                     {/* 23. karya & partav */}
                     <DocSection
                         id="functions-karya"
@@ -1031,7 +1292,6 @@ echo $?`}
                             example={getExample("functions-and-arguments")}
                         />
                     </DocSection>
-
                     {/* 24. shevti */}
                     <DocSection
                         id="exit-shevti"
@@ -1047,7 +1307,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("exit-code")} />
                     </DocSection>
-
                     {/* 25. paryay */}
                     <DocSection
                         id="paryay-switch"
@@ -1063,7 +1322,6 @@ echo $?`}
                         </p>
                         <CodeBlock example={getExample("switch-statement")} />
                     </DocSection>
-
                     {/* 26. Planned Specifications */}
                     <DocSection
                         id="planned-specs"
