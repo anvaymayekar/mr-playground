@@ -141,7 +141,7 @@ export default function AboutPage() {
                                 <ExternalLink size={12} />
                             </a>
                             <a
-                                href="https://linkedin.com/in/anvay-mayekar"
+                                href="https://linkedin.com/in/anvaymayekar"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-foreground"
